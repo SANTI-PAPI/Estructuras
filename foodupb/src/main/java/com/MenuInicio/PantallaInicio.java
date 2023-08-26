@@ -1,4 +1,4 @@
-package com.Init;
+package com.MenuInicio;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,16 +9,12 @@ import javax.swing.JTextField;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
-public class MInit extends JFrame {
-    public MInit() {
+public class PantallaInicio extends JFrame {
+    public PantallaInicio() {
         iniciarComponentes();
         this.setMaximizedBounds(getBounds());
-
     }
-
-    /**
-     * 
-     */
+    
     public void iniciarComponentes() {
         JPanel panelBackGround = new JPanel();
         panelBackGround.setBackground(new ColorUIResource(151, 151, 157));
@@ -27,22 +23,20 @@ public class MInit extends JFrame {
         panelBackGround.setLayout(null);
 
         this.add(panelBackGround);
+        setLocationRelativeTo(null);
         this.setVisible(true);
         this.setSize(800, 500);
 
-        JButton cerrarSesion = new JButton();
-        cerrarSesion.setBounds(10, 10, 100, 40);
-        cerrarSesion.setText("ATRAS");
-        panelBackGround.add(cerrarSesion);
+        JLabel labelTitulo = new JLabel("Inicio de sesión");
+        labelTitulo.setBounds(335, 20, 500, 100);
+        labelTitulo.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+        panelBackGround.add(labelTitulo);
 
-        JLabel pedwhitout = new JLabel("Inicio");
-        pedwhitout.setBounds(325, 20, 500, 100);
-        panelBackGround.add(pedwhitout);
-
-        JButton modPedido = new JButton();
-        modPedido.setBounds(295, 400, 200, 40);
-        modPedido.setText("Iniciar");
-        panelBackGround.add(modPedido, BorderLayout.NORTH);
+        JButton buttonEntrar = new JButton();
+        buttonEntrar.setBounds(295, 400, 200, 40);
+        buttonEntrar.setText("Iniciar sesión");
+        buttonEntrar.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+        panelBackGround.add(buttonEntrar, BorderLayout.NORTH);
 
         JTextField nombre = new JTextField();
         nombre.setBounds(200, 100, 500, 50);
@@ -51,13 +45,12 @@ public class MInit extends JFrame {
         JPasswordField contra = new JPasswordField();
         contra.setBounds(200, 200, 500, 50);
         panelBackGround.add(contra);
-
     }
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MInit().setVisible(true);
+                new PantallaInicio().setVisible(true);
 
             }
 

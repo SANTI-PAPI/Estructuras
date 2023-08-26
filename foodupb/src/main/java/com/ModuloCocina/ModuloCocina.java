@@ -4,28 +4,24 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.ColorUIResource;
-import java.awt.*;
+
+import com.ModuloOperador.ModuloOperador;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ModuloCocina extends JFrame {
     public ModuloCocina() {
         iniciarComponentes();
         this.setMaximizedBounds(getBounds());
-
     }
 
-    /**
-     * 
-     */
     public void iniciarComponentes() {
         JPanel panelBackGround = new JPanel();
         panelBackGround.setBackground(new ColorUIResource(151, 151, 157));
         panelBackGround.setVisible(true);
         panelBackGround.setSize(getPreferredSize());
         panelBackGround.setLayout(null);
-
-        this.add(panelBackGround);
-        this.setVisible(true);
-        this.setSize(800, 500);
 
         JPanel panel1 = new JPanel();
         panel1.setBackground(new ColorUIResource(255, 255, 255));
@@ -45,11 +41,21 @@ public class ModuloCocina extends JFrame {
         panel3.setBounds(630, 80, 300, 300);
         panelBackGround.add(panel3);
 
-        JButton cerrarSesion = new JButton();
-        cerrarSesion.setBounds(10, 10, 100, 40);
-        cerrarSesion.setText("ATRAS");
-        panelBackGround.add(cerrarSesion);
-
+        JButton buttonVolver = new JButton();
+        buttonVolver.setBounds(10, 10, 100, 40);
+        buttonVolver.setText("VOLVER");
+        panelBackGround.add(buttonVolver);
+        buttonVolver.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ModuloOperador moduloOperador = new ModuloOperador();
+                dispose();
+            }
+        });
+        
+        this.add(panelBackGround);
+        setLocationRelativeTo(null);
+        this.setVisible(true);
+        this.setSize(800, 500);
     }
 
     public static void main(String[] args) {
