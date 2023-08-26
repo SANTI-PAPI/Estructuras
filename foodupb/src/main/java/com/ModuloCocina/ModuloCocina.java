@@ -13,7 +13,10 @@ import java.awt.event.ActionListener;
 public class ModuloCocina extends JFrame {
     public ModuloCocina() {
         iniciarComponentes();
-        this.setMaximizedBounds(getBounds());
+        setTitle("FoodUPB - Modulo de cocina");
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setMaximizedBounds(getBounds());
     }
 
     public void iniciarComponentes() {
@@ -53,7 +56,6 @@ public class ModuloCocina extends JFrame {
         });
         
         this.add(panelBackGround);
-        setLocationRelativeTo(null);
         this.setVisible(true);
         this.setSize(800, 500);
     }

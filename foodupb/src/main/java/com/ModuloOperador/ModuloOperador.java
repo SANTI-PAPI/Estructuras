@@ -15,8 +15,11 @@ import com.ModuloCocina.*;
 public class ModuloOperador extends JFrame {
     public ModuloOperador() {
         iniciarComponentes();
-        this.setLayout(new GridLayout(1, 2));
-        this.setMaximizedBounds(getBounds());
+        setTitle("FoodUPB - Modulo de operador");
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setLayout(new GridLayout(1, 2));
+        setMaximizedBounds(getBounds());
     }
 
     public void iniciarComponentes() {
@@ -85,7 +88,6 @@ public class ModuloOperador extends JFrame {
         panelDerecho.add(aggCliente);
 
         this.add(panelBackGround);
-        setLocationRelativeTo(null);
         this.setVisible(true);
         this.setSize(800, 500);
     }

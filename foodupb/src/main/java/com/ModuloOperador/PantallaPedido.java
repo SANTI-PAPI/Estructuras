@@ -2,8 +2,6 @@ package com.ModuloOperador;
 
 import javax.swing.*;
 
-import com.ModuloCocina.ModuloCocina;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,8 +9,11 @@ import java.awt.event.ActionListener;
 public class PantallaPedido extends JFrame {
     public PantallaPedido() {
         iniciarComponentes();
-        this.setLayout(new GridLayout(1, 2));
-        this.setMaximizedBounds(getBounds());
+        setTitle("FoodUPB - Creación del pedido");
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setLayout(new GridLayout(1, 2));
+        setMaximizedBounds(getBounds());
     }
     public static void main(String[] args) {
         PantallaPedido pantalla = new PantallaPedido();
@@ -20,7 +21,6 @@ public class PantallaPedido extends JFrame {
     }
 
     private void iniciarComponentes() {
-
         JPanel mainPanel = new JPanel(); // Panel principal
         mainPanel.setLayout(new BorderLayout());
         getContentPane().add(mainPanel);
@@ -40,55 +40,60 @@ public class PantallaPedido extends JFrame {
             }
           } );
 
-        JTextField buscador = new JTextField("🔍");
-        buscador.setBounds(80, 60, 330, 30); // Posición del buscador debajo del botón
-        panelIzquierda.add(buscador);
+        JTextField fieldBuscador = new JTextField();
+        fieldBuscador.setBounds(80, 60, 330, 30); // Posición del buscador debajo del botón
+        panelIzquierda.add(fieldBuscador);
 
-        JPanel cajasPanel = new JPanel();
-        cajasPanel.setBounds(115, 120, 200, 200); // Posición de cajasPanel debajo del buscador
-        cajasPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        panelIzquierda.add(cajasPanel);
+        JLabel labelBuscador = new JLabel("  🔍  ");
+        labelBuscador.setBounds(50, 60, 30, 30); // Posición de la etiqueta "CANTIDAD"
+        labelBuscador.setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
+        panelIzquierda.add(labelBuscador);
 
-        JSlider slider = new JSlider(JSlider.VERTICAL, 0, 100, 50); // Crea un slider vertical
-        slider.setBounds(315, 120, 50, 200); // Posición del slider al lado del cajasPanel
-        panelIzquierda.add(slider);
+        String[] art = {"Hamburguesa sencilla      $600", "Hamburguesa doble      $900", "Perro sencillo      $500", "Perro doble      $800"};
+        JList articulos = new JList<>(art);
+        articulos.setSelectionMode(0);
+        JPanel panelsito = new JPanel(new GridLayout(art.length+1, 2, 10, 0));
+        panelsito.add(articulos);
+        JScrollPane panelBusqueda = new JScrollPane(panelsito);
+        panelBusqueda.setBounds(60, 120, 370, 200); // Posición de cajasPanel debajo del buscador
+        panelBusqueda.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        panelIzquierda.add(panelBusqueda);
 
-        JTextField cajaTexto = new JTextField();
-        cajaTexto.setBounds(85, 350, 200, 30); // Posición de la caja de texto debajo de "CANTIDAD"
-        panelIzquierda.add(cajaTexto);
+        JTextField fieldCantidad = new JTextField("1");
+        fieldCantidad.setBounds(115, 350, 75, 30); // Posición de la caja de texto debajo de "CANTIDAD"
+        panelIzquierda.add(fieldCantidad);
 
-        JLabel cantidadLabel = new JLabel("CANTIDAD");
-        cantidadLabel.setBounds(85, 380, 200, 30); // Posición de la etiqueta "CANTIDAD"
-        cantidadLabel.setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
-        panelIzquierda.add(cantidadLabel);
+        JLabel labelCantidad = new JLabel("CANTIDAD");
+        labelCantidad.setBounds(115, 380, 75, 30); // Posición de la etiqueta "CANTIDAD"
+        labelCantidad.setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
+        panelIzquierda.add(labelCantidad);
 
-        JButton agregarButton = new JButton("AGREGAR");
-        agregarButton.setBounds(300, 350, 100, 30); // Posición del botón "AGREGAR" al lado de la caja de texto
-        panelIzquierda.add(agregarButton);
+        JButton buttonAgregar = new JButton("AGREGAR");
+        buttonAgregar.setBounds(265, 350, 100, 30); // Posición del botón "AGREGAR" al lado de la caja de texto
+        panelIzquierda.add(buttonAgregar);
 
         JPanel panelDerecha = new JPanel(null); // Panel para poner caja y botones
         panelDerecha.setPreferredSize(new Dimension(300, 450));
         panelDerecha.setBackground(Color.GRAY);
         mainPanel.add(panelDerecha, BorderLayout.EAST);
 
-        JPanel cajaPanelDerecha = new JPanel(); //Crear un caja donde luego se verá el pedido
-        cajaPanelDerecha.setBounds(55, 50, 200, 200);
-        cajaPanelDerecha.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        cajaPanelDerecha.setBackground(Color.WHITE);
-        panelDerecha.add(cajaPanelDerecha);
+        JScrollPane panelPedido = new JScrollPane(); //Crear un caja donde luego se verá el pedido
+        panelPedido.setBounds(60, 75, 200, 200);
+        panelPedido.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        panelPedido.setBackground(Color.WHITE);
+        panelDerecha.add(panelPedido);
 
         JButton quitarBoton = new JButton("QUITAR"); //Crea el botón Quitar
-        quitarBoton.setBounds(95, 270, 120, 30);
+        quitarBoton.setBounds(105, 295, 120, 30);
         panelDerecha.add(quitarBoton);
 
         JButton continuarBoton = new JButton("CONTINUAR"); //Crea el botón Continuar
-        continuarBoton.setBounds(95, 310, 120, 30);
+        continuarBoton.setBounds(105, 335, 120, 30);
         panelDerecha.add(continuarBoton);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0, 0, 800, 500);
         setResizable(false);
-        setLocationRelativeTo(null);
         setVisible(true);
     }
 }

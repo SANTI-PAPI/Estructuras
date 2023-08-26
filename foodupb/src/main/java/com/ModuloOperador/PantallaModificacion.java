@@ -12,6 +12,9 @@ import java.awt.event.ActionListener;
 public class PantallaModificacion extends JFrame {
     public PantallaModificacion() {
         iniciarComponentes();
+        setTitle("FoodUPB - Modificación de pedidos");
+        setLocationRelativeTo(null);
+        setResizable(false);
         this.setMaximizedBounds(getBounds());
     }
 
@@ -52,7 +55,6 @@ public class PantallaModificacion extends JFrame {
 
         setVisible(true);
         this.add(panelBackground);
-        setLocationRelativeTo(null);
         this.setVisible(true);
         this.setSize(800, 500);
     }
