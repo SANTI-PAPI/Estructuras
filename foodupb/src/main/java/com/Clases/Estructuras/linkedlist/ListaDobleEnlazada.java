@@ -3,29 +3,32 @@ package com.Clases.Estructuras.linkedlist;
 import com.Clases.Estructuras.interfaces.linkedlist.LinkedListInterface;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.node.NodoDobleEnlazado;
+
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
-    private NodoDobleEnlazado<T> head;
-    private NodoDobleEnlazado<T> tail;
+    private NodoDobleEnlazado<T> cabeza;
+    private NodoDobleEnlazado<T> cola;
     private NodoDobleEnlazado<T> inode;
-    private int size;
+    private int tamano;
 
     @Override
-    public boolean add(T object) {
+    public boolean add(T object) { // CONFIRMADO
         if (object != null) {
             try {
                 if (isEmpty()) {
-                    tail = head = new NodoDobleEnlazado<T>(object);
-                } else { 
-                    tail.setNext(new NodoDobleEnlazado<T>(object));
-                    tail.getNext().setPrevious(tail);
-                    tail = tail.getNext();
+                    cabeza = cola = new NodoDobleEnlazado<T>(object);
+                } else {
+                    cola.setNext(new NodoDobleEnlazado<T>(object));
+                    cola.getNext().setPrevious(cola);
+                    cola = cola.getNext();
                 }
-                size++;
+                tamano++;
                 return true;
             } catch (Exception e) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, e.getMessage(), e);
@@ -35,35 +38,28 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
     }
 
     @Override
-    public boolean add(NodeInterface<T> node, T object) {
-        Iterator iterator = iterator();
-        NodoDobleEnlazado nodeTemp;
+    public boolean add(NodeInterface<T> node, T object) { // CONFIRMADO
         if (object != null) {
             try {
                 if (isEmpty()) {
-                    tail = head = new NodoDobleEnlazado<>(object);
+                    return false;
                 }
-                if (tail.equals(node)) {
-                    tail.setNext(new NodoDobleEnlazado<>(object));
-                    tail.getNext().setPrevious(tail);
-                    tail = tail.getNext();
+                if (cola.isEquals(node.getObject())) {
+                    add(object);
                 } else {
+                    NodoDobleEnlazado nodeTemp;
+                    Iterator iterator = iterator();
                     while (iterator.hasNext()) {
                         nodeTemp = (NodoDobleEnlazado) iterator.next();
                         if (nodeTemp.isEquals(node.getObject())) {
-
-                            NodoDobleEnlazado nodeToAdd = new NodoDobleEnlazado<T>(object);
-                            if (nodeTemp.isEquals(tail.getObject())) {
-                                tail = nodeToAdd;
-                            }
-                            nodeToAdd.setNext(nodeTemp.getNext());
-                            nodeTemp.getNext().setPrevious(nodeToAdd);
+                            NodoDobleEnlazado nodeToAdd = new NodoDobleEnlazado<T>(object, nodeTemp.getNext(),
+                                    nodeTemp);
                             nodeTemp.setNext(nodeToAdd);
-                            nodeToAdd.setPrevious(nodeTemp);
+                            nodeToAdd.getNext().setPrevious(nodeToAdd);
                         }
                     }
+                    tamano++;
                 }
-                size++;
                 return true;
             } catch (Exception e) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, e.getMessage(), e);
@@ -74,40 +70,11 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public boolean add(NodeInterface<T> node, NodeInterface<T> next) {
-        // add(node , next.getObject());
-        Iterator iter = iterator();
-        NodoDobleEnlazado nodeTemp;
-        if (node != null && next != null) {
-            tail.setNext((NodoDobleEnlazado<T>) next);
-            tail.getNext().setPrevious(tail);
-            tail = tail.getNext();
-        }
-        try {
-            while (iter.hasNext()) {
-                nodeTemp = (NodoDobleEnlazado) iter.next();
-                if (nodeTemp.isEquals(node.getObject())) {
-
-                    NodoDobleEnlazado newNode = (NodoDobleEnlazado) next;
-                    if (nodeTemp.isEquals(tail.getObject())) {
-                        tail = newNode;
-                    }
-                    newNode.setNext(nodeTemp.getNext());
-                    nodeTemp.getNext().setPrevious(newNode);
-                    nodeTemp.setNext(newNode);
-                    newNode.setPrevious(nodeTemp);
-                }
-            }
-            size++;
-            return true;
-        } catch (Exception ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
-        }
-        return false;
+        return add(node, next.getObject());
     }
 
     @Override
     public boolean add(T[] objects) {
-        Iterator iter = iterator();
         if (objects != null) {
             try {
                 for (T object : objects) {
@@ -123,38 +90,11 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public boolean add(NodeInterface<T> node, T[] objects) {
-        Iterator iter = iterator();
-        NodoDobleEnlazado nodeTemp;
-        if (objects.length > 0) {
-            try {
-                if (isEmpty()) {
-                    for (int i = 0; i < objects.length; i++) {
-                        if (head == null) {
-                            head = tail = new NodoDobleEnlazado<>(objects[i]);
-                            size++;
-                        }
-                    }
-                } else {
-                    while (iter.hasNext()) {
-                        nodeTemp = (NodoDobleEnlazado) iter.next();
-                        if (nodeTemp.isEquals(node.getObject())) {
-                            for (int i = 0; i < objects.length; i++) {
-
-                                NodoDobleEnlazado newNode = new NodoDobleEnlazado<T>(objects[i]);
-
-                                newNode.setNext(nodeTemp.getNext());
-                                nodeTemp.getNext().setPrevious(newNode);
-                                nodeTemp.setNext(newNode);
-                                newNode.setPrevious(nodeTemp);
-                                size++;
-                            }
-                        }
-                    }
-                    return true;
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
+        for (T object : objects) {
+            if (object != null) {
+                add(node, object);
             }
+            return true;
         }
         return false;
     }
@@ -164,17 +104,13 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
         if (object != null) {
             try {
                 if (isEmpty()) {
-                    head = tail = new NodoDobleEnlazado<T>(object);
-                    head.setPrevious(tail);
-                    tail.setNext(head);
+                    add(object);
                 } else {
-                    NodoDobleEnlazado newNode = new NodoDobleEnlazado(object);
-
-                    newNode.setNext(head);
-                    head.setPrevious(newNode);
-                    head = newNode;
+                    NodoDobleEnlazado newNode = new NodoDobleEnlazado(object, cabeza);
+                    cabeza.setPrevious(newNode);
+                    cabeza = newNode;
+                    tamano++;
                 }
-                size++;
                 return true;
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
@@ -185,23 +121,19 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public boolean addOnHead(T[] objects) {
-        if (objects.length > 0) {
-            try {
-                for (T object : objects) {
-                    addOnHead(object);
-                }
-                return true;
-            } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
+        for (T object : objects) {
+            if (object != null) {
+                addOnHead(object);
             }
+            return true;
         }
         return false;
     }
 
     @Override
     public boolean clear() {
-        head = null;
-        size = 0;
+        cabeza = cola = null;
+        tamano = 0;
         return true;
     }
 
@@ -209,27 +141,24 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
     public ListaDobleEnlazada<T> cloneList() {
         try {
             if (!isEmpty()) {
-                Iterator<NodeInterface<T>> iter = iterator();
-                ListaDobleEnlazada<T> cloneNode = new ListaDobleEnlazada<T>();
-                while (iter.hasNext()) {
-                    cloneNode.add(iter.next().getObject());
-                }
-                return cloneNode;
+                return (ListaDobleEnlazada<T>) this.clone();
+            } else {
+                return new ListaDobleEnlazada<>();
             }
-        } catch (Exception ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
+        } catch (Exception e) {
+
         }
         return null;
     }
 
     @Override
     public boolean contains(T object) {
-        Iterator iter = iterator();
         if (!isEmpty()) {
             if (object != null) {
+                Iterator iter = iterator();
                 while (iter.hasNext()) {
-                    NodoDobleEnlazado newNode = (NodoDobleEnlazado) iter.next();
-                    if (newNode.isEquals(object)) {
+                    NodoDobleEnlazado nextNode = (NodoDobleEnlazado) iter.next();
+                    if (nextNode.isEquals(object)) {
                         return true;
                     }
                 }
@@ -240,33 +169,23 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public boolean contains(T[] objects) {
-        if (!isEmpty()) {
-            try {
-                int cont = 1;
-                for (T object : objects) {
-                    if (contains(object)) {
-                        cont++;
-                    }
-                }
-                if (cont == objects.length) {
-                    return true;
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
+        for (T object : objects) {
+            if (!contains(object)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
     public NodeInterface<T> nodeOf(T object) {
-        Iterator iter = iterator();
         if (object != null) {
             try {
+                Iterator iter = iterator();
                 while (iter.hasNext()) {
-                    NodoDobleEnlazado newNode = (NodoDobleEnlazado) iter.next();
-                    if (newNode.isEquals(object)) {
-                        return newNode;
+                    NodoDobleEnlazado nextNode = (NodoDobleEnlazado) iter.next();
+                    if (nextNode.isEquals(object)) {
+                        return nextNode;
                     }
                 }
             } catch (Exception ex) {
@@ -278,62 +197,65 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return this.head == null;
+        return tamano == 0;
     }
 
     @Override
     public T get() {
         if (!isEmpty()) {
-            return head.getObject();
+            return cabeza.getObject();
         }
         return null;
     }
 
     @Override
     public T[] get(int n) {
-        T[] arrRetur = (T[]) new Object[n];
-        Iterator iter = iterator();
+        T[] arrReturn = (T[]) new Object[n];
         if (!isEmpty()) {
             if (size() >= n) {
+                Iterator iter = iterator();
                 for (int i = 0; i < n; i++) {
                     NodoDobleEnlazado<T> nodeArr = (NodoDobleEnlazado<T>) iter.next();
-                    arrRetur[i] = nodeArr.getObject();
+                    arrReturn[i] = nodeArr.getObject();
                 }
             }
         }
 
-        return arrRetur;
+        return arrReturn;
     }
 
     @Override
     public T getPrevious(NodeInterface<T> node) {
-        Iterator iter = iterator();
         T objReturn = null;
         try {
             if (!isEmpty()) {
                 node = (NodeInterface<T>) nodeOf(node.getObject());
-                objReturn = ((NodoDobleEnlazado<T>) node).getPrevious().getObject();
-                return objReturn;
+                return ((NodoDobleEnlazado<T>) node).getPrevious().getObject();
+                
             }
         } catch (Exception ex) {
-            objReturn = null;
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
         }
         return objReturn;
     }
 
     private NodoDobleEnlazado<T> getPreviousNode(NodeInterface<T> node) {
-        NodoDobleEnlazado<T> nodeTemp = (NodoDobleEnlazado<T>) node;
-        if (!isEmpty()) {
-            return nodeTemp.getPrevious();
+        NodoDobleEnlazado nodo = new NodoDobleEnlazado<>();
+        try {
+            if (!isEmpty()) {
+                node = (NodeInterface<T>) nodeOf(node.getObject());
+                return ((NodoDobleEnlazado<T>) node).getPrevious();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
         }
-        return nodeTemp.getPrevious();
+        return nodo;
     }
 
     @Override
     public T getFromEnd() {
         if (!isEmpty()) {
-            return tail.getObject();
+            return cola.getObject();
         }
         return null;
     }
@@ -341,13 +263,11 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
     @Override
     public T[] getFromEnd(int n) {
         T[] arrTail = (T[]) new Object[n];
-        NodoDobleEnlazado<T> nodeTemp;
-        Iterator iter = iteratorToBack();
-        if (size() > n) {
-            for (int i = 0; i < n; i++) {
-                nodeTemp = (NodoDobleEnlazado<T>) iter.next();
+        NodoDobleEnlazado<T> nodeTemp = cola;
+        if (size() >= n) {
+            for (int i = n-1; i <= 0; i--) {
                 arrTail[i] = nodeTemp.getObject();
-                nodeTemp.getNext();
+                nodeTemp = nodeTemp.getPrevious();
             }
         }
         return arrTail;
@@ -356,9 +276,10 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
     @Override
     public T pop() {
         if (!isEmpty()) {
-            NodoDobleEnlazado<T> nodeTemp = head;
-            head = head.getNext();
-            size--;
+            NodoDobleEnlazado<T> nodeTemp = cabeza;
+            cabeza = cabeza.getNext();
+            cabeza.setPrevious(null);
+            tamano--;
             return nodeTemp.getObject();
         }
         return null;
@@ -367,34 +288,26 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Iterator iter;
-        NodoDobleEnlazado<T> nodeTemp = null;
-        if (object != null && (!isEmpty()) && (contains(object))) {
+        NodoDobleEnlazado<T> nodeTemp;
+        if (object != null && !isEmpty() && (contains(object))) {
             try {
-                if (head.isEquals(object)) {
-                    head = head.getNext();
-                    head.setPrevious(tail);
-                    tail.setNext(head);
-                    size--;
-                    return true;
-                } else if (tail.isEquals(object)) {
-                    T nodeFin = tail.getPrevious().getObject();
-                    tail = (NodoDobleEnlazado<T>) nodeOf(nodeFin);
-                    
-                    size--;
-                    return true;
+                if (cabeza.isEquals(object)) {
+                    pop();
+                } else if (cola.isEquals(object)) {
+                    cola = cola.getPrevious();
+                    cola.setNext(null);
+                    tamano--;
                 }
-                NodoDobleEnlazado<T> nodeU;
                 iter = iterator();
                 while (iter.hasNext()) {
-                    nodeU = nodeTemp;
                     nodeTemp = (NodoDobleEnlazado<T>) iter.next();
                     if (nodeTemp.isEquals(object)) {
-                        nodeU.setNext(nodeTemp.getNext());
-                        nodeTemp.getNext().setPrevious(nodeU);
-                        size--;
-                        return true;
+                        nodeTemp.getPrevious().setNext(nodeTemp.getNext());
+                        nodeTemp.getNext().setPrevious(nodeTemp.getPrevious());
+                        tamano--;
                     }
                 }
+                return true;
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
             }
@@ -404,25 +317,16 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public boolean remove(NodeInterface<T> node) {
-        if (isEmpty()) {
-            return false;
-        } else {
-            try {
-                return remove(node.getObject());
-            } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
-            }
-        }
-        return false;
+        return remove(node.getObject());
     }
 
     @Override
     public boolean removeAll(T[] objects) {
-        if (!isEmpty() && objects != null) {
+        if (!isEmpty() && contains(objects)) {
             try {
-                for (T objet : objects) {
-                    if (objet != null) {
-                        remove(objet);
+                for (T object : objects) {
+                    if (object != null) {
+                        remove(object);
                     }
                 }
                 return true;
@@ -433,49 +337,23 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
         return false;
     }
 
-    /*
-     * private boolean retain(T[] objects) {
-     * try {
-     * for (T objet : objects) {
-     * if (objet != null) {
-     * if (!contains(objet)) {
-     * remove(objet);
-     * 
-     * }
-     * }
-     * }
-     * return true;
-     * } catch (Exception ex) {
-     * Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-     * ex.getMessage(), ex);
-     * }
-     * return false;
-     * }
-     * 
-     * 
-     */
     @Override
     public boolean retainAll(T[] objects) {
-        if (objects != null && !isEmpty()) {
+        if (objects.length > 0) {
             try {
-                int cont = 0;
-                Iterator iter = iterator();
-                T[] arrTemp = (T[]) new Object[objects.length];
-                NodoDobleEnlazado<T> nodeTemp;
-                while (iter.hasNext()) {
-                    nodeTemp = (NodoDobleEnlazado<T>) iter.next();
-                    for (int i = 0; i < objects.length; i++) {
-                        if (nodeTemp.isEquals(objects[i])) {
-                            arrTemp[cont] = nodeTemp.getObject();
-                            cont++;
-                        }
+                T[] arrFinal = (T[]) new Object[objects.length];
+                int pos = 0;
+                for (T object : objects) {
+                    if (contains(object)) {
+                        arrFinal[pos] = object;
+                        pos++;
                     }
                 }
                 clear();
-                add(arrTemp);
+                add(arrFinal);
                 return true;
-            } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, ex.getMessage(), ex);
+            } catch (Exception e) {
+                
             }
         }
         return false;
@@ -483,46 +361,39 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public int size() {
-        return size;
+        return tamano;
     }
 
     @Override
-    public LinkedListInterface<T> subList(NodeInterface<T> from, NodeInterface<T> to) {
-        if (validateSubList(from, to) && (!isEmpty())) {
-            Iterator iter = iterator();
-            NodoDobleEnlazado<T> ini;
-            ListaDobleEnlazada subLista = new ListaDobleEnlazada();
-            while (iter.hasNext()) {
-                ini = (NodoDobleEnlazado<T>) iter.next();
-                if (ini.isEquals(from.getObject())) {
-                    subLista.add(ini.getObject());
-                    ini = ini.getNext();
-                    while (!ini.isEquals(to.getObject())) {
-                        subLista.add(ini.getObject());
-                        ini = ini.getNext();
+    public ListaDobleEnlazada<T> subList(NodeInterface<T> from, NodeInterface<T> to) {
+        ListaDobleEnlazada subList = new ListaDobleEnlazada();
+        if (!from.isEquals(null) && !to.isEquals(null) && validSubList(from, to)) { // Verifica que la sublista sea valida
+            Iterator iterador = iterator();
+            while (iterador.hasNext()) {
+                NodoDobleEnlazado nodo = (NodoDobleEnlazado) iterador.next();
+                if (nodo.isEquals(from.getObject())) { // "Si el nodo actual es el nodo 'from',
+                    while (!nodo.isEquals(to.getObject())) { // mientras que el nodo actual no sea el nodo 'to',
+                        subList.add(nodo.getObject()); // se añaden los nodos desde 'from' hasta antes del nodo 'to'"
+                        nodo = (NodoDobleEnlazado) iterador.next();
                     }
-                    subLista.add(ini.getObject());
-                    return subLista;
+                    subList.add(nodo.getObject()); // Por último, se añade el nodo 'to'
                 }
             }
-            return subLista;
-        } else {
-            System.out.println("no entra");
         }
-        return null;
+        return subList;
     }
 
-    private boolean validateSubList(NodeInterface<T> from, NodeInterface<T> to) {
-        Iterator iter = iterator();
-        NodoDobleEnlazado<T> nodeTemp;
-        if (from != null && to != null) {
-            while (iter.hasNext()) {
-                nodeTemp = (NodoDobleEnlazado<T>) iter.next();
-                if (nodeTemp.isEquals(from.getObject())) {
-                    return true;
-                } else if (nodeTemp.isEquals(to.getObject())) {
-                    return false;
-                }
+    private boolean validSubList(NodeInterface<T> from, NodeInterface<T> to) {
+        Iterator iterador = iterator();
+        boolean firstFrom = false; // Verifica que el nodo from esté antes del nodo to
+        boolean toFound = false;   // Verifica que el nodo to esté después del nodo from
+        while (iterador.hasNext()) {
+            NodoDobleEnlazado nodo = (NodoDobleEnlazado) iterador.next();
+            if (nodo.isEquals(from.getObject()) && !toFound) { // "Si el nodo actual es el nodo 'from' y aún no se ha encontrado el nodo 'to',
+                firstFrom = true; // "el nodo 'from' está antes que el nodo 'to'"
+            }
+            if (nodo.isEquals(to.getObject()) && firstFrom) { // "Si el nodo 'from' está antes que el nodo 'to' y el nodo actual es el nodo 'to',
+                return true; // retorna true, verificando que la sublista es valida"
             }
         }
         return false;
@@ -530,61 +401,55 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public T[] toArray() {
-        NodeInterface<T> nodo = head;
-        T[] arreglo = (T[]) new Object[size];
-        Iterator iterator = iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-            nodo = (NodeInterface<T>) iterator.next();
-            arreglo[i++] = (T) nodo.getObject();
+        NodoDobleEnlazado nodo = cabeza;
+        T[] arreglo = (T[]) new Object[tamano];
+        for (int i = 0; i < tamano; i++) {
+            arreglo[i] = (T) nodo.getObject();
+            nodo = nodo.getNext();
         }
         return arreglo;
     }
-    /*
-     * @Override
-     * public T[] toArray() {
-     * T[] objectArr ;
-     * DoubleListNode nodo = head;
-     * T[] arreglo = (T[]) new Object[size];
-     * 
-     * for (int i = 0; i < size; i++) {
-     * arreglo[i] = (T) nodo.getObject();
-     * nodo = nodo.getNext();
-     * }
-     * return arreglo;
-     * }
-     */
-
+    
     @Override
     public boolean sortObjectsBySize() {
-        // shell
-        if (!isEmpty()) {
-            try {
-                T[] arryLis = toArray();
-                for (int gap = arryLis.length / 2; gap > 0; gap /= 2) {
-                    for (int i = gap; i < arryLis.length; i++) {
-                        T tempVal = arryLis[i];
-                        int j = i;
-                        while (j >= gap && arryLis[j - gap].toString().length() > tempVal.toString().length()) {
-                            arryLis[j] = arryLis[j - gap];
-                            j -= gap;
-                        }
-                        arryLis[j] = tempVal;
-                    }
+        if (size() == 1) {
+            return true;
+        } if (size() == 0) {
+            return false;
+        }
+        T[] objects = toArray();
+        for (int gap = objects.length / 2; gap > 0; gap /= 2) {
+            for (int i = gap; i < objects.length; i++) {
+                T actual = objects[i];
+                int j;
+                for (j = i; j >= gap && objectToByteArray(objects[j - gap]).length > objectToByteArray(actual).length; j -= gap) {
+                    objects[j] = objects[j - gap];
                 }
-                clear();
-                add(arryLis);
-                return true;
-            } catch (Exception e) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, e.getMessage(), e);
+                objects[j] = actual;
             }
         }
-        return false;
+        clear();
+        add(objects);
+        return true;
+    }
+
+    private byte[] objectToByteArray(Object object) {
+        ByteArrayOutputStream boas = new ByteArrayOutputStream();
+        if (object != null) {
+            try (ObjectOutputStream ois = new ObjectOutputStream(boas)) {
+                ois.writeObject(object);
+                return boas.toByteArray();
+            } catch (Exception e) {
+
+            }
+        }
+        return new byte[0];
     }
 
     @Override
     public Iterator<NodeInterface<T>> iterator() {
-        inode = head;
+        inode = cabeza;
+
         return new Iterator<NodeInterface<T>>() {
             @Override
             public boolean hasNext() {
@@ -598,16 +463,14 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
                 }
                 NodeInterface<T> node = inode;
                 inode = inode.getNext();
-                if (inode == head) {
-                    inode = null;
-                }
                 return node;
             }
         };
     }
 
-    public Iterator<NodeInterface<T>> iteratorToBack() {
-        inode = tail;
+    public Iterator<NodeInterface<T>> iteratorFromBack() {
+        inode = cola;
+
         return new Iterator<NodeInterface<T>>() {
             @Override
             public boolean hasNext() {
@@ -621,137 +484,45 @@ public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
                 }
                 NodeInterface<T> node = inode;
                 inode = inode.getPrevious();
-                if (inode == tail) {
-                    inode = null;
-                }
                 return node;
             }
         };
     }
 
-    public Iterator iteratorObj() {
-        inode = head;
-        return new Iterator() {
-            @Override
-            public boolean hasNext() {
-                return inode != null;
+    public boolean invertirK(int k){
+        try {
+            NodoDobleEnlazado<T> temp1 = cabeza;
+            NodoDobleEnlazado<T> temp2;
+            NodoDobleEnlazado<T> iterador = cabeza;
+            int contador = 0;
+            NodoDobleEnlazado<T> saveHead = cabeza;
+            for (int i=0; i<k-1; i++){
+                saveHead = saveHead.getNext();
             }
-
-            @Override
-            public Object next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
+            for (int i=0; i<size(); i++){
+                contador++;
+                System.out.println(iterador);
+                temp2 = iterador;
+                iterador = iterador.getNext();
+                if (contador == k){
+                    NodoDobleEnlazado<T> auxiliar = getPreviousNode(temp1);
+                    getPreviousNode(temp2).setNext(temp1);
+                    if (auxiliar != null){
+                        auxiliar.setNext(temp2);
+                    }
+                    auxiliar = temp1.getNext();
+                    temp1.setNext(temp2.getNext());
+                    temp2.setNext(auxiliar);
+                    temp2 = iterador;
+                    temp1 = temp2;
+                    contador = 0;
                 }
-                NodeInterface<T> node = inode;
-                inode = inode.getNext();
-                return node.getObject();
             }
-        };
-    }
-
-    public void imprimir() {
-        Iterator<NodeInterface<T>> iterator = iterator();
-        for (int i = 0; i < size; i++) {
-            System.out.println(iterator.next().getObject());
+            cabeza = saveHead;
         }
-    }
-
-    public boolean invertir(int k) {
-        if (k > 0 && !isEmpty()) {
-            int tamaño = (size() / k);
-            NodoDobleEnlazado<T> nodeIter;
-            NodoDobleEnlazado<T> firstNode;
-            NodoDobleEnlazado<T> kNode;
-            NodoDobleEnlazado<T> prevNode;
-            NodoDobleEnlazado<T> moveNode;
-            NodoDobleEnlazado<T> nodeFor;
-            NodoDobleEnlazado<T> nodeSis;
-            nodeIter = head;
-            for (int i = 0; i < tamaño; i++) {
-                firstNode = nodeIter;
-                kNode = firstNode;
-                for (int j = 1; j < k; j++) {
-                    kNode = kNode.getNext();
-                }
-                if (size() == k) {
-                    nodeFor = getPreviousNode(kNode);
-                    moveNode = firstNode.getNext();
-                    nodeFor.setNext(firstNode);
-                    tail = firstNode;
-                    head = kNode;
-                    kNode.setNext(moveNode);
-                    return true;
-                }
-                if (kNode.isEquals(tail.getObject())) {
-                    if (k == 2) {
-                        prevNode = getPreviousNode(kNode);
-                        moveNode = getPreviousNode(firstNode);
-                        nodeSis = firstNode.getNext();
-                        prevNode.setNext(firstNode);
-                        firstNode.setNext(head);
-                        moveNode.setNext(kNode);
-                        kNode.setNext(firstNode);
-                        tail = firstNode;
-                    }
-                    if (k > 2) {
-                        prevNode = getPreviousNode(kNode);
-                        moveNode = getPreviousNode(firstNode);
-                        nodeSis = firstNode.getNext();
-                        prevNode.setNext(firstNode);
-                        firstNode.setNext(head);
-                        moveNode.setNext(kNode);
-                        kNode.setNext(nodeSis);
-                        tail = firstNode;
-                    }
-                }
-                if (firstNode.isEquals(head.getObject())) {
-                    if (k == 2) {
-                        prevNode = firstNode.getNext();
-                        moveNode = getPreviousNode(kNode);
-                        moveNode.setNext(firstNode);
-                        firstNode.setNext(kNode.getNext());
-                        kNode.setNext(firstNode);
-                        head = kNode;
-                        nodeIter = firstNode.getNext();
-                    }
-                    if (k > 2) {
-                        prevNode = firstNode.getNext();
-                        moveNode = getPreviousNode(kNode);
-                        moveNode.setNext(firstNode);
-                        firstNode.setNext(kNode.getNext());
-                        kNode.setNext(prevNode);
-                        head = kNode;
-                        nodeIter = firstNode.getNext();
-                    }
-                }
-                if ((firstNode != head) && (kNode != tail) && (kNode != head) && (firstNode != tail)) {
-                    if (k == 2) {
-                        nodeFor = kNode.getNext();
-                        prevNode = getPreviousNode(kNode);
-                        moveNode = getPreviousNode(firstNode);
-                        nodeSis = firstNode.getNext();
-                        moveNode.setNext(kNode);
-                        kNode.setNext(firstNode);
-                        prevNode.setNext(firstNode);
-                        firstNode.setNext(nodeFor);
-                        nodeIter = firstNode.getNext();
-                    }
-                    if (k > 2) {
-                        nodeFor = kNode.getNext();
-                        prevNode = getPreviousNode(kNode);
-                        moveNode = getPreviousNode(firstNode);
-                        nodeSis = firstNode.getNext();
-                        moveNode.setNext(kNode);
-                        kNode.setNext(nodeSis);
-                        prevNode.setNext(firstNode);
-                        firstNode.setNext(nodeFor);
-                        nodeIter = firstNode.getNext();
-                    }
-                }
-            }
-            return true;
+        catch (Exception e){
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, e.getMessage(),e);
         }
-
         return false;
     }
 }

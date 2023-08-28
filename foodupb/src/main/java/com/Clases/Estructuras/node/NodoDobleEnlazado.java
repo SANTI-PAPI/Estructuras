@@ -16,9 +16,9 @@ public class NodoDobleEnlazado<T> extends Nodo<T> {
         this.anterior = null;
     }
 
-    public NodoDobleEnlazado(T object, NodoDobleEnlazado<T> next) {
+    public NodoDobleEnlazado(T object, NodoDobleEnlazado<T> siguiente) {
         super(object);
-        this.siguiente = next;
+        this.siguiente = siguiente;
         this.anterior = null;
     }
 

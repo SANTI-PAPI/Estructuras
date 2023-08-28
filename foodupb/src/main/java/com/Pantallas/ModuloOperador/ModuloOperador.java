@@ -7,11 +7,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.plaf.ColorUIResource;
 
+import org.json.simple.parser.ParseException;
+
 import com.Pantallas.ModuloCocina.ModuloCocina;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class ModuloOperador extends JFrame {
     public ModuloOperador() {
@@ -67,7 +70,12 @@ public class ModuloOperador extends JFrame {
         panelDerecho.add(buttonPedido);
         buttonPedido.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) { 
-                new PantallaPedido();
+                try {
+                    new PantallaPedido();
+                } catch (IOException | ParseException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
                 dispose();
             }
           } );
