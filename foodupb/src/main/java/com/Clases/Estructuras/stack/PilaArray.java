@@ -35,12 +35,12 @@ public class PilaArray<T> implements StackInterface<T> {
     public T pop() {
         if (!isEmpty()) {
             try {
-                T[] arrTemporal = (T[]) new Object[tamano - 1];
-                T objPos = arreglo[0];
-                for (int i = 0; i < tamano - 1; i++) {
-                    arrTemporal[i] = arreglo[i + 1];
-                }
                 tamano--;
+                T[] arrTemporal = (T[]) new Object[tamano];
+                T objPos = arreglo[tamano];
+                for (int i = 0; i < tamano; i++) {
+                    arrTemporal[i] = arreglo[i];
+                }
                 arreglo = arrTemporal;
                 return objPos;
             } catch (Exception e) {
@@ -53,9 +53,9 @@ public class PilaArray<T> implements StackInterface<T> {
     public boolean push(T object) {
         try {
             T[] arrTemporal = (T[]) new Object[tamano + 1];
-            arrTemporal[0] = object;
+            arrTemporal[tamano] = object;
             for (int i = 0; i < tamano; i++) {
-                arrTemporal[i + 1] = arreglo[i];
+                arrTemporal[i] = arreglo[i];
             }
             arreglo = arrTemporal;
             tamano++;

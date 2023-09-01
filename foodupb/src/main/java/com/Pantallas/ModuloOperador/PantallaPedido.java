@@ -14,8 +14,6 @@ import org.json.simple.parser.ParseException;
 
 import com.Datos.JSONManager;
 
-import static org.junit.Assert.assertThat;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -182,12 +180,8 @@ public class PantallaPedido extends JFrame {
 
       modelo.addTableModelListener(new TableModelListener() {
 
-         public static boolean isNumeric(String strNum) {
-            if (strNum == null) {
-               return false;
-            }
+         public static boolean isNumeric(int strNum) {
             try {
-               double d = Double.parseDouble(strNum);
             } catch (NumberFormatException nfe) {
                return false;
             }
@@ -196,7 +190,7 @@ public class PantallaPedido extends JFrame {
 
          @Override
          public void tableChanged(TableModelEvent e) {
-            if ((tablaPedidos.getSelectedRow() != -1) && !(isNumeric(String.valueOf(modelo.getValueAt(tablaPedidos.getSelectedRow(), 1))))){
+            if ((tablaPedidos.getSelectedRow() != -1) && !(isNumeric(Integer.parseInt((String) modelo.getValueAt(tablaPedidos.getSelectedRow(), 1))))){
                modelo.setValueAt(1, tablaPedidos.getSelectedRow(), 1);
             }
          }
@@ -213,12 +207,11 @@ public class PantallaPedido extends JFrame {
                }
             }
             if (fila == -1) {
-               Object[] nuevaFila = { nombre, Integer.parseInt(fieldCantidad.getText()) };
+               Object[] nuevaFila = { nombre, (fieldCantidad.getText()) };
                modelo.addRow(nuevaFila);
             } else {
-               tablaPedidos.getModel().setValueAt(
-                     ((int) tablaPedidos.getModel().getValueAt(fila, 1)) + Integer.parseInt(fieldCantidad.getText()),
-                     fila, 1);
+               String cantidadActual = (String) tablaPedidos.getModel().getValueAt(fila, 1);
+               tablaPedidos.getModel().setValueAt(String.valueOf(Integer.parseInt(cantidadActual) + Integer.parseInt(fieldCantidad.getText())), fila, 1);
             }
 
          }
