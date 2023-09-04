@@ -190,22 +190,16 @@ public class PantallaPedido extends JFrame {
 
          @Override
          public void tableChanged(TableModelEvent e) {
-            if ((tablaPedidos.getSelectedRow() != -1) && !(isNumeric(Integer.parseInt((String) modelo.getValueAt(tablaPedidos.getSelectedRow(), 1))))){
-               modelo.setValueAt(1, tablaPedidos.getSelectedRow(), 1);
-            }
+            try { if ((tablaPedidos.getSelectedRow() != -1) && !(isNumeric(Integer.parseInt((String) modelo.getValueAt(tablaPedidos.getSelectedRow(), 1))))) {} } 
+            catch (Exception exception) { modelo.setValueAt(1, tablaPedidos.getSelectedRow(), 1); }
          }
-
       });
 
       buttonAgregar.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             String nombre = String.valueOf(tablaArticulos.getValueAt(tablaArticulos.getSelectedRow(), 0));
             int fila = -1;
-            for (int i = 0; i < tablaPedidos.getRowCount(); i++) {
-               if (tablaPedidos.getModel().getValueAt(i, 0).equals(nombre)) {
-                  fila = i;
-               }
-            }
+            for (int i = 0; i < tablaPedidos.getRowCount(); i++) { if (tablaPedidos.getModel().getValueAt(i, 0).equals(nombre)) { fila = i; } }
             if (fila == -1) {
                Object[] nuevaFila = { nombre, (fieldCantidad.getText()) };
                modelo.addRow(nuevaFila);
@@ -213,7 +207,6 @@ public class PantallaPedido extends JFrame {
                String cantidadActual = (String) tablaPedidos.getModel().getValueAt(fila, 1);
                tablaPedidos.getModel().setValueAt(String.valueOf(Integer.parseInt(cantidadActual) + Integer.parseInt(fieldCantidad.getText())), fila, 1);
             }
-
          }
       });
 
@@ -222,13 +215,23 @@ public class PantallaPedido extends JFrame {
       panelDerecha.add(buttonQuitar);
       buttonQuitar.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent arg0) {
-            modelo.removeRow(tablaPedidos.getSelectedRow());
+               modelo.removeRow(tablaPedidos.getSelectedRow());
+            
          }
       });
 
-      JButton continuarBoton = new JButton("CONTINUAR"); // Crea el botón Continuar
-      continuarBoton.setBounds(105, 385, 120, 30);
-      panelDerecha.add(continuarBoton);
+      JButton buttonContinuar = new JButton("CONTINUAR"); // Crea el botón Continuar
+      buttonContinuar.setBounds(105, 385, 120, 30);
+      panelDerecha.add(buttonContinuar);
+      buttonContinuar.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent arg0) {
+               setVisible(false);
+               try {
+                  new PantallaRegistroDireccion();
+               } catch (IOException | ParseException e) {
+               }
+         }
+      });
 
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setBounds(0, 0, 800, 500);
