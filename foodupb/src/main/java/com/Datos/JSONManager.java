@@ -131,27 +131,67 @@ public class JSONManager {
     }
 
     public static void pruebaWriteClientes() throws IOException {
-        Cliente nuevoCliente = new Cliente("3123053971", "Jose", "Montero",
+        Cliente nuevoCliente1 = new Cliente("3123053971", "Jose", "Montero",
                 TipoDireccion.KILOMETRO, "7 Sur", "Via Piedecuesta", "Universidad Pontificia Bolivariana",
                 "Floridablanca", "RUITOQUE", "El Propio");
-        JSONObject detallesCliente = new JSONObject();
+        JSONObject detallesCliente1 = new JSONObject();
 
-        detallesCliente.put("nombre", nuevoCliente.getNombre());
-        detallesCliente.put("apellido", nuevoCliente.getApellido());
-        detallesCliente.put("numero", nuevoCliente.getNumeroTelefono());
-        detallesCliente.put("tipoDireccion", nuevoCliente.getTipoDireccion().toString());
-        detallesCliente.put("direccion1", nuevoCliente.getDireccion1());
-        detallesCliente.put("direccion2", nuevoCliente.getDireccion2());
-        detallesCliente.put("direccionAdicional", nuevoCliente.getDireccionAdicional());
-        detallesCliente.put("municipio", nuevoCliente.getMunicipio());
-        detallesCliente.put("comuna", nuevoCliente.getComuna());
-        detallesCliente.put("barrio", nuevoCliente.getBarrio());
+        detallesCliente1.put("nombre", nuevoCliente1.getNombre());
+        detallesCliente1.put("apellido", nuevoCliente1.getApellido());
+        detallesCliente1.put("numero", nuevoCliente1.getNumeroTelefono());
+        detallesCliente1.put("tipoDireccion", nuevoCliente1.getTipoDireccion().toString());
+        detallesCliente1.put("direccion1", nuevoCliente1.getDireccion1());
+        detallesCliente1.put("direccion2", nuevoCliente1.getDireccion2());
+        detallesCliente1.put("direccionAdicional", nuevoCliente1.getDireccionAdicional());
+        detallesCliente1.put("municipio", nuevoCliente1.getMunicipio());
+        detallesCliente1.put("comuna", nuevoCliente1.getComuna());
+        detallesCliente1.put("barrio", nuevoCliente1.getBarrio());
 
-        JSONObject objetoCliente = new JSONObject();
-        objetoCliente.put("cliente", detallesCliente);
+        JSONObject objetoCliente1 = new JSONObject();
+        objetoCliente1.put("cliente", detallesCliente1);
+
+        Cliente nuevoCliente2 = new Cliente("3216031698", "Santiago", "Nino",
+                TipoDireccion.CALLE, "48", "25-34", "",
+                "Piedecuesta", "PIEDECUESTA_NORTE", "No se");
+        JSONObject detallesCliente2 = new JSONObject();
+
+        detallesCliente2.put("nombre", nuevoCliente2.getNombre());
+        detallesCliente2.put("apellido", nuevoCliente2.getApellido());
+        detallesCliente2.put("numero", nuevoCliente2.getNumeroTelefono());
+        detallesCliente2.put("tipoDireccion", nuevoCliente2.getTipoDireccion().toString());
+        detallesCliente2.put("direccion1", nuevoCliente2.getDireccion1());
+        detallesCliente2.put("direccion2", nuevoCliente2.getDireccion2());
+        detallesCliente2.put("direccionAdicional", nuevoCliente2.getDireccionAdicional());
+        detallesCliente2.put("municipio", nuevoCliente2.getMunicipio());
+        detallesCliente2.put("comuna", nuevoCliente2.getComuna());
+        detallesCliente2.put("barrio", nuevoCliente2.getBarrio());
+
+        JSONObject objetoCliente2 = new JSONObject();
+        objetoCliente2.put("cliente", detallesCliente2);
+
+        Cliente nuevoCliente3 = new Cliente("3245019284", "Sergio", "Mesa",
+                TipoDireccion.CALLE, "44", "41-11", "Apartamento 2901",
+                "Bucaramanga", "CABECERA", "La Calle del Majestic");
+        JSONObject detallesCliente3 = new JSONObject();
+
+        detallesCliente3.put("nombre", nuevoCliente3.getNombre());
+        detallesCliente3.put("apellido", nuevoCliente3.getApellido());
+        detallesCliente3.put("numero", nuevoCliente3.getNumeroTelefono());
+        detallesCliente3.put("tipoDireccion", nuevoCliente3.getTipoDireccion().toString());
+        detallesCliente3.put("direccion1", nuevoCliente3.getDireccion1());
+        detallesCliente3.put("direccion2", nuevoCliente3.getDireccion2());
+        detallesCliente3.put("direccionAdicional", nuevoCliente3.getDireccionAdicional());
+        detallesCliente3.put("municipio", nuevoCliente3.getMunicipio());
+        detallesCliente3.put("comuna", nuevoCliente3.getComuna());
+        detallesCliente3.put("barrio", nuevoCliente3.getBarrio());
+
+        JSONObject objetoCliente3 = new JSONObject();
+        objetoCliente3.put("cliente", detallesCliente2);
 
         JSONArray listaClientes = new JSONArray();
-        listaClientes.add(objetoCliente);
+        listaClientes.add(objetoCliente1);
+        listaClientes.add(objetoCliente2);
+        listaClientes.add(objetoCliente3);
 
         try (FileWriter file = new FileWriter("clientes.json")) {
             file.write(listaClientes.toJSONString());
