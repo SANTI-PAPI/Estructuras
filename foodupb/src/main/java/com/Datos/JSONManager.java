@@ -186,7 +186,7 @@ public class JSONManager {
         detallesCliente3.put("barrio", nuevoCliente3.getBarrio());
 
         JSONObject objetoCliente3 = new JSONObject();
-        objetoCliente3.put("cliente", detallesCliente2);
+        objetoCliente3.put("cliente", detallesCliente3);
 
         JSONArray listaClientes = new JSONArray();
         listaClientes.add(objetoCliente1);
