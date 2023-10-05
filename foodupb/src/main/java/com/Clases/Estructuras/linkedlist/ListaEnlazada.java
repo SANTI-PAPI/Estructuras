@@ -20,9 +20,9 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
         if (object != null) {
             try {
                 if (isEmpty()) {
-                    cabeza = cola = new NodoListaEnlazada(object);
+                    cabeza = cola = new NodoListaEnlazada<T>(object);
                 } else {
-                    cola.setSiguiente(new NodoListaEnlazada(object));
+                    cola.setSiguiente(new NodoListaEnlazada<T>(object));
                     cola = cola.getSiguiente();
                 }
                 tamano++;
@@ -41,11 +41,11 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
                 if (isEmpty()) {
                     return false;
                 } else {
-                    Iterator iterador = this.iterator();
+                    Iterator<NodeInterface<T>> iterador = this.iterator();
                     while (iterador.hasNext()) {
                         NodoListaEnlazada<T> nodo = (NodoListaEnlazada<T>) iterador.next();
                         if (nodo.isEquals(node.getObject())) {
-                            NodoListaEnlazada<T> nuevoNodo = new NodoListaEnlazada(object, nodo.getSiguiente());
+                            NodoListaEnlazada<T> nuevoNodo = new NodoListaEnlazada<>(object, nodo.getSiguiente());
                             nodo.setSiguiente(nuevoNodo);
                             if (!nodo.hasSiguiente()) {
                                 cola = nuevoNodo;
@@ -68,7 +68,7 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
             if (isEmpty()) {
                 return false;
             } else {
-                Iterator iterador = this.iterator();
+                Iterator<NodeInterface<T>> iterador = this.iterator();
                 while (iterador.hasNext()) {
                     NodoListaEnlazada<T> nodo = (NodoListaEnlazada<T>) iterador.next();
                     if (nodo.isEquals(node.getObject())) {
@@ -164,9 +164,9 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public boolean contains(T object) {
-        Iterator iterador = this.iterator();
+        Iterator<NodeInterface<T>> iterador = this.iterator();
         while (iterador.hasNext()) {
-            NodoListaEnlazada nodo = (NodoListaEnlazada) iterador.next();
+            NodoListaEnlazada<T> nodo = (NodoListaEnlazada<T>) iterador.next();
             if (nodo.isEquals(object)) {
                 return true;
             }
@@ -186,14 +186,14 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public NodeInterface<T> nodeOf(T object) {
-        Iterator iterador = this.iterator();
+        Iterator<NodeInterface<T>> iterador = this.iterator();
         while (iterador.hasNext()) {
-            NodoListaEnlazada nodo = (NodoListaEnlazada) iterador.next();
+            NodoListaEnlazada<T> nodo = (NodoListaEnlazada<T>) iterador.next();
             if (nodo.isEquals(object)) {
                 return nodo;
             }
         }
-        return new NodoListaEnlazada(null);
+        return new NodoListaEnlazada<T>(null);
     }
 
     @Override
@@ -213,7 +213,7 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
     public T[] get(int n) {
         T[] arrRetorno = (T[]) new Object[n];
         if (size() >= n) {
-            Iterator iterador = this.iterator();
+            Iterator<NodeInterface<T>> iterador = this.iterator();
             for (int i = 0; i < n; i++) { // Se recorre cada posición del arreglo, y solo se iteran las primeras n posiciones
                 NodoListaEnlazada<T> nodo = (NodoListaEnlazada<T>) iterador.next();
                 arrRetorno[i] = nodo.getObject();
@@ -226,7 +226,7 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
     public T getPrevious(NodeInterface<T> node) {
         if (cabeza != null) {
             NodoListaEnlazada<T> nodo = null;
-            Iterator iterador = iterator();
+            Iterator<NodeInterface<T>> iterador = iterator();
             while (iterador.hasNext()) {
                 NodoListaEnlazada<T> nodoPrevio = nodo;
                 nodo = (NodoListaEnlazada<T>) iterador.next();
@@ -249,11 +249,11 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
     @Override
     public T[] getFromEnd(int n) {
         Object[] endArray = new Object[n];
-        NodoListaEnlazada nodo = cola; // Se comienza a recorrer desde la cola
+        NodoListaEnlazada<T> nodo = cola; // Se comienza a recorrer desde la cola
         if (size() >= n) { // Solo ejecuta la función si la lista es de igual o mayor tamaño al n ingresado
             for (int i = (n - 1); i >= 0; i--) { // Se llena el arreglo desde la última posición hasta el inicio, con el fin de mantener el orden de los elementos
                 endArray[i] = nodo.getObject(); // Se asigna el objeto del nodo a la posición i del arreglo
-                nodo = new NodoListaEnlazada(getPrevious(nodo)); // Se crea un nuevo nodo con el objeto del nodo previo
+                nodo = new NodoListaEnlazada<T>(getPrevious(nodo)); // Se crea un nuevo nodo con el objeto del nodo previo
             }
         }
         return (T[]) endArray;
@@ -273,7 +273,7 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
                 if (isEmpty()) {
                     return false;
                 } else {
-                    Iterator iterador = this.iterator();
+                    Iterator<NodeInterface<T>> iterador = this.iterator();
                     NodoListaEnlazada<T> nodo = null;
                     while (iterador.hasNext()) {
                         NodoListaEnlazada<T> nodoAnterior = nodo;
@@ -303,7 +303,7 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
                 if (isEmpty()) {
                     return false;
                 } else {
-                    Iterator iterador = this.iterator();
+                    Iterator<NodeInterface<T>> iterador = this.iterator();
                     NodoListaEnlazada<T> nodo = null;
                     while (iterador.hasNext()) {
                         NodoListaEnlazada<T> nodoAnterior = nodo;
@@ -366,15 +366,15 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public ListaEnlazada<T> subList(NodeInterface<T> from, NodeInterface<T> to) {
-        ListaEnlazada subList = new ListaEnlazada();
+        ListaEnlazada<T> subList = new ListaEnlazada<T>();
         if (!from.isEquals(null) && !to.isEquals(null) && validSubList(from, to)) { // Verifica que la sublista sea valida
-            Iterator iterador = iterator();
+            Iterator<NodeInterface<T>> iterador = iterator();
             while (iterador.hasNext()) {
-                NodoListaEnlazada nodo = (NodoListaEnlazada) iterador.next();
+                NodoListaEnlazada<T> nodo = (NodoListaEnlazada<T>) iterador.next();
                 if (nodo.isEquals(from.getObject())) { // "Si el nodo actual es el nodo 'from',
                     while (!nodo.isEquals(to.getObject())) { // mientras que el nodo actual no sea el nodo 'to',
                         subList.add(nodo.getObject()); // se añaden los nodos desde 'from' hasta antes del nodo 'to'"
-                        nodo = (NodoListaEnlazada) iterador.next();
+                        nodo = (NodoListaEnlazada<T>) iterador.next();
                     }
                     subList.add(nodo.getObject()); // Por último, se añade el nodo 'to'
                 }
@@ -384,11 +384,11 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
     }
 
     private boolean validSubList(NodeInterface<T> from, NodeInterface<T> to) {
-        Iterator iterador = iterator();
+        Iterator<NodeInterface<T>> iterador = iterator();
         boolean firstFrom = false; // Verifica que el nodo from esté antes del nodo to
         boolean toFound = false;   // Verifica que el nodo to esté después del nodo from
         while (iterador.hasNext()) {
-            NodoListaEnlazada nodo = (NodoListaEnlazada) iterador.next();
+            NodoListaEnlazada<T> nodo = (NodoListaEnlazada<T>) iterador.next();
             if (nodo.isEquals(from.getObject()) && !toFound) { // "Si el nodo actual es el nodo 'from' y aún no se ha encontrado el nodo 'to',
                 firstFrom = true; // "el nodo 'from' está antes que el nodo 'to'"
             }
@@ -401,7 +401,7 @@ public class ListaEnlazada<T> implements LinkedListInterface<T> {
 
     @Override
     public T[] toArray() {
-        NodoListaEnlazada nodo = cabeza;
+        NodoListaEnlazada<T> nodo = cabeza;
         T[] arreglo = (T[]) new Object[tamano];
 
         for (int i = 0; i < tamano; i++) {

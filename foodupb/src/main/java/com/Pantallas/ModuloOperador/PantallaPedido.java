@@ -12,6 +12,10 @@ import javax.swing.text.PlainDocument;
 
 import org.json.simple.parser.ParseException;
 
+import com.Clases.Articulo;
+import com.Clases.Cliente;
+import com.Clases.Estructuras.interfaces.node.NodeInterface;
+import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Datos.JSONManager;
 
 import java.awt.*;
@@ -19,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 
 class MyIntFilter extends DocumentFilter {
    @Override
@@ -32,8 +37,6 @@ class MyIntFilter extends DocumentFilter {
 
       if (test(sb.toString())) {
          super.insertString(fb, offset, string, attr);
-      } else {
-         // warn the user and don't allow the insert
       }
    }
 
@@ -57,10 +60,7 @@ class MyIntFilter extends DocumentFilter {
 
       if (test(sb.toString())) {
          super.replace(fb, offset, length, text, attrs);
-      } else {
-         // warn the user and don't allow the insert
       }
-
    }
 
    @Override
@@ -73,25 +73,83 @@ class MyIntFilter extends DocumentFilter {
 
       if (test(sb.toString())) {
          super.remove(fb, offset, length);
-      } else {
-         // warn the user and don't allow the insert
       }
-
    }
 }
 
 public class PantallaPedido extends JFrame {
-   public PantallaPedido() throws FileNotFoundException, IOException, ParseException {
+   boolean flagEnd = false;
+   String telefono;
+   Cliente cliente;
+   ListaArticulos listaArticulos;
+   DefaultTableModel modelo;
+
+   public PantallaPedido(String telefono) throws FileNotFoundException, IOException, ParseException {
       iniciarComponentes();
+      this.telefono = telefono;
       setTitle("FoodUPB - Creación del pedido");
       setLocationRelativeTo(null);
       setResizable(false);
       setLayout(new GridLayout(1, 2));
       setMaximizedBounds(getBounds());
+      listaArticulos = JSONManager.getListaArticulos();
+   }
+
+   public PantallaPedido(ListaArticulos listaPedido, String telefono) throws FileNotFoundException, IOException, ParseException {
+      iniciarComponentes();
+      this.telefono = telefono;
+      setTitle("FoodUPB - Creación del pedido");
+      setLocationRelativeTo(null);
+      setResizable(false);
+      setLayout(new GridLayout(1, 2));
+      setMaximizedBounds(getBounds());
+      listaArticulos = JSONManager.getListaArticulos();
+      Iterator<NodeInterface<Articulo>> iteradorPedido = listaPedido.iterator();
+      flagEnd = true;
+      while (iteradorPedido.hasNext()) {
+         Articulo articuloActual = iteradorPedido.next().getObject();
+         String nombre = articuloActual.getNombre();
+         int cantidad = articuloActual.getCantidad();
+         Object[] nuevaFila = { nombre, cantidad };
+         modelo.addRow(nuevaFila);
+      }
+      flagEnd = false;
+   }
+
+   public PantallaPedido(Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+      iniciarComponentes();
+      this.cliente = cliente;
+      setTitle("FoodUPB - Creación del pedido");
+      setLocationRelativeTo(null);
+      setResizable(false);
+      setLayout(new GridLayout(1, 2));
+      setMaximizedBounds(getBounds());
+      listaArticulos = JSONManager.getListaArticulos();
+   }
+
+   public PantallaPedido(ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+      iniciarComponentes();
+      this.cliente = cliente;
+      setTitle("FoodUPB - Creación del pedido");
+      setLocationRelativeTo(null);
+      setResizable(false);
+      setLayout(new GridLayout(1, 2));
+      setMaximizedBounds(getBounds());
+      listaArticulos = JSONManager.getListaArticulos();
+      Iterator<NodeInterface<Articulo>> iteradorPedido = listaPedido.iterator();
+      flagEnd = true;
+      while (iteradorPedido.hasNext()) {
+         Articulo articuloActual = iteradorPedido.next().getObject();
+         String nombre = articuloActual.getNombre();
+         int cantidad = articuloActual.getCantidad();
+         Object[] nuevaFila = { nombre, cantidad };
+         modelo.addRow(nuevaFila);
+      }
+      flagEnd = false;
    }
 
    public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
-      PantallaPedido pantalla = new PantallaPedido();
+      PantallaPedido pantalla = new PantallaPedido("3123053971");
       pantalla.setVisible(true);
    }
 
@@ -150,7 +208,7 @@ public class PantallaPedido extends JFrame {
       labelCantidad.setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
       panelIzquierda.add(labelCantidad);
 
-      DefaultTableModel modelo = new DefaultTableModel() {
+      modelo = new DefaultTableModel() {
          @Override
          public boolean isCellEditable(int row, int column) {
             if (column == 1) {
@@ -182,6 +240,7 @@ public class PantallaPedido extends JFrame {
 
          public static boolean isNumeric(int strNum) {
             try {
+               String.valueOf(strNum);
             } catch (NumberFormatException nfe) {
                return false;
             }
@@ -190,22 +249,40 @@ public class PantallaPedido extends JFrame {
 
          @Override
          public void tableChanged(TableModelEvent e) {
-            try { if ((tablaPedidos.getSelectedRow() != -1) && !(isNumeric(Integer.parseInt((String) modelo.getValueAt(tablaPedidos.getSelectedRow(), 1))))) {} } 
-            catch (Exception exception) { modelo.setValueAt(1, tablaPedidos.getSelectedRow(), 1); }
+            if (!flagEnd && (tablaPedidos.getSelectedRow() != -1 && tablaPedidos.getRowCount() > 0)) {
+               try {
+                  if (!(isNumeric(Integer.parseInt((String) modelo.getValueAt(tablaPedidos.getSelectedRow(), 1))))) {
+                  }
+               } catch (Exception exception) {
+                  flagEnd = true;
+                  modelo.setValueAt(1, tablaPedidos.getSelectedRow(), 1);
+                  flagEnd = false;
+               }
+            }
          }
       });
 
       buttonAgregar.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            String nombre = String.valueOf(tablaArticulos.getValueAt(tablaArticulos.getSelectedRow(), 0));
-            int fila = -1;
-            for (int i = 0; i < tablaPedidos.getRowCount(); i++) { if (tablaPedidos.getModel().getValueAt(i, 0).equals(nombre)) { fila = i; } }
-            if (fila == -1) {
-               Object[] nuevaFila = { nombre, (fieldCantidad.getText()) };
-               modelo.addRow(nuevaFila);
-            } else {
-               String cantidadActual = (String) tablaPedidos.getModel().getValueAt(fila, 1);
-               tablaPedidos.getModel().setValueAt(String.valueOf(Integer.parseInt(cantidadActual) + Integer.parseInt(fieldCantidad.getText())), fila, 1);
+            if (tablaArticulos.getSelectedRow() != -1) {
+               flagEnd = true;
+               String nombre = String.valueOf(tablaArticulos.getValueAt(tablaArticulos.getSelectedRow(), 0));
+               int fila = -1;
+               for (int i = 0; i < tablaPedidos.getRowCount(); i++) {
+                  if (tablaPedidos.getModel().getValueAt(i, 0).equals(nombre)) {
+                     fila = i;
+                  }
+               }
+               if (fila == -1) {
+                  Object[] nuevaFila = { nombre, (fieldCantidad.getText()) };
+                  modelo.addRow(nuevaFila);
+               } else {
+                  String cantidadActual = (String) tablaPedidos.getModel().getValueAt(fila, 1);
+                  tablaPedidos.getModel().setValueAt(
+                        String.valueOf(Integer.parseInt(cantidadActual) + Integer.parseInt(fieldCantidad.getText())),
+                        fila, 1);
+               }
+               flagEnd = false;
             }
          }
       });
@@ -215,8 +292,11 @@ public class PantallaPedido extends JFrame {
       panelDerecha.add(buttonQuitar);
       buttonQuitar.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent arg0) {
+            flagEnd = true;
+            if (tablaPedidos.getSelectedRow() != -1) {
                modelo.removeRow(tablaPedidos.getSelectedRow());
-            
+            }
+            flagEnd = false;
          }
       });
 
@@ -225,11 +305,29 @@ public class PantallaPedido extends JFrame {
       panelDerecha.add(buttonContinuar);
       buttonContinuar.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent arg0) {
-               setVisible(false);
-               try {
-                  new PantallaRegistroDireccion();
-               } catch (IOException | ParseException e) {
+            try {
+               if (tablaPedidos.getRowCount() != 0) {
+                  ListaArticulos listaPedido = new ListaArticulos();
+                  flagEnd = true;
+                  for (int i = 0; i < tablaPedidos.getRowCount(); i++) {
+                     String nombre = String.valueOf(tablaPedidos.getValueAt(i, 0));
+                     int cantidad = Integer.parseInt(String.valueOf(tablaPedidos.getValueAt(i, 1)));
+                     Articulo articuloActual = listaArticulos.contains(nombre);
+                     if (articuloActual != null) {
+                        articuloActual.setCantidad(cantidad);
+                        listaPedido.add(articuloActual);
+                     }
+                  }
+                  flagEnd = false;
+                  setVisible(false);
+                  if (telefono != null) {
+                     new PantallaRegistroDireccion(listaPedido, telefono);
+                  } if (cliente != null) {
+                     new PantallaRegistroDireccion(listaPedido, cliente);
+                  }
                }
+            } catch (IOException | ParseException e) {
+            }
          }
       });
 

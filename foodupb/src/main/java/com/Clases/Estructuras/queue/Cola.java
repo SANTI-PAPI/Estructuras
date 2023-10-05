@@ -4,10 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 
 import com.Clases.Estructuras.interfaces.queue.QueueInterface;
-import com.Clases.Estructuras.linkedlist.ListaDobleEnlazada;
+import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 
 public class Cola<T> implements QueueInterface<T> {
-    private ListaDobleEnlazada<T> lista = new ListaDobleEnlazada<>();
+    private ListaEnlazada<T> lista = new ListaEnlazada<>();
 
     @Override
     public boolean clear() {
@@ -21,7 +21,7 @@ public class Cola<T> implements QueueInterface<T> {
 
     @Override
     public T peek() {
-        return lista.getFromEnd();
+        return lista.get();
     }
 
     @Override

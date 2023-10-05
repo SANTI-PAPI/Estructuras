@@ -2,6 +2,7 @@ package com.Clases;
 
 public class Articulo {
     private String nombre;
+    private int cantidad;
     private int precio;
     boolean complejo;
 
@@ -19,5 +20,12 @@ public class Articulo {
     }
     public boolean isComplejo() {
         return complejo;
+    }
+    
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+    public int getCantidad() {
+        return cantidad;
     }
 }

@@ -8,7 +8,7 @@ public class ColaPrioridad<T> implements QueueInterface<T> {
     private Cola<T>[] colaPrioridad;
 
     public ColaPrioridad(int cantidadPrioridad) {
-        this.cantidad = cantidad;
+        this.cantidad = cantidadPrioridad;
         colaPrioridad = new Cola[cantidadPrioridad];
         for (int i = 0; i < cantidadPrioridad; i++) {
             colaPrioridad[i] = new Cola<T>();
@@ -64,7 +64,7 @@ public class ColaPrioridad<T> implements QueueInterface<T> {
 
     public boolean insert(T object, int prioridad) {
         tamano++;
-        if (prioridad < cantidad) {
+        if (prioridad >= 0 && prioridad < cantidad) {
             return colaPrioridad[prioridad].insert(object);
         }
         return false;

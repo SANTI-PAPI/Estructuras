@@ -43,10 +43,14 @@ public class ColaEstatica<T> implements QueueInterface<T> {
     public T extract() {
         if (!isEmpty()) {
             T objeto = arreglo[cabeza];
-            if (cabeza != cola) {
-                if (cabeza++ == maximo) {
-                    cabeza = 0;
-                }
+            arreglo[cabeza] = null;
+            tamano--;
+            cabeza++;
+            if (cabeza == maximo) {
+                cabeza = 0;
+            }
+            if (tamano == 0) {
+                cabeza = cola = tamano;
             }
             return objeto;
         }
@@ -56,10 +60,17 @@ public class ColaEstatica<T> implements QueueInterface<T> {
     @Override
     public boolean insert(T object) {
         if (tamano != maximo) {
-            if (cola++ == maximo) {
+            if (isEmpty()) {
+                arreglo[cabeza] = object;
+                tamano++;
+                return true;
+            }
+            cola++;
+            if (cola == maximo) {
                 cola = 0;
             }
             arreglo[cola] = object;
+            tamano++;
             return true;
         }
         return false;
@@ -67,7 +78,7 @@ public class ColaEstatica<T> implements QueueInterface<T> {
 
     @Override
     public int size() {
-        return maximo;
+        return tamano;
     }
 
     @Override

@@ -6,20 +6,30 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.plaf.ColorUIResource;
-
+import javax.swing.text.PlainDocument;
 import org.json.simple.parser.ParseException;
 
+import com.Clases.Cliente;
+import com.Clases.FiltroEntero;
+import com.Clases.Estructuras.linkedlist.ListaClientes;
+import com.Datos.JSONManager;
 import com.Pantallas.ModuloCocina.ModuloCocina;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class ModuloOperador extends JFrame {
+    ListaClientes listaClientes;
+
     public ModuloOperador() {
         iniciarComponentes();
         setTitle("FoodUPB - Modulo de operador");
+        try {
+            listaClientes = JSONManager.pruebaReadClientes();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(new GridLayout(1, 2));
@@ -48,53 +58,56 @@ public class ModuloOperador extends JFrame {
         buttonCocina.setBounds(10, 410, 140, 40);
         buttonCocina.setText("MÓDULO COCINA");
         panelBackGround.add(buttonCocina);
-        buttonCocina.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) { 
+        buttonCocina.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 new ModuloCocina();
                 dispose();
             }
-          } );
+        });
 
         JLabel noPhone = new JLabel();
         noPhone.setText("Número de teléfono");
         noPhone.setBounds(10, 20, 200, 20);
         panelDerecho.add(noPhone);
 
-        JTextField phone = new JTextField();
-        phone.setBounds(10, 40, 300, 30);
-        panelDerecho.add(phone);
+        JTextField fieldTelefono = new JTextField();
+        fieldTelefono.setBounds(10, 40, 300, 30);
+        panelDerecho.add(fieldTelefono);
+        PlainDocument doc = (PlainDocument) fieldTelefono.getDocument();
+        doc.setDocumentFilter(new FiltroEntero(10));
 
         JButton buttonPedido = new JButton();
         buttonPedido.setBounds(60, 100, 200, 40);
         buttonPedido.setText("Nuevo pedido");
         panelDerecho.add(buttonPedido);
-        buttonPedido.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) { 
+        buttonPedido.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 try {
-                    new PantallaPedido();
+                    if (fieldTelefono.getText().length() == 10) {
+                        Cliente cliente = listaClientes.contains(fieldTelefono.getText());
+                        if (cliente != null) {
+                            new PantallaPedido(cliente);
+                        } else {
+                            new PantallaPedido(fieldTelefono.getText());
+                        }
+                        dispose();
+                    }
                 } catch (IOException | ParseException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-                dispose();
             }
-          } );
+        });
 
         JButton buttonModificar = new JButton();
         buttonModificar.setBounds(60, 160, 200, 40);
         buttonModificar.setText("Ajustar pedido");
         panelDerecho.add(buttonModificar);
-        buttonModificar.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) { 
+        buttonModificar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 new PantallaModificacion();
                 dispose();
             }
-          } );
-
-        JButton aggCliente = new JButton();
-        aggCliente.setBounds(60, 260, 200, 40);
-        aggCliente.setText("Agregar nuevo cliente");
-        panelDerecho.add(aggCliente);
+        });
 
         this.add(panelBackGround);
         this.setVisible(true);

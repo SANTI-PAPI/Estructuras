@@ -4,10 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 
 import com.Clases.Estructuras.interfaces.stack.StackInterface;
-import com.Clases.Estructuras.linkedlist.ListaDobleEnlazada;
+import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 
 public class Pila<T> implements StackInterface<T> {
-    private ListaDobleEnlazada<T> lista = new ListaDobleEnlazada<>();
+    private ListaEnlazada<T> lista = new ListaEnlazada<>();
 
     @Override
     public boolean clear() {
