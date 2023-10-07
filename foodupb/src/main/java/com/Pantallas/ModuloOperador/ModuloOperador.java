@@ -26,7 +26,7 @@ public class ModuloOperador extends JFrame {
         iniciarComponentes();
         setTitle("FoodUPB - Modulo de operador");
         try {
-            listaClientes = JSONManager.pruebaReadClientes();
+            listaClientes = JSONManager.readClientes();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -86,7 +86,7 @@ public class ModuloOperador extends JFrame {
                     if (fieldTelefono.getText().length() == 10) {
                         Cliente cliente = listaClientes.contains(fieldTelefono.getText());
                         if (cliente != null) {
-                            new PantallaPedido(cliente);
+                            new PantallaPedidoPrevio(cliente);
                         } else {
                             new PantallaPedido(fieldTelefono.getText());
                         }

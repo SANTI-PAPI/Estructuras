@@ -148,11 +148,6 @@ public class PantallaPedido extends JFrame {
       flagEnd = false;
    }
 
-   public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
-      PantallaPedido pantalla = new PantallaPedido("3123053971");
-      pantalla.setVisible(true);
-   }
-
    private void iniciarComponentes() throws FileNotFoundException, IOException, ParseException {
 
       JPanel mainPanel = new JPanel(); // Panel principal
@@ -169,7 +164,15 @@ public class PantallaPedido extends JFrame {
       panelIzquierda.add(buttonVolver);
       buttonVolver.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            new ModuloOperador();
+            if (cliente != null) {
+               try {
+                  new PantallaPedidoPrevio(cliente);
+               } catch (IOException | ParseException e1) {
+                  e1.printStackTrace();
+               }
+            } else {
+               new ModuloOperador();
+            }
             dispose();
          }
       });
@@ -277,7 +280,7 @@ public class PantallaPedido extends JFrame {
                   Object[] nuevaFila = { nombre, (fieldCantidad.getText()) };
                   modelo.addRow(nuevaFila);
                } else {
-                  String cantidadActual = (String) tablaPedidos.getModel().getValueAt(fila, 1);
+                  String cantidadActual = String.valueOf(tablaPedidos.getModel().getValueAt(fila, 1));
                   tablaPedidos.getModel().setValueAt(
                         String.valueOf(Integer.parseInt(cantidadActual) + Integer.parseInt(fieldCantidad.getText())),
                         fila, 1);
@@ -308,7 +311,6 @@ public class PantallaPedido extends JFrame {
             try {
                if (tablaPedidos.getRowCount() != 0) {
                   ListaArticulos listaPedido = new ListaArticulos();
-                  flagEnd = true;
                   for (int i = 0; i < tablaPedidos.getRowCount(); i++) {
                      String nombre = String.valueOf(tablaPedidos.getValueAt(i, 0));
                      int cantidad = Integer.parseInt(String.valueOf(tablaPedidos.getValueAt(i, 1)));
@@ -318,13 +320,12 @@ public class PantallaPedido extends JFrame {
                         listaPedido.add(articuloActual);
                      }
                   }
-                  flagEnd = false;
-                  setVisible(false);
                   if (telefono != null) {
                      new PantallaRegistroDireccion(listaPedido, telefono);
                   } if (cliente != null) {
                      new PantallaRegistroDireccion(listaPedido, cliente);
                   }
+                  dispose();
                }
             } catch (IOException | ParseException e) {
             }

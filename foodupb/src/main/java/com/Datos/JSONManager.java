@@ -18,20 +18,22 @@ import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Clases.Estructuras.linkedlist.ListaClientes;
 import com.Clases.Estructuras.linkedlist.ListaEnlazada;
+import com.Clases.Estructuras.linkedlist.ListaPedidos;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
 
 public class JSONManager {
     public static void main(String[] args) throws IOException, ParseException {
         pruebaWriteClientes();
-        pruebaReadClientes();
+        readClientes();
         pruebaWriteArticulos();
         pruebaReadArticulos();
     }
 
     public static void pruebaWriteArticulos() throws IOException {
-        Articulo articulo1 = new Articulo("Hamburguesa", 10000, false);
+        Articulo articulo1 = new Articulo(1, "Hamburguesa", 10000, false);
         JSONObject detallesArticulo1 = new JSONObject();
 
+        detallesArticulo1.put("id", Integer.toString(articulo1.getId()));
         detallesArticulo1.put("nombre", articulo1.getNombre());
         detallesArticulo1.put("precio", Integer.toString(articulo1.getPrecio()));
         detallesArticulo1.put("isComplejo", Boolean.toString(articulo1.isComplejo()));
@@ -39,9 +41,10 @@ public class JSONManager {
         JSONObject objetoArticulo1 = new JSONObject();
         objetoArticulo1.put("articulo", detallesArticulo1);
 
-        Articulo articulo2 = new Articulo("Perro loco", 7500, false);
+        Articulo articulo2 = new Articulo(2, "Perro loco", 7500, false);
         JSONObject detallesArticulo2 = new JSONObject();
 
+        detallesArticulo2.put("id", Integer.toString(articulo2.getId()));
         detallesArticulo2.put("nombre", articulo2.getNombre());
         detallesArticulo2.put("precio", Integer.toString(articulo2.getPrecio()));
         detallesArticulo2.put("isComplejo", Boolean.toString(articulo2.isComplejo()));
@@ -49,9 +52,10 @@ public class JSONManager {
         JSONObject objetoArticulo2 = new JSONObject();
         objetoArticulo2.put("articulo", detallesArticulo2);
 
-        Articulo articulo3 = new Articulo("Filet mignon", 50000, true);
+        Articulo articulo3 = new Articulo(3, "Filet mignon", 50000, true);
         JSONObject detallesArticulo3 = new JSONObject();
 
+        detallesArticulo3.put("id", Integer.toString(articulo3.getId()));
         detallesArticulo3.put("nombre", articulo3.getNombre());
         detallesArticulo3.put("precio", Integer.toString(articulo3.getPrecio()));
         detallesArticulo3.put("isComplejo", Boolean.toString(articulo3.isComplejo()));
@@ -59,9 +63,10 @@ public class JSONManager {
         JSONObject objetoArticulo3 = new JSONObject();
         objetoArticulo3.put("articulo", detallesArticulo3);
 
-        Articulo articulo4 = new Articulo("Ratatouille", 36500, true);
+        Articulo articulo4 = new Articulo(4, "Ratatouille", 36500, true);
         JSONObject detallesArticulo4 = new JSONObject();
 
+        detallesArticulo4.put("id", Integer.toString(articulo4.getId()));
         detallesArticulo4.put("nombre", articulo4.getNombre());
         detallesArticulo4.put("precio", Integer.toString(articulo4.getPrecio()));
         detallesArticulo4.put("isComplejo", Boolean.toString(articulo4.isComplejo()));
@@ -95,13 +100,13 @@ public class JSONManager {
             Iterator<NodeInterface<Articulo>> iterador = linkedArticulos.iterator();
             Object[][] tablaArticulos = new Object[linkedArticulos.size()][2];
             int pos = 0;
-            while(iterador.hasNext()) {
+            while (iterador.hasNext()) {
                 NodoListaEnlazada<Articulo> nodo = (NodoListaEnlazada<Articulo>) iterador.next();
                 tablaArticulos[pos][0] = nodo.getObject().getNombre();
                 tablaArticulos[pos][1] = nodo.getObject().getPrecio();
                 pos++;
             }
-            
+
             return tablaArticulos;
         }
     }
@@ -122,10 +127,11 @@ public class JSONManager {
 
     public static Articulo parseArticuloObject(JSONObject articulo) {
         JSONObject objetoArticulo = (JSONObject) articulo.get("articulo");
-        
-        Articulo nuevoArticulo = new Articulo((String) objetoArticulo.get("nombre"), 
-        Integer.parseInt((String) objetoArticulo.get("precio")), 
-        Boolean.parseBoolean((String) objetoArticulo.get("isComplejo")));
+
+        Articulo nuevoArticulo = new Articulo(Integer.parseInt((String) objetoArticulo.get("id")),
+                (String) objetoArticulo.get("nombre"),
+                Integer.parseInt((String) objetoArticulo.get("precio")),
+                Boolean.parseBoolean((String) objetoArticulo.get("isComplejo")));
 
         return nuevoArticulo;
     }
@@ -199,7 +205,7 @@ public class JSONManager {
         }
     }
 
-    public static ListaClientes pruebaReadClientes() throws FileNotFoundException, IOException, ParseException {
+    public static ListaClientes readClientes() throws FileNotFoundException, IOException, ParseException {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader reader = new FileReader("clientes.json")) {
@@ -228,5 +234,74 @@ public class JSONManager {
         String barrio = (String) objetoCliente.get("barrio");
 
         return new Cliente(telefono, nombre, apellido, tipoDir, dir1, dir2, dirAd, municipio, comuna, barrio);
+    }
+
+    public static ListaPedidos getListaPedidos(String numeroTelefono)
+            throws FileNotFoundException, IOException, ParseException {
+        ListaArticulos listaArticulos = getListaArticulos();
+        JSONParser jsonParser = new JSONParser();
+        ListaPedidos listaPedidos = new ListaPedidos();
+        String fileDir = "clientes//c" + String.valueOf(numeroTelefono);
+
+        try (FileReader reader = new FileReader(fileDir)) {
+            Object obj = jsonParser.parse(reader);
+
+            JSONArray arrayPedidos = (JSONArray) obj;
+            arrayPedidos.forEach(pe -> listaPedidos.add(parsePedidoObject((JSONObject) pe, listaArticulos)));
+        }
+        listaPedidos.sort();
+        return listaPedidos;
+    }
+
+    private static ListaArticulos parsePedidoObject(JSONObject pe, ListaArticulos listaArticulos) {
+        JSONObject objetoPedido = (JSONObject) pe.get("pedido");
+        JSONArray arrayArticulos = (JSONArray) objetoPedido.get("articulos");
+        ListaArticulos listaPedido = new ListaArticulos();
+        arrayArticulos.forEach(ar -> listaPedido.add(parseArticuloObject(listaArticulos, (JSONObject) ar)));
+
+        return listaPedido;
+    }
+
+    private static Articulo parseArticuloObject(ListaArticulos listaArticulos, JSONObject objetoPedido) {
+        JSONObject objetoArticulo = (JSONObject) objetoPedido.get("articulo");
+        Articulo nuevoArticulo = listaArticulos.contains(Integer.parseInt((String) objetoArticulo.get("id")));
+        return nuevoArticulo;
+    }
+
+    public static void writeClientes(Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+        ListaClientes lista = readClientes();
+
+        if (lista.contains(cliente.getNumeroTelefono()) != null) {
+            lista.remove(cliente.getNumeroTelefono());
+        }
+        lista.add(cliente);
+
+        Iterator<NodeInterface<Cliente>> iterador = lista.iterator();
+        JSONArray listaClientes = new JSONArray();
+
+        while (iterador.hasNext()) {
+            Cliente clienteActual = iterador.next().getObject();
+            JSONObject detallesCliente = new JSONObject();
+
+            detallesCliente.put("nombre", clienteActual.getNombre());
+            detallesCliente.put("apellido", clienteActual.getApellido());
+            detallesCliente.put("numero", clienteActual.getNumeroTelefono());
+            detallesCliente.put("tipoDireccion", clienteActual.getTipoDireccion().toString());
+            detallesCliente.put("direccion1", clienteActual.getDireccion1());
+            detallesCliente.put("direccion2", clienteActual.getDireccion2());
+            detallesCliente.put("direccionAdicional", clienteActual.getDireccionAdicional());
+            detallesCliente.put("municipio", clienteActual.getMunicipio());
+            detallesCliente.put("comuna", clienteActual.getComuna());
+            detallesCliente.put("barrio", clienteActual.getBarrio());
+
+            JSONObject objetoCliente = new JSONObject();
+            objetoCliente.put("cliente", detallesCliente);
+            listaClientes.add(objetoCliente);
+        }
+
+        try (FileWriter file = new FileWriter("clientes.json")) {
+            file.write(listaClientes.toJSONString());
+            file.flush();
+        }
     }
 }

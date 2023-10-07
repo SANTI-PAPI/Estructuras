@@ -17,4 +17,32 @@ public class ListaClientes extends ListaEnlazada<Cliente> {
         }
         return null;
     }
+
+    public boolean remove(String numero) {
+        try {
+            if (isEmpty()) {
+                return false;
+            } else {
+                Iterator<NodeInterface<Cliente>> iterador = this.iterator();
+                NodoListaEnlazada<Cliente> nodo = null;
+                while (iterador.hasNext()) {
+                    NodoListaEnlazada<Cliente> nodoAnterior = nodo;
+                    nodo = (NodoListaEnlazada<Cliente>) iterador.next();
+                    if (nodo.getObject().getNumeroTelefono().equals(numero)) {
+                        if (nodoAnterior == null) {
+                            cabeza = nodo.getSiguiente();
+                        } else {
+                            nodoAnterior.setSiguiente(nodo.getSiguiente());
+                        }
+                        tamano--;
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
 }

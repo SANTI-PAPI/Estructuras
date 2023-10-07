@@ -40,7 +40,7 @@ public class PantallaRegistroDireccion extends JFrame {
 
    public PantallaRegistroDireccion(ListaArticulos listaPedido, Cliente cliente)
          throws FileNotFoundException, IOException, ParseException {
-            this.cliente = cliente;
+      this.cliente = cliente;
       iniciarComponentes(listaPedido);
       setTitle("FoodUPB - Registro del cliente");
       setLocationRelativeTo(null);
@@ -148,6 +148,33 @@ public class PantallaRegistroDireccion extends JFrame {
       JTextField campoBarrio = new JTextField();
       campoBarrio.setBounds(60, 315, 200, 30);
 
+      JButton buttonContinuar = new JButton("CONTINUAR");
+      buttonContinuar.setBounds(600, 315, 120, 30);
+      buttonContinuar.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+            if (!((String) campoNombres.getText()).equals("") && !((String) campoApellidos.getText()).equals("")
+                  && !((String) campoDireccion.getText()).equals("")
+                  && !((String) campoDireccion2.getText()).equals("")
+                  && !((String) campoDirAdicional.getText()).equals("")
+                  && !((String) campoBarrio.getText()).equals("")
+                  && (comboComuna.getSelectedItem() != null)) {
+               if (telefono != null) {
+                  cliente = new Cliente(telefono, campoNombres.getText(), campoApellidos.getText(),
+                        (TipoDireccion) comboDireccion.getSelectedItem(),
+                        campoDireccion.getText(), campoDireccion2.getText(), campoDirAdicional.getText(),
+                        (String) comboMunicipio.getSelectedItem(),
+                        (String) comboComuna.getSelectedItem(), campoBarrio.getText());
+               }
+               try {
+                  new PantallaConfirmacion(listaPedido, cliente);
+               } catch (IOException | ParseException e1) {
+                  e1.printStackTrace();
+               }
+               dispose();
+            }
+         }
+      });
+
       if (cliente != null) {
          campoNombres.setText(cliente.getNombre());
          campoApellidos.setText(cliente.getApellido());
@@ -178,6 +205,7 @@ public class PantallaRegistroDireccion extends JFrame {
       mainPanel.add(comboMunicipio);
       mainPanel.add(labelBarrio);
       mainPanel.add(campoBarrio);
+      mainPanel.add(buttonContinuar);
 
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setBounds(0, 0, 800, 500);
