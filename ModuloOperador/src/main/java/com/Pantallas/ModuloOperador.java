@@ -50,11 +50,11 @@ public class ModuloOperador extends JFrame {
 
         JButton buttonVolver = new JButton();
         buttonVolver.setBounds(10, 10, 140, 40);
-        buttonVolver.setText("CERRAR SESIÓN");
+        buttonVolver.setText("CERRAR SESION");
         panelBackGround.add(buttonVolver);
 
         JLabel noPhone = new JLabel();
-        noPhone.setText("Número de teléfono");
+        noPhone.setText("Numero de telefono");
         noPhone.setBounds(10, 20, 200, 20);
         panelDerecho.add(noPhone);
 
