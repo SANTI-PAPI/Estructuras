@@ -1,13 +1,17 @@
 package com.Clases.Servidor;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Iterator;
@@ -36,7 +40,7 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
   }
 
   @Override
-  public ListaArticulos getListaArticulos() throws RemoteException, FileNotFoundException, IOException, org.json.simple.parser.ParseException {
+  public byte[] getListaArticulos() throws RemoteException, FileNotFoundException, IOException, org.json.simple.parser.ParseException {
     JSONParser jsonParser = new JSONParser();
     File archivo = new File("pom.xml");
     String dir = archivo.getCanonicalPath();
@@ -50,7 +54,11 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
       ListaArticulos linkedArticulos = new ListaArticulos();
       listaArticulos.forEach(ar -> linkedArticulos.add(parseArticuloObject((JSONObject) ar)));
 
-      return linkedArticulos;
+      ByteArrayOutputStream listaArt = new ByteArrayOutputStream();
+      ObjectOutputStream rescribir = new ObjectOutputStream(listaArt);
+      rescribir.writeObject(listaArticulos);
+      rescribir.close();
+      return listaArt.toByteArray();
     }
   }
 
@@ -63,8 +71,9 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     return nuevoArticulo;
   }
 
+  // RETORNA UN OBJETO TIPO ListaClientes EN ARRAY DE BYTES
   @Override
-  public ListaClientes readClientes() throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
+  public byte[] readClientes() throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
     JSONParser jsonParser = new JSONParser();
     File archivo = new File("pom.xml");
     String dir = archivo.getCanonicalPath();
@@ -78,7 +87,11 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
       ListaClientes linkedClientes = new ListaClientes();
       listaClientes.forEach(cl -> linkedClientes.add(parseClienteObject((JSONObject) cl)));
 
-      return linkedClientes;
+      ByteArrayOutputStream listaCli = new ByteArrayOutputStream();
+      ObjectOutputStream rescribir = new ObjectOutputStream(listaCli);
+      rescribir.writeObject(linkedClientes);
+      rescribir.close();
+      return listaCli.toByteArray();
     }
   }
 
@@ -100,8 +113,13 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
   }
 
   @Override
-  public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
-    ListaArticulos listaArticulos = getListaArticulos();
+  public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException, ClassNotFoundException {
+
+    ByteArrayInputStream bs = new ByteArrayInputStream(getListaArticulos());
+    ObjectInputStream is = new ObjectInputStream(bs);
+    ListaArticulos listaArticulos = (ListaArticulos) is.readObject();
+    is.close();
+
     JSONParser jsonParser = new JSONParser();
     ListaPedidos listaPedidos = new ListaPedidos();
 
@@ -143,12 +161,18 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
   }
 
   @Override
-  public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
+  public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException, ClassNotFoundException {
     File archivo = new File("pom.xml");
     String dir = archivo.getCanonicalPath();
     dir = dir.substring(0, (dir.length() - 7));
     dir += "datos\\clientes.json";
-    ListaClientes lista = readClientes();
+
+    ByteArrayInputStream bs = new ByteArrayInputStream(readClientes());
+    ObjectInputStream is = new ObjectInputStream(bs);
+    ListaClientes listaClient = (ListaClientes) is.readObject();
+    is.close();
+
+    ListaClientes lista = listaClient;
 
     if (lista.contains(cliente.getNumeroTelefono()) != null) {
       lista.remove(cliente.getNumeroTelefono());

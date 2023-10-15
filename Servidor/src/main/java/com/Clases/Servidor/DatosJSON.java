@@ -2,6 +2,7 @@ package com.Clases.Servidor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -18,12 +19,14 @@ public interface DatosJSON extends Remote {
 
         public Object[][] readArticulos() throws RemoteException, IOException, ParseException;
 
-        public ListaArticulos getListaArticulos() throws RemoteException, FileNotFoundException, IOException, ParseException;
+        public byte[] getListaArticulos() throws RemoteException, FileNotFoundException, IOException, ParseException;
 
-        public ListaClientes readClientes() throws RemoteException, IOException, FileNotFoundException, ParseException;
+        public byte[] readClientes() throws RemoteException, IOException, FileNotFoundException, ParseException;
 
-        public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, ParseException;
+        public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException,
+                        FileNotFoundException, ParseException, ClassNotFoundException;
 
-        public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, ParseException;
+        public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException,
+                        ParseException, ClassNotFoundException;
 
 }
