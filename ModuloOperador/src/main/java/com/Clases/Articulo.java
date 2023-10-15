@@ -1,6 +1,8 @@
 package com.Clases;
 
-public class Articulo {
+import java.io.Serializable;
+
+public class Articulo implements Serializable {
     private String nombre;
     private int id;
     private int cantidad;

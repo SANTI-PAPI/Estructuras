@@ -27,12 +27,12 @@ import com.Clases.Articulo;
 import com.Clases.Cliente;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
-import com.Clases.Servidor.Servidor;
+import com.Clases.Servidor.ClienteRMI;
 
 public class PantallaConfirmacion extends JFrame {
     Cliente cliente;
     ListaArticulos pedido;
-    Servidor servidor;
+    ClienteRMI servidor;
 
     public PantallaConfirmacion(ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
         Properties config = new Properties();
@@ -44,7 +44,7 @@ public class PantallaConfirmacion extends JFrame {
 
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);
-            servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+            servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
         } catch (Exception e) {
         }
         this.pedido = listaPedido;

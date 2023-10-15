@@ -6,12 +6,13 @@ import com.Clases.Estructuras.node.NodoDobleEnlazado;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ListaDobleEnlazada<T> implements LinkedListInterface<T> {
+public class ListaDobleEnlazada<T> implements LinkedListInterface<T>, Serializable {
     private NodoDobleEnlazado<T> cabeza;
     private NodoDobleEnlazado<T> cola;
     private NodoDobleEnlazado<T> inode;

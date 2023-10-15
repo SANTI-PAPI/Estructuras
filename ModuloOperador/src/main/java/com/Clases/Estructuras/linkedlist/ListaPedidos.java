@@ -1,10 +1,13 @@
 package com.Clases.Estructuras.linkedlist;
 
-public class ListaPedidos extends ListaEnlazada<ListaArticulos> {
+import java.io.Serializable;
+
+public class ListaPedidos extends ListaEnlazada<ListaArticulos> implements Serializable {
     public boolean sort() {
         if (size() == 1) {
             return true;
-        } if (size() == 0) {
+        }
+        if (size() == 0) {
             return false;
         }
         ListaArticulos[] objects = toArray();

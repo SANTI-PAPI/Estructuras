@@ -5,24 +5,28 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.Iterator;
 
 import org.json.simple.parser.ParseException;
 
+import com.Clases.Articulo;
 import com.Clases.Cliente;
+import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Clases.Estructuras.linkedlist.ListaClientes;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
 
-public class Servidor /* implements DatosJSON */ {
+public class ClienteRMI /* implements DatosJSON */ {
     private DatosJSON service;
     private String ip;
     private String port;
     private String serviceName;
     private String uri;
 
-    public Servidor(String ip, String port, String serviceName) {
+    public ClienteRMI(String ip, String port, String serviceName) {
         this.ip = ip;
         this.port = port;
         this.serviceName = serviceName;
@@ -57,14 +61,28 @@ public class Servidor /* implements DatosJSON */ {
     public ListaArticulos getListaArticulos() throws RemoteException, FileNotFoundException, IOException, ParseException {
         try {
             service = (DatosJSON) Naming.lookup(uri);
-
             ByteArrayInputStream bs = new ByteArrayInputStream(service.getListaArticulos());
             ObjectInputStream is = new ObjectInputStream(bs);
             ListaArticulos listaArt = (ListaArticulos) is.readObject();
+            Iterator<NodeInterface<Articulo>> iterador = listaArt.iterator();
+            
+            while (iterador.hasNext()) {
+                System.out.println("Articulo: " + iterador.next().getObject().getNombre());
+            }
+
             is.close();
             return listaArt;
 
-        } catch (Exception e) {
+        } catch (RemoteException rE) {
+            System.out.println("RemoteException");
+        } catch (IOException iE) {
+            System.out.println("IOException");
+        } catch (ParseException pE) {
+            System.out.println("ParseException");
+        } catch (NotBoundException e) {
+            System.out.println("NotBoundException");
+        } catch (ClassNotFoundException e) {
+            System.out.println("ClassNotFoundException");
         }
         return new ListaArticulos();
     }

@@ -11,19 +11,21 @@ import org.json.simple.parser.ParseException;
 
 import com.Clases.Cliente;
 import com.Clases.FiltroEntero;
+import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaClientes;
-import com.Clases.Servidor.Servidor;
+import com.Clases.Servidor.ClienteRMI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Properties;
 
 public class ModuloOperador extends JFrame {
     ListaClientes listaClientes;
-    Servidor servidor;
+    ClienteRMI servidor;
 
     public ModuloOperador() throws IOException, ParseException {
         Properties config = new Properties();
@@ -35,10 +37,11 @@ public class ModuloOperador extends JFrame {
 
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);
-            servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+            servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
         } catch (Exception e) {
         }
         listaClientes = servidor.readClientes();
+        
 
         iniciarComponentes();
         setTitle("FoodUPB - Modulo de operador");

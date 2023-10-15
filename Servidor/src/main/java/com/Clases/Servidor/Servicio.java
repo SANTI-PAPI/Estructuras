@@ -32,7 +32,6 @@ import com.Clases.Estructuras.linkedlist.ListaPedidos;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
 
 public class Servicio extends UnicastRemoteObject implements DatosJSON {
-
   private static final long serialVersionUID = 123L;
 
   protected Servicio() throws RemoteException {
@@ -56,7 +55,7 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
       ByteArrayOutputStream listaArt = new ByteArrayOutputStream();
       ObjectOutputStream rescribir = new ObjectOutputStream(listaArt);
-      rescribir.writeObject(listaArticulos);
+      rescribir.writeObject(linkedArticulos);
       rescribir.close();
       return listaArt.toByteArray();
     }

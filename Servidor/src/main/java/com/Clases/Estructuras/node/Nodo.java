@@ -1,8 +1,10 @@
 package com.Clases.Estructuras.node;
 
+import java.io.Serializable;
+
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 
-public class Nodo<T> implements NodeInterface<T> {
+public class Nodo<T> implements NodeInterface<T>, Serializable {
     T objeto;
     
     public Nodo() {

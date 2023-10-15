@@ -20,8 +20,7 @@ public class Main {
 
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);
-            Servidor server = new Servidor((String) config.get("IP"), (String) config.get("PORT"),
-                    (String) config.get("SERVICENAME"));
+            Servidor server = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
             server.deployDatosJSON();
         } catch (Exception e) {
             e.printStackTrace();
