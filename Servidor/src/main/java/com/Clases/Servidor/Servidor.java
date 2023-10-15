@@ -14,7 +14,6 @@ public class Servidor {
         this.ip = ip;
         this.port = port;
         this.serviceName = serviceName;
-        // "//92.168.0.1:1802/service"
         this.uri = "//" + this.ip + ":" + this.port + "/" + this.serviceName;
     }
 

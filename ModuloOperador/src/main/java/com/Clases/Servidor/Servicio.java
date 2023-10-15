@@ -13,6 +13,7 @@ import java.util.Iterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.Clases.Articulo;
 import com.Clases.Cliente;
@@ -20,7 +21,9 @@ import com.Clases.TipoDireccion;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Clases.Estructuras.linkedlist.ListaClientes;
+import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
+import com.Clases.Estructuras.node.NodoListaEnlazada;
 
 public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
@@ -49,7 +52,6 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     }
   }
 
-  @Override
   public Articulo parseArticuloObject(JSONObject articulo) {
     JSONObject objetoArticulo = (JSONObject) articulo.get("articulo");
 
@@ -73,13 +75,12 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
       JSONArray listaClientes = (JSONArray) obj;
       ListaClientes linkedClientes = new ListaClientes();
 
-      listaClientes.forEach(cl -> linkedClientes.add(ParseClienteObject((JSONObject) cl)));
+      listaClientes.forEach(cl -> linkedClientes.add(parseClienteObject((JSONObject) cl)));
       return linkedClientes;
     }
   }
 
-  @Override
-  public Cliente ParseClienteObject(JSONObject cliente) {
+  public Cliente parseClienteObject(JSONObject cliente) {
     JSONObject objetoCliente = (JSONObject) cliente.get("cliente");
 
     String telefono = (String) objetoCliente.get("numero");
@@ -110,7 +111,7 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
       JSONArray arrayPedidos = (JSONArray) obj;
       arrayPedidos.forEach(pe -> {
         try {
-          listaPedidos.add(ParsePedidosObject((JSONObject) pe, listaArticulos));
+          listaPedidos.add(parsePedidosObject((JSONObject) pe, listaArticulos));
         } catch (RemoteException e) {
         }
       });
@@ -119,14 +120,13 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     return listaPedidos;
   }
 
-  @Override
-  public ListaArticulos ParsePedidosObject(JSONObject pe, ListaArticulos listaArticulos) throws RemoteException {
+  public ListaArticulos parsePedidosObject(JSONObject pe, ListaArticulos listaArticulos) throws RemoteException {
     JSONObject objetoPedido = (JSONObject) pe.get("pedido");
     JSONArray arrayArticulos = (JSONArray) objetoPedido.get("articulos");
     ListaArticulos listaPedido = new ListaArticulos();
     arrayArticulos.forEach(ar -> {
       try {
-        listaPedido.add(ParseArticuloObject(listaArticulos, (JSONObject) ar));
+        listaPedido.add(parseArticuloObject(listaArticulos, (JSONObject) ar));
       } catch (RemoteException e) {
       }
     });
@@ -134,15 +134,14 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     return listaPedido;
   }
 
-  @Override
-  public Articulo ParseArticuloObject(ListaArticulos listaArticulos, JSONObject objetoPedido) throws RemoteException {
+  public Articulo parseArticuloObject(ListaArticulos listaArticulos, JSONObject objetoPedido) throws RemoteException {
     JSONObject objetoArticulo = (JSONObject) objetoPedido.get("articulo");
     Articulo nuevoArticulo = listaArticulos.contains(Integer.parseInt((String) objetoArticulo.get("id")));
     return nuevoArticulo;
   }
 
   @Override
-  public void WriteClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
+  public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
     File archivo = new File("pom.xml");
     String dir = archivo.getCanonicalPath();
     dir = dir.substring(0, (dir.length() - 22));
@@ -186,5 +185,35 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
   @Override
   public int suma(int i1, int i2) throws RemoteException {
     return i1 + i2;
+  }
+
+  @Override
+  public Object[][] readArticulos() throws IOException, ParseException {
+    JSONParser jsonParser = new JSONParser();
+    File archivo = new File("pom.xml");
+    String dir = archivo.getCanonicalPath();
+    dir = dir.substring(0, (dir.length() - 22));
+    dir += "articulos.json";
+
+    try (FileReader reader = new FileReader(dir)) {
+      Object obj = jsonParser.parse(reader);
+
+      JSONArray listaArticulos = (JSONArray) obj;
+      ListaEnlazada<Articulo> linkedArticulos = new ListaEnlazada<>();
+
+      listaArticulos.forEach(ar -> linkedArticulos.add(parseArticuloObject((JSONObject) ar)));
+
+      Iterator<NodeInterface<Articulo>> iterador = linkedArticulos.iterator();
+      Object[][] tablaArticulos = new Object[linkedArticulos.size()][2];
+      int pos = 0;
+      while (iterador.hasNext()) {
+        NodoListaEnlazada<Articulo> nodo = (NodoListaEnlazada<Articulo>) iterador.next();
+        tablaArticulos[pos][0] = nodo.getObject().getNombre();
+        tablaArticulos[pos][1] = nodo.getObject().getPrecio();
+        pos++;
+      }
+
+      return tablaArticulos;
+    }
   }
 }

@@ -18,20 +18,14 @@ public interface DatosJSON extends Remote {
 
         public int suma(int i1, int i2) throws RemoteException;
 
-        public ListaArticulos getListaArticulos() throws RemoteException, FileNotFoundException, IOException, ParseException;
+        public Object[][] readArticulos() throws RemoteException, IOException, ParseException;
 
-        public Articulo parseArticuloObject(JSONObject articulo) throws RemoteException;
+        public ListaArticulos getListaArticulos() throws RemoteException, FileNotFoundException, IOException, ParseException;
 
         public ListaClientes readClientes() throws RemoteException, IOException, FileNotFoundException, ParseException;
 
-        public Cliente ParseClienteObject(JSONObject Cliente);
-
         public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, ParseException;
 
-        public ListaArticulos ParsePedidosObject(JSONObject pe, ListaArticulos listaArticulos) throws RemoteException;
-
-        public Articulo ParseArticuloObject(ListaArticulos ListaArticulos, JSONObject objetoPedido) throws RemoteException;
-
-        public void WriteClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, ParseException;
+        public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, ParseException;
 
 }

@@ -22,7 +22,6 @@ import org.json.simple.parser.ParseException;
 import com.Clases.Cliente;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
-import com.Datos.JSONManager;
 
 public class PantallaPedidoPrevio extends JFrame {
     Cliente cliente;
@@ -56,7 +55,10 @@ public class PantallaPedidoPrevio extends JFrame {
         mainPanel.add(buttonVolver);
         buttonVolver.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new ModuloOperador();
+                try {
+                    new ModuloOperador();
+                } catch (IOException | ParseException e1) {
+                }
                 dispose();
             }
         });

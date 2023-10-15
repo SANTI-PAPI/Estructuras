@@ -5,9 +5,12 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -24,14 +27,26 @@ import com.Clases.Articulo;
 import com.Clases.Cliente;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
-import com.Datos.JSONManager;
+import com.Clases.Servidor.Servidor;
 
 public class PantallaConfirmacion extends JFrame {
     Cliente cliente;
     ListaArticulos pedido;
+    Servidor servidor;
 
-    public PantallaConfirmacion(ListaArticulos listaPedido, Cliente cliente)
-            throws FileNotFoundException, IOException, ParseException {
+    public PantallaConfirmacion(ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+        Properties config = new Properties();
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "config.properties";
+
+        try (FileInputStream fin = new FileInputStream(new File(dir))) {
+            config.load(fin);
+            servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+        } catch (Exception e) {
+        }
         this.pedido = listaPedido;
         this.cliente = cliente;
         iniciarComponentes();
@@ -81,8 +96,8 @@ public class PantallaConfirmacion extends JFrame {
             valorTotal += (articuloActual.getCantidad() * articuloActual.getPrecio());
         }
 
-        String[] columnas = { "Nombre del artículo" , "Cantidad" };
-        
+        String[] columnas = { "Nombre del artículo", "Cantidad" };
+
         JTable tablaArticulos = new JTable(articulos, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -110,7 +125,7 @@ public class PantallaConfirmacion extends JFrame {
         JLabel labelTotal = new JLabel("PRECIO TOTAL:");
         labelTotal.setBounds(600, 120, 100, 30);
         mainPanel.add(labelTotal);
-        
+
         double valorImpuestos = (Double.parseDouble(String.valueOf(valorTotal)) / 100) * 19;
         JLabel labelValorTotal = new JLabel("$ " + String.valueOf(valorTotal));
         labelValorTotal.setBounds(600, 140, 100, 30);
@@ -136,7 +151,7 @@ public class PantallaConfirmacion extends JFrame {
         buttonConfirmar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
-                    JSONManager.writeClientes(cliente);
+                    servidor.writeClientes(cliente);
                 } catch (IOException | ParseException e) {
                     e.printStackTrace();
                 }

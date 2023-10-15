@@ -86,7 +86,7 @@ public class JSONManager {
         }
     }
 
-    public static Object[][] pruebaReadArticulos() throws FileNotFoundException, IOException, ParseException {
+    public static Object[][] readArticulos() throws FileNotFoundException, IOException, ParseException {
         JSONParser jsonParser = new JSONParser();
         File archivo = new File("pom.xml");
         String dir = archivo.getCanonicalPath();

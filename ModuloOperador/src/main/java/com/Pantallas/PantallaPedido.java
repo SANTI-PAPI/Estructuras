@@ -16,19 +16,21 @@ import com.Clases.Articulo;
 import com.Clases.Cliente;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
-import com.Datos.JSONManager;
+import com.Clases.Servidor.Servidor;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Properties;
 
 class MyIntFilter extends DocumentFilter {
    @Override
-   public void insertString(FilterBypass fb, int offset, String string,
-         AttributeSet attr) throws BadLocationException {
+   public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
 
       Document doc = fb.getDocument();
       StringBuilder sb = new StringBuilder();
@@ -50,8 +52,7 @@ class MyIntFilter extends DocumentFilter {
    }
 
    @Override
-   public void replace(FilterBypass fb, int offset, int length, String text,
-         AttributeSet attrs) throws BadLocationException {
+   public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
 
       Document doc = fb.getDocument();
       StringBuilder sb = new StringBuilder();
@@ -64,8 +65,7 @@ class MyIntFilter extends DocumentFilter {
    }
 
    @Override
-   public void remove(FilterBypass fb, int offset, int length)
-         throws BadLocationException {
+   public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
       Document doc = fb.getDocument();
       StringBuilder sb = new StringBuilder();
       sb.append(doc.getText(0, doc.getLength()));
@@ -83,8 +83,23 @@ public class PantallaPedido extends JFrame {
    Cliente cliente;
    ListaArticulos listaArticulos;
    DefaultTableModel modelo;
+   Servidor servidor;
 
    public PantallaPedido(String telefono) throws FileNotFoundException, IOException, ParseException {
+      Properties config = new Properties();
+
+      File archivo = new File("pom.xml");
+      String dir = archivo.getCanonicalPath();
+      dir = dir.substring(0, (dir.length() - 7));
+      dir += "config.properties";
+
+      try (FileInputStream fin = new FileInputStream(new File(dir))) {
+         config.load(fin);
+         servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+      } catch (Exception e) {
+      }
+      listaArticulos = servidor.getListaArticulos();
+
       iniciarComponentes();
       this.telefono = telefono;
       setTitle("FoodUPB - Creación del pedido");
@@ -92,10 +107,23 @@ public class PantallaPedido extends JFrame {
       setResizable(false);
       setLayout(new GridLayout(1, 2));
       setMaximizedBounds(getBounds());
-      listaArticulos = JSONManager.getListaArticulos();
    }
 
    public PantallaPedido(ListaArticulos listaPedido, String telefono) throws FileNotFoundException, IOException, ParseException {
+      Properties config = new Properties();
+
+      File archivo = new File("pom.xml");
+      String dir = archivo.getCanonicalPath();
+      dir = dir.substring(0, (dir.length() - 7));
+      dir += "config.properties";
+
+      try (FileInputStream fin = new FileInputStream(new File(dir))) {
+         config.load(fin);
+         servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+      } catch (Exception e) {
+      }
+      listaArticulos = servidor.getListaArticulos();
+
       iniciarComponentes();
       this.telefono = telefono;
       setTitle("FoodUPB - Creación del pedido");
@@ -103,7 +131,7 @@ public class PantallaPedido extends JFrame {
       setResizable(false);
       setLayout(new GridLayout(1, 2));
       setMaximizedBounds(getBounds());
-      listaArticulos = JSONManager.getListaArticulos();
+      
       Iterator<NodeInterface<Articulo>> iteradorPedido = listaPedido.iterator();
       flagEnd = true;
       while (iteradorPedido.hasNext()) {
@@ -117,6 +145,20 @@ public class PantallaPedido extends JFrame {
    }
 
    public PantallaPedido(Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+      Properties config = new Properties();
+
+      File archivo = new File("pom.xml");
+      String dir = archivo.getCanonicalPath();
+      dir = dir.substring(0, (dir.length() - 7));
+      dir += "config.properties";
+
+      try (FileInputStream fin = new FileInputStream(new File(dir))) {
+         config.load(fin);
+         servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+      } catch (Exception e) {
+      }
+      listaArticulos = servidor.getListaArticulos();
+
       iniciarComponentes();
       this.cliente = cliente;
       setTitle("FoodUPB - Creación del pedido");
@@ -124,10 +166,23 @@ public class PantallaPedido extends JFrame {
       setResizable(false);
       setLayout(new GridLayout(1, 2));
       setMaximizedBounds(getBounds());
-      listaArticulos = JSONManager.getListaArticulos();
    }
 
    public PantallaPedido(ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+      Properties config = new Properties();
+
+      File archivo = new File("pom.xml");
+      String dir = archivo.getCanonicalPath();
+      dir = dir.substring(0, (dir.length() - 7));
+      dir += "config.properties";
+
+      try (FileInputStream fin = new FileInputStream(new File(dir))) {
+         config.load(fin);
+         servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+      } catch (Exception e) {
+      }
+      listaArticulos = servidor.getListaArticulos();
+
       iniciarComponentes();
       this.cliente = cliente;
       setTitle("FoodUPB - Creación del pedido");
@@ -135,7 +190,6 @@ public class PantallaPedido extends JFrame {
       setResizable(false);
       setLayout(new GridLayout(1, 2));
       setMaximizedBounds(getBounds());
-      listaArticulos = JSONManager.getListaArticulos();
       Iterator<NodeInterface<Articulo>> iteradorPedido = listaPedido.iterator();
       flagEnd = true;
       while (iteradorPedido.hasNext()) {
@@ -149,7 +203,6 @@ public class PantallaPedido extends JFrame {
    }
 
    private void iniciarComponentes() throws FileNotFoundException, IOException, ParseException {
-
       JPanel mainPanel = new JPanel(); // Panel principal
       mainPanel.setLayout(new BorderLayout());
       getContentPane().add(mainPanel);
@@ -171,7 +224,10 @@ public class PantallaPedido extends JFrame {
                   e1.printStackTrace();
                }
             } else {
-               new ModuloOperador();
+               try {
+                  new ModuloOperador();
+               } catch (IOException | ParseException e1) {
+               }
             }
             dispose();
          }
@@ -187,7 +243,7 @@ public class PantallaPedido extends JFrame {
       panelIzquierda.add(labelBuscador);
 
       String[] columnas = { "Nombre del artículo", "Precio unitario" };
-      Object[][] articulos = JSONManager.pruebaReadArticulos();
+      Object[][] articulos = servidor.readArticulos();
       JTable tablaArticulos = new JTable(articulos, columnas) {
          @Override
          public boolean isCellEditable(int row, int column) {
@@ -281,9 +337,7 @@ public class PantallaPedido extends JFrame {
                   modelo.addRow(nuevaFila);
                } else {
                   String cantidadActual = String.valueOf(tablaPedidos.getModel().getValueAt(fila, 1));
-                  tablaPedidos.getModel().setValueAt(
-                        String.valueOf(Integer.parseInt(cantidadActual) + Integer.parseInt(fieldCantidad.getText())),
-                        fila, 1);
+                  tablaPedidos.getModel().setValueAt(String.valueOf(Integer.parseInt(cantidadActual) + Integer.parseInt(fieldCantidad.getText())), fila, 1);
                }
                flagEnd = false;
             }
@@ -322,7 +376,8 @@ public class PantallaPedido extends JFrame {
                   }
                   if (telefono != null) {
                      new PantallaRegistroDireccion(listaPedido, telefono);
-                  } if (cliente != null) {
+                  }
+                  if (cliente != null) {
                      new PantallaRegistroDireccion(listaPedido, cliente);
                   }
                   dispose();

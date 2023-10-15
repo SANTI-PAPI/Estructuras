@@ -13,13 +13,13 @@ public class Main {
         String dir = archivo.getCanonicalPath();
         dir = dir.substring(0, (dir.length() - 7));
         dir += "config.properties";
-
+        
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);
-            Servidor server = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
-            server.deployDatosJSON();
+            Servidor servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+            System.out.println(String.valueOf(servidor.suma(10, 20)));
         } catch (Exception e) {
-            
+
         }
     }
 }

@@ -5,9 +5,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.plaf.ColorUIResource;
+
+import org.json.simple.parser.ParseException;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class PantallaModificacion extends JFrame {
     public PantallaModificacion() {
@@ -35,7 +39,10 @@ public class PantallaModificacion extends JFrame {
         panelBackground.add(buttonVolver);
         buttonVolver.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) { 
-                new ModuloOperador();
+                try {
+                    new ModuloOperador();
+                } catch (IOException | ParseException e1) {
+                }
                 dispose();
             }
           } );
