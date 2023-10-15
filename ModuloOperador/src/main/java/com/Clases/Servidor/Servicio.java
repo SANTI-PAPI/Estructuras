@@ -39,8 +39,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     JSONParser jsonParser = new JSONParser();
     File archivo = new File("pom.xml");
     String dir = archivo.getCanonicalPath();
-    dir = dir.substring(0, (dir.length() - 22));
-    dir += "articulos.json";
+    dir = dir.substring(0, (dir.length() - 7));
+    dir += "datos\\articulos.json";
 
     try (FileReader reader = new FileReader(dir)) {
       Object obj = jsonParser.parse(reader);
@@ -67,8 +67,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     JSONParser jsonParser = new JSONParser();
     File archivo = new File("pom.xml");
     String dir = archivo.getCanonicalPath();
-    dir = dir.substring(0, (dir.length() - 22));
-    dir += "clientes.json";
+    dir = dir.substring(0, (dir.length() - 7));
+    dir += "datos\\clientes.json";
 
     try (FileReader reader = new FileReader(dir)) {
       Object obj = jsonParser.parse(reader);
@@ -145,8 +145,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
   public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
     File archivo = new File("pom.xml");
     String dir = archivo.getCanonicalPath();
-    dir = dir.substring(0, (dir.length() - 22));
-    dir += "clientes.json";
+    dir = dir.substring(0, (dir.length() - 7));
+    dir += "datos\\clientes.json";
     ListaClientes lista = readClientes();
 
     if (lista.contains(cliente.getNumeroTelefono()) != null) {
@@ -185,7 +185,6 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
   @Override
   public int suma(int i1, int i2) throws RemoteException {
-
     return i1 + i2;
   }
 
@@ -194,8 +193,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     JSONParser jsonParser = new JSONParser();
     File archivo = new File("pom.xml");
     String dir = archivo.getCanonicalPath();
-    dir = dir.substring(0, (dir.length() - 22));
-    dir += "articulos.json";
+    dir = dir.substring(0, (dir.length() - 7));
+    dir += "datos\\articulos.json";
 
     try (FileReader reader = new FileReader(dir)) {
       Object obj = jsonParser.parse(reader);

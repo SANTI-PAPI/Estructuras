@@ -1,4 +1,4 @@
-package Servidor;
+package com.Clases.Servidor;
 
 import java.io.File;
 import java.io.FileInputStream;

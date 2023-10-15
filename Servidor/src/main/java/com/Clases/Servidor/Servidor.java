@@ -1,4 +1,4 @@
-package Servidor;
+package com.Clases.Servidor;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
