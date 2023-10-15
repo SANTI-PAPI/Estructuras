@@ -76,8 +76,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
       JSONArray listaClientes = (JSONArray) obj;
       ListaClientes linkedClientes = new ListaClientes();
-
       listaClientes.forEach(cl -> linkedClientes.add(parseClienteObject((JSONObject) cl)));
+
       return linkedClientes;
     }
   }

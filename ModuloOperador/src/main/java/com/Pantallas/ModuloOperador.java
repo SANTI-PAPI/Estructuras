@@ -33,8 +33,6 @@ public class ModuloOperador extends JFrame {
         dir = dir.substring(0, (dir.length() - 7));
         dir += "config.properties";
 
-        iniciarComponentes();
-        setTitle("FoodUPB - Modulo de operador");
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);
             servidor = new Servidor((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
@@ -42,6 +40,8 @@ public class ModuloOperador extends JFrame {
         }
         listaClientes = servidor.readClientes();
 
+        iniciarComponentes();
+        setTitle("FoodUPB - Modulo de operador");
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(new GridLayout(1, 2));
