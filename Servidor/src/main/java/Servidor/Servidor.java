@@ -1,7 +1,10 @@
-package com.Clases.Servidor;
+package Servidor;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 public class Servidor {
 

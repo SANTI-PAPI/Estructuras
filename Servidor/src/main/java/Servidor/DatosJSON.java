@@ -1,4 +1,4 @@
-package com.Clases.Servidor;
+package Servidor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,9 +17,10 @@ import com.Clases.Estructuras.linkedlist.ListaPedidos;
 public interface DatosJSON extends Remote {
 
         public int suma(int i1, int i2) throws RemoteException;
+
         /*
-         * public ListaArticulos getListaArticulos() throws RemoteException,
-         * FileNotFoundException, IOException, ParseException;
+         * public ListaArticulos getListaArticulos()
+         * throws RemoteException, FileNotFoundException, IOException, ParseException;
          * 
          * public Articulo parseArticuloObject(JSONObject articulo) throws
          * RemoteException;
@@ -29,16 +30,17 @@ public interface DatosJSON extends Remote {
          * 
          * public Cliente ParseClienteObject(JSONObject Cliente);
          * 
-         * public ListaPedidos getListaPedidos(String numeroTelefono) throws
-         * RemoteException, IOException, FileNotFoundException, ParseException;
+         * public ListaPedidos getListaPedidos(String numeroTelefono)
+         * throws RemoteException, IOException, FileNotFoundException, ParseException;
          * 
          * public ListaArticulos ParsePedidosObject(JSONObject pe, ListaArticulos
          * listaArticulos) throws RemoteException;
          * 
          * public Articulo ParseArticuloObject(ListaArticulos ListaArticulos, JSONObject
-         * objetoPedido) throws RemoteException;
+         * objetoPedido)
+         * throws RemoteException;
          * 
-         * public void WriteClientes(Cliente cliente) throws RemoteException,
-         * IOException, FileNotFoundException, ParseException;
+         * public void WriteClientes(Cliente cliente)
+         * throws RemoteException, IOException, FileNotFoundException, ParseException;
          */
 }

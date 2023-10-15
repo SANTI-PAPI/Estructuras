@@ -1,8 +1,10 @@
-package com.Clases.Servidor;
+package Servidor;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,7 +27,6 @@ import com.Clases.Estructuras.linkedlist.ListaPedidos;
 public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
   private static final long serialVersionUID = 123L;
-  private DatosJSON service;
 
   protected Servicio() throws RemoteException {
     super();
@@ -33,8 +34,9 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
   /*
    * @Override
-   * public ListaArticulos getListaArticulos() throws RemoteException,
-   * FileNotFoundException, IOException, org.json.simple.parser.ParseException {
+   * public ListaArticulos getListaArticulos()
+   * throws RemoteException, FileNotFoundException, IOException,
+   * org.json.simple.parser.ParseException {
    * JSONParser jsonParser = new JSONParser();
    * File archivo = new File("pom.xml");
    * String dir = archivo.getCanonicalPath();
@@ -58,16 +60,18 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
    * JSONObject objetoArticulo = (JSONObject) articulo.get("articulo");
    * 
    * Articulo nuevoArticulo = new Articulo(Integer.parseInt((String)
-   * objetoArticulo.get("id")), (String) objetoArticulo.get("nombre"),
-   * Integer.parseInt((String) objetoArticulo.get("precio")),
+   * objetoArticulo.get("id")),
+   * (String) objetoArticulo.get("nombre"), Integer.parseInt((String)
+   * objetoArticulo.get("precio")),
    * Boolean.parseBoolean((String) objetoArticulo.get("isComplejo")));
    * 
    * return nuevoArticulo;
    * }
    * 
    * @Override
-   * public ListaClientes readClientes() throws RemoteException, IOException,
-   * FileNotFoundException, org.json.simple.parser.ParseException {
+   * public ListaClientes readClientes()
+   * throws RemoteException, IOException, FileNotFoundException,
+   * org.json.simple.parser.ParseException {
    * JSONParser jsonParser = new JSONParser();
    * File archivo = new File("pom.xml");
    * String dir = archivo.getCanonicalPath();
@@ -107,8 +111,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
    * }
    * 
    * @Override
-   * public ListaPedidos getListaPedidos(String numeroTelefono) throws
-   * RemoteException, IOException, FileNotFoundException,
+   * public ListaPedidos getListaPedidos(String numeroTelefono)
+   * throws RemoteException, IOException, FileNotFoundException,
    * org.json.simple.parser.ParseException {
    * ListaArticulos listaArticulos = getListaArticulos();
    * JSONParser jsonParser = new JSONParser();
@@ -157,8 +161,9 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
    * }
    * 
    * @Override
-   * public void WriteClientes(Cliente cliente) throws RemoteException,
-   * IOException, FileNotFoundException, org.json.simple.parser.ParseException {
+   * public void WriteClientes(Cliente cliente)
+   * throws RemoteException, IOException, FileNotFoundException,
+   * org.json.simple.parser.ParseException {
    * File archivo = new File("pom.xml");
    * String dir = archivo.getCanonicalPath();
    * dir = dir.substring(0, (dir.length() - 22));
@@ -203,7 +208,6 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
    */
   @Override
   public int suma(int i1, int i2) throws RemoteException {
-
     return i1 + i2;
   }
 }
