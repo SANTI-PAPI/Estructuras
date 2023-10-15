@@ -28,6 +28,7 @@ import com.Clases.Estructuras.node.NodoListaEnlazada;
 public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
   private static final long serialVersionUID = 123L;
+  private DatosJSON service;
 
   protected Servicio() throws RemoteException {
     super();
@@ -184,6 +185,7 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
   @Override
   public int suma(int i1, int i2) throws RemoteException {
+
     return i1 + i2;
   }
 
