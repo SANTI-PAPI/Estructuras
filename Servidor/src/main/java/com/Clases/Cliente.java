@@ -1,23 +1,17 @@
 package com.Clases;
 
-import java.io.Serializable;
-
-public class Cliente implements Serializable {
-    private String nombre;
-    private String apellido;
+public class Cliente {
+    private String nombre, apellido;
     private String numeroTelefono;
     private TipoDireccion tipoDireccion;
-    private String direccion1;
-    private String direccion2;
-    private String direccionAdicional;
-    private String municipio;
-    private String barrio;
+    private String direccion1, direccion2, direccionAdicional;
+    private String municipio, barrio;
     private String comuna;
     private boolean premium = false;
-
+    
     public Cliente(String numero, String nombre, String apellido,
-            TipoDireccion tipo, String direccion1, String direccion2,
-            String direccionAdicional, String municipio, String comuna, String barrio) {
+    TipoDireccion tipo, String direccion1, String direccion2, 
+    String direccionAdicional, String municipio, String comuna, String barrio) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.numeroTelefono = numero;
@@ -30,8 +24,8 @@ public class Cliente implements Serializable {
         this.barrio = barrio;
     }
 
-    public void setNuevaDireccion(TipoDireccion tipo, String dir1,
-            String dir2, String dirAd, String municipio, String comuna, String barrio) {
+    public void setNuevaDireccion(TipoDireccion tipo, String dir1, 
+    String dir2, String dirAd, String municipio, String comuna, String barrio) {
         this.tipoDireccion = tipo;
         this.direccion1 = dir1;
         this.direccion2 = dir2;

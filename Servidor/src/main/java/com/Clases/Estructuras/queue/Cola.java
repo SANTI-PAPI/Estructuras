@@ -2,12 +2,11 @@ package com.Clases.Estructuras.queue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import com.Clases.Estructuras.interfaces.queue.QueueInterface;
 import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 
-public class Cola<T> implements QueueInterface<T>, Serializable {
+public class Cola<T> implements QueueInterface<T> {
     private ListaEnlazada<T> lista = new ListaEnlazada<>();
 
     @Override
@@ -54,15 +53,14 @@ public class Cola<T> implements QueueInterface<T>, Serializable {
 
             for (int i = 0; i < tamano; i++) {
                 T objetoActual = extract();
-                while ((!cola1.isEmpty())
-                        && (objectToByteArray(objetoActual).length > objectToByteArray(cola1.peek()).length)) {
+                while ((!cola1.isEmpty()) && (objectToByteArray(objetoActual).length > objectToByteArray(cola1.peek()).length)) {
                     cola2.insert(cola1.extract());
                 }
                 cola1.insert(objetoActual);
                 while (!cola2.isEmpty()) {
                     cola1.insert(cola2.extract());
                 }
-            }
+            } 
             while (!cola1.isEmpty()) {
                 insert(cola1.extract());
             }

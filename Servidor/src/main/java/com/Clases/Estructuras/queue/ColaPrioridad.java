@@ -1,10 +1,8 @@
 package com.Clases.Estructuras.queue;
 
-import java.io.Serializable;
-
 import com.Clases.Estructuras.interfaces.queue.QueueInterface;
 
-public class ColaPrioridad<T> implements QueueInterface<T>, Serializable {
+public class ColaPrioridad<T> implements QueueInterface<T> {
     private int cantidad;
     private int tamano = 0;
     private Cola<T>[] colaPrioridad;
@@ -39,7 +37,7 @@ public class ColaPrioridad<T> implements QueueInterface<T>, Serializable {
 
     @Override
     public T peek() {
-        for (int i = cantidad - 1; i >= 0; i++) {
+        for (int i = cantidad-1; i >= 0; i++) {
             if (!colaPrioridad[i].isEmpty()) {
                 return colaPrioridad[i].peek();
             }
@@ -61,7 +59,7 @@ public class ColaPrioridad<T> implements QueueInterface<T>, Serializable {
     @Override
     public boolean insert(T object) {
         tamano++;
-        return colaPrioridad[cantidad - 1].insert(object);
+        return colaPrioridad[cantidad-1].insert(object);
     }
 
     public boolean insert(T object, int prioridad) {

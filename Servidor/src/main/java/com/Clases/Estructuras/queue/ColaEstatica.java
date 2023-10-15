@@ -1,10 +1,8 @@
 package com.Clases.Estructuras.queue;
 
-import java.io.Serializable;
-
 import com.Clases.Estructuras.interfaces.queue.QueueInterface;
 
-public class ColaEstatica<T> implements QueueInterface<T>, Serializable {
+public class ColaEstatica<T> implements QueueInterface<T> {
     private int maximo = 0;
     private int tamano = 0;
     private int cabeza = 0;
@@ -101,15 +99,13 @@ public class ColaEstatica<T> implements QueueInterface<T>, Serializable {
         T[] nuevoArreglo = (T[]) new Object[maximo];
         if (!isEmpty()) {
             for (int i = cabeza; pos < tamano; i++) {
-                if (i == maximo) {
-                    i = 0;
-                }
+                if (i == maximo) { i = 0; }
                 nuevoArreglo[pos] = arreglo[i];
                 pos++;
             }
             arreglo = nuevoArreglo;
-            cabeza = 0;
-            cola = tamano - 1;
+            cabeza = 0; 
+            cola = tamano-1;
             return true;
         }
         return false;
@@ -121,15 +117,13 @@ public class ColaEstatica<T> implements QueueInterface<T>, Serializable {
         T[] nuevoArreglo = (T[]) new Object[maximo];
         if (!isEmpty()) {
             for (int i = cola; pos < tamano; i--) {
-                if (i == -1) {
-                    i = tamano - 1;
-                }
+                if (i == -1) { i = tamano-1; }
                 nuevoArreglo[pos] = arreglo[i];
                 pos++;
             }
             arreglo = nuevoArreglo;
             cabeza = 0;
-            cola = tamano - 1;
+            cola = tamano-1;
             return true;
         }
         return false;

@@ -2,11 +2,10 @@ package com.Clases.Estructuras.stack;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import com.Clases.Estructuras.interfaces.stack.StackInterface;
 
-public class PilaEstatica<T> implements StackInterface<T>, Serializable {
+public class PilaEstatica<T> implements StackInterface<T> {
     private int maximo;
     private int tamano = 0;
     private T[] arreglo = (T[]) new Object[maximo];

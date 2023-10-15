@@ -8,8 +8,7 @@ import com.Clases.Articulo;
 import com.Clases.Cliente;
 
 public class ListaArticulos extends ListaEnlazada<Articulo> {
-    private int cantidad; // Para organizar la cantidad de veces que se ha pedido una lista de artículos
-                          // por un Cliente
+    private int cantidad; // Para organizar la cantidad de veces que se ha pedido una lista de artículos por un Cliente
     private Cliente cliente; // Para asignar el pedido a nombre de un cliente
 
     public Articulo contains(String nombreArticulo) {

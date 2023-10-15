@@ -5,11 +5,10 @@ import java.util.logging.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import com.Clases.Estructuras.interfaces.queue.QueueInterface;
 
-public class ColaArray<T> implements QueueInterface<T>, Serializable {
+public class ColaArray<T> implements QueueInterface<T> {
     private int tamano = 0;
     private T[] arreglo = (T[]) new Object[tamano];
 
@@ -92,15 +91,14 @@ public class ColaArray<T> implements QueueInterface<T>, Serializable {
 
             for (int i = 0; i < tamano; i++) {
                 T objetoActual = extract();
-                while ((!cola1.isEmpty())
-                        && (objectToByteArray(objetoActual).length > objectToByteArray(cola1.peek()).length)) {
+                while ((!cola1.isEmpty()) && (objectToByteArray(objetoActual).length > objectToByteArray(cola1.peek()).length)) {
                     cola2.insert(cola1.extract());
                 }
                 cola1.insert(objetoActual);
                 while (!cola2.isEmpty()) {
                     cola1.insert(cola2.extract());
                 }
-            }
+            } 
             while (!cola1.isEmpty()) {
                 insert(cola1.extract());
             }
@@ -126,11 +124,11 @@ public class ColaArray<T> implements QueueInterface<T>, Serializable {
     @Override
     public boolean reverse() {
         ColaArray<T> nuevaCola = new ColaArray<>();
-        for (int i = tamano - 1; i >= 0; i++) {
+        for (int i = tamano-1; i >= 0; i++) {
             nuevaCola.insert(arreglo[i]);
         }
         arreglo = nuevaCola.arreglo;
         return true;
     }
-
+    
 }

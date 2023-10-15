@@ -3,7 +3,7 @@ package com.Clases.Estructuras.node;
 public class NodoDobleEnlazado<T> extends Nodo<T> {
     NodoDobleEnlazado<T> siguiente;
     NodoDobleEnlazado<T> anterior;
-
+    
     public NodoDobleEnlazado() {
         super();
         this.siguiente = null;
@@ -22,8 +22,8 @@ public class NodoDobleEnlazado<T> extends Nodo<T> {
         this.anterior = null;
     }
 
-    public NodoDobleEnlazado(T object, NodoDobleEnlazado<T> siguiente,
-            NodoDobleEnlazado<T> anterior) {
+    public NodoDobleEnlazado(T object, NodoDobleEnlazado<T> siguiente, 
+    NodoDobleEnlazado<T> anterior) {
         super(object);
         this.siguiente = siguiente;
         this.anterior = anterior;

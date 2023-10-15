@@ -2,12 +2,11 @@ package com.Clases.Estructuras.stack;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import com.Clases.Estructuras.interfaces.stack.StackInterface;
 import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 
-public class Pila<T> implements StackInterface<T>, Serializable {
+public class Pila<T> implements StackInterface<T> {
     private ListaEnlazada<T> lista = new ListaEnlazada<>();
 
     @Override
@@ -54,15 +53,14 @@ public class Pila<T> implements StackInterface<T>, Serializable {
 
             for (int i = 0; i < tamano; i++) {
                 T objetoActual = pop();
-                while ((!pila1.isEmpty())
-                        && (objectToByteArray(objetoActual).length > objectToByteArray(pila1.peek()).length)) {
+                while ((!pila1.isEmpty()) && (objectToByteArray(objetoActual).length > objectToByteArray(pila1.peek()).length)) {
                     pila2.push(pila1.pop());
                 }
                 pila1.push(objetoActual);
                 while (!pila2.isEmpty()) {
                     pila1.push(pila2.pop());
                 }
-            }
+            } 
             while (!pila1.isEmpty()) {
                 push(pila1.pop());
             }
@@ -94,5 +92,5 @@ public class Pila<T> implements StackInterface<T>, Serializable {
         lista = nuevaPila.lista;
         return true;
     }
-
+    
 }

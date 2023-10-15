@@ -6,13 +6,12 @@ import com.Clases.Estructuras.node.NodoDobleEnlazado;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ListaDobleEnlazadaCircular<T> implements Serializable, LinkedListInterface<T> {
+public class ListaDobleEnlazadaCircular<T> implements LinkedListInterface<T> {
     private NodoDobleEnlazado<T> cabeza;
     private NodoDobleEnlazado<T> cola;
     private NodoDobleEnlazado<T> inode;
@@ -450,7 +449,6 @@ public class ListaDobleEnlazadaCircular<T> implements Serializable, LinkedListIn
 
         return new Iterator<NodeInterface<T>>() {
             int i = 0;
-
             @Override
             public boolean hasNext() {
                 return i < size();
@@ -474,7 +472,6 @@ public class ListaDobleEnlazadaCircular<T> implements Serializable, LinkedListIn
 
         return new Iterator<NodeInterface<T>>() {
             int i = 0;
-
             @Override
             public boolean hasNext() {
                 return i < size();

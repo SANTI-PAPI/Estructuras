@@ -1,12 +1,10 @@
 package com.Clases;
 
-import java.io.Serializable;
-
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-public class FiltroEntero extends DocumentFilter implements Serializable {
+public class FiltroEntero extends DocumentFilter {
     int length = 0;
 
     public FiltroEntero(int length) {

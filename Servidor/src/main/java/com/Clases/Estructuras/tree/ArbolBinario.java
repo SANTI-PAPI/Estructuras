@@ -1,12 +1,10 @@
 package com.Clases.Estructuras.tree;
 
-import java.io.Serializable;
-
 import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 import com.Clases.Estructuras.node.NodoArbolBinario;
 import com.Clases.Estructuras.queue.Cola;
 
-public class ArbolBinario<T> implements Serializable {
+public class ArbolBinario<T> {
     NodoArbolBinario<T> raiz = null;
 
     public ArbolBinario(T objeto) {
@@ -84,8 +82,7 @@ public class ArbolBinario<T> implements Serializable {
                 if (search(objeto, nodoActual.getSubIzquierda())) {
                     return true;
                 }
-            }
-            if (nodoActual.getSubDerecha() != null) {
+            } if (nodoActual.getSubDerecha() != null) {
                 if (search(objeto, nodoActual.getSubDerecha())) {
                     return true;
                 }
@@ -142,13 +139,12 @@ public class ArbolBinario<T> implements Serializable {
         return ordenNivel(raiz, listaNivel, colaRestante);
     }
 
-    public ListaEnlazada<T> ordenNivel(NodoArbolBinario<T> nodoActual, ListaEnlazada<T> listaActual,
-            Cola<NodoArbolBinario<T>> colaActual) {
+    public ListaEnlazada<T> ordenNivel(NodoArbolBinario<T> nodoActual, ListaEnlazada<T> listaActual, Cola<NodoArbolBinario<T>> colaActual) {
         if (nodoActual != null) {
             listaActual.add(nodoActual.getObject());
             if (nodoActual.getSubIzquierda() != null) {
                 colaActual.insert(nodoActual.getSubIzquierda());
-            }
+            } 
             if (nodoActual.getSubDerecha() != null) {
                 colaActual.insert(nodoActual.getSubDerecha());
             }
