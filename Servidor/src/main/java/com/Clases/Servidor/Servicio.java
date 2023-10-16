@@ -5,13 +5,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Iterator;
@@ -30,9 +27,11 @@ import com.Clases.Estructuras.linkedlist.ListaClientes;
 import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
+import com.Clases.Estructuras.queue.ColaPrioridad;
 
 public class Servicio extends UnicastRemoteObject implements DatosJSON {
   private static final long serialVersionUID = 123L;
+  // private ColaPrioridad<> colaPedidos = new ColaPrioridad<>(0);
 
   protected Servicio() throws RemoteException {
     super();
@@ -90,6 +89,9 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
       ObjectOutputStream rescribir = new ObjectOutputStream(listaCli);
       rescribir.writeObject(linkedClientes);
       rescribir.close();
+      listaCli.close();
+
+      reader.close();
       return listaCli.toByteArray();
     }
   }
@@ -168,21 +170,22 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
     ByteArrayInputStream bs = new ByteArrayInputStream(readClientes());
     ObjectInputStream is = new ObjectInputStream(bs);
-    ListaClientes listaClient = (ListaClientes) is.readObject();
+    ListaClientes lista = (ListaClientes) is.readObject();
     is.close();
-
-    ListaClientes lista = listaClient;
+    bs.close();
 
     if (lista.contains(cliente.getNumeroTelefono()) != null) {
-      lista.remove(cliente.getNumeroTelefono());
+      System.out.println("1" + lista.remove(cliente.getNumeroTelefono()));
     }
-    lista.add(cliente);
+    System.out.println("2" + lista.add(cliente));
+    System.out.println("Último cliente: " + lista.getFromEnd().getNombre());
 
     Iterator<NodeInterface<Cliente>> iterador = lista.iterator();
     JSONArray listaClientes = new JSONArray();
 
     while (iterador.hasNext()) {
       Cliente clienteActual = iterador.next().getObject();
+      System.out.println("Cliente actual: " + clienteActual.getNombre());
       JSONObject detallesCliente = new JSONObject();
 
       detallesCliente.put("nombre", clienteActual.getNombre());

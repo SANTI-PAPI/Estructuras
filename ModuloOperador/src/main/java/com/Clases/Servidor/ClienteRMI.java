@@ -64,26 +64,11 @@ public class ClienteRMI /* implements DatosJSON */ {
             ByteArrayInputStream bs = new ByteArrayInputStream(service.getListaArticulos());
             ObjectInputStream is = new ObjectInputStream(bs);
             ListaArticulos listaArt = (ListaArticulos) is.readObject();
-            Iterator<NodeInterface<Articulo>> iterador = listaArt.iterator();
-            
-            while (iterador.hasNext()) {
-                System.out.println("Articulo: " + iterador.next().getObject().getNombre());
-            }
-
             is.close();
             return listaArt;
 
-        } catch (RemoteException rE) {
-            System.out.println("RemoteException");
-        } catch (IOException iE) {
-            System.out.println("IOException");
-        } catch (ParseException pE) {
-            System.out.println("ParseException");
-        } catch (NotBoundException e) {
-            System.out.println("NotBoundException");
-        } catch (ClassNotFoundException e) {
-            System.out.println("ClassNotFoundException");
-        }
+        } catch (Exception e) {
+        } 
         return new ListaArticulos();
     }
 

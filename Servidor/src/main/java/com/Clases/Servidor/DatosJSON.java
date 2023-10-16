@@ -23,10 +23,8 @@ public interface DatosJSON extends Remote {
 
         public byte[] readClientes() throws RemoteException, IOException, FileNotFoundException, ParseException;
 
-        public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException,
-                        FileNotFoundException, ParseException, ClassNotFoundException;
+        public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, ParseException, ClassNotFoundException;
 
-        public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException,
-                        ParseException, ClassNotFoundException;
+        public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, ParseException, ClassNotFoundException;
 
 }

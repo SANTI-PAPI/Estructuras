@@ -40,7 +40,7 @@ public class ListaClientes extends ListaEnlazada<Cliente> {
                 }
             }
         } catch (Exception e) {
-
+            System.out.println("¿Excepción?");
         }
 
         return false;
