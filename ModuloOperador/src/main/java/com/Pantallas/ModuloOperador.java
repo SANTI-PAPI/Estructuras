@@ -41,7 +41,6 @@ public class ModuloOperador extends JFrame {
         } catch (Exception e) {
         }
         listaClientes = servidor.readClientes();
-        
 
         iniciarComponentes();
         setTitle("FoodUPB - Modulo de operador");
@@ -108,7 +107,10 @@ public class ModuloOperador extends JFrame {
         panelDerecho.add(buttonModificar);
         buttonModificar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new PantallaModificacion();
+                try {
+                    new PantallaModificacion();
+                } catch (IOException e1) {
+                }
                 dispose();
             }
         });

@@ -1,4 +1,8 @@
 {
     "java.dependency.packagePresentation": "hierarchical",
-    "java.format.settings.url": ".vscode/java-formatter.xml"
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "[java]": {
+        "editor.detectIndentation": false
+    }
 }

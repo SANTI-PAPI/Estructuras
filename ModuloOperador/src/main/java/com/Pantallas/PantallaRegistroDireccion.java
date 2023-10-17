@@ -28,8 +28,7 @@ public class PantallaRegistroDireccion extends JFrame {
    String telefono;
    Cliente cliente;
 
-   public PantallaRegistroDireccion(ListaArticulos listaPedido, String telefono)
-         throws FileNotFoundException, IOException, ParseException {
+   public PantallaRegistroDireccion(ListaArticulos listaPedido, String telefono) throws FileNotFoundException, IOException, ParseException {
       iniciarComponentes(listaPedido);
       this.telefono = telefono;
       setTitle("FoodUPB - Registro del cliente");
@@ -38,9 +37,9 @@ public class PantallaRegistroDireccion extends JFrame {
       setMaximizedBounds(getBounds());
    }
 
-   public PantallaRegistroDireccion(ListaArticulos listaPedido, Cliente cliente)
-         throws FileNotFoundException, IOException, ParseException {
+   public PantallaRegistroDireccion(ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
       this.cliente = cliente;
+      this.telefono = cliente.getNumeroTelefono();
       iniciarComponentes(listaPedido);
       setTitle("FoodUPB - Registro del cliente");
       setLocationRelativeTo(null);
@@ -48,8 +47,7 @@ public class PantallaRegistroDireccion extends JFrame {
       setMaximizedBounds(getBounds());
    }
 
-   private void iniciarComponentes(ListaArticulos listaPedido)
-         throws FileNotFoundException, IOException, ParseException {
+   private void iniciarComponentes(ListaArticulos listaPedido) throws FileNotFoundException, IOException, ParseException {
       JPanel mainPanel = new JPanel(); // Panel principal
       mainPanel.setLayout(null);
       mainPanel.setBackground(Color.LIGHT_GRAY);
@@ -152,18 +150,12 @@ public class PantallaRegistroDireccion extends JFrame {
       buttonContinuar.setBounds(600, 315, 120, 30);
       buttonContinuar.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            if (!((String) campoNombres.getText()).equals("") && !((String) campoApellidos.getText()).equals("")
-                  && !((String) campoDireccion.getText()).equals("")
-                  && !((String) campoDireccion2.getText()).equals("")
-                  && !((String) campoDirAdicional.getText()).equals("")
-                  && !((String) campoBarrio.getText()).equals("")
+            if (!((String) campoNombres.getText()).equals("") && !((String) campoApellidos.getText()).equals("") && !((String) campoDireccion.getText()).equals("")
+                  && !((String) campoDireccion2.getText()).equals("") && !((String) campoDirAdicional.getText()).equals("") && !((String) campoBarrio.getText()).equals("")
                   && (comboComuna.getSelectedItem() != null)) {
                if (telefono != null) {
-                  cliente = new Cliente(telefono, campoNombres.getText(), campoApellidos.getText(),
-                        (TipoDireccion) comboDireccion.getSelectedItem(),
-                        campoDireccion.getText(), campoDireccion2.getText(), campoDirAdicional.getText(),
-                        (String) comboMunicipio.getSelectedItem(),
-                        (String) comboComuna.getSelectedItem(), campoBarrio.getText());
+                  cliente = new Cliente(telefono, campoNombres.getText(), campoApellidos.getText(), (TipoDireccion) comboDireccion.getSelectedItem(), campoDireccion.getText(),
+                        campoDireccion2.getText(), campoDirAdicional.getText(), (String) comboMunicipio.getSelectedItem(), (String) comboComuna.getSelectedItem(), campoBarrio.getText());
                }
                try {
                   new PantallaConfirmacion(listaPedido, cliente);

@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -21,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.parser.ParseException;
 
 import com.Clases.Articulo;
@@ -35,6 +37,7 @@ public class PantallaConfirmacion extends JFrame {
     ClienteRMI servidor;
 
     public PantallaConfirmacion(ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+        System.out.println(listaPedido.getIdPedido());
         Properties config = new Properties();
 
         File archivo = new File("pom.xml");
@@ -152,8 +155,16 @@ public class PantallaConfirmacion extends JFrame {
             public void actionPerformed(ActionEvent arg0) {
                 try {
                     servidor.writeClientes(cliente);
-                } catch (IOException | ParseException e) {
-                    e.printStackTrace();
+                    pedido.setCliente(cliente);
+                    if (pedido.getIdPedido() == null) {
+                        pedido.setIdPedido(DigestUtils.sha1Hex(LocalDateTime.now().toString()));
+                        servidor.addNuevoPedido(pedido);
+                    } else {
+                        servidor.modificarPedido(pedido);
+                    }
+                    new ModuloOperador();
+                    dispose();
+                } catch (Exception e) {
                 }
             }
         });
