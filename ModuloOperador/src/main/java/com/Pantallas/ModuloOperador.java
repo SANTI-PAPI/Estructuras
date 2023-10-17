@@ -20,8 +20,10 @@ import java.io.IOException;
 
 public class ModuloOperador extends JFrame {
     ListaClientes listaClientes;
+    String nombre;
 
-    public ModuloOperador() {
+    public ModuloOperador(String nombre) {
+        this.nombre = nombre;
         iniciarComponentes();
         setTitle("FoodUPB - Modulo de operador");
         try {
@@ -41,6 +43,13 @@ public class ModuloOperador extends JFrame {
         panelBackGround.setVisible(true);
         panelBackGround.setSize(500, 500);
         panelBackGround.setLayout(null);
+
+        JLabel labelNombre = new JLabel("Usuario:");
+        labelNombre.setBounds(15, 400, 140, 40);
+        panelBackGround.add(labelNombre);
+        JLabel labelNombre2 = new JLabel(nombre);
+        labelNombre2.setBounds(15, 420, 140, 40);
+        panelBackGround.add(labelNombre2);
 
         JPanel panelDerecho = new JPanel();
         panelDerecho.setBackground(new ColorUIResource(255, 255, 255));
@@ -74,9 +83,9 @@ public class ModuloOperador extends JFrame {
                     if (fieldTelefono.getText().length() == 10) {
                         Cliente cliente = listaClientes.contains(fieldTelefono.getText());
                         if (cliente != null) {
-                            new PantallaPedidoPrevio(cliente);
+                            new PantallaPedidoPrevio(nombre, cliente);
                         } else {
-                            new PantallaPedido(fieldTelefono.getText());
+                            new PantallaPedido(nombre, fieldTelefono.getText());
                         }
                         dispose();
                     }
@@ -92,7 +101,7 @@ public class ModuloOperador extends JFrame {
         panelDerecho.add(buttonModificar);
         buttonModificar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new PantallaModificacion();
+                new PantallaModificacion(nombre);
                 dispose();
             }
         });
@@ -100,13 +109,5 @@ public class ModuloOperador extends JFrame {
         this.add(panelBackGround);
         this.setVisible(true);
         this.setSize(800, 500);
-    }
-
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ModuloOperador().setVisible(true);
-            }
-        });
     }
 }

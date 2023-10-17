@@ -25,11 +25,13 @@ import com.Clases.TipoDireccion;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
 
 public class PantallaRegistroDireccion extends JFrame {
+   String nombre;
    String telefono;
    Cliente cliente;
 
-   public PantallaRegistroDireccion(ListaArticulos listaPedido, String telefono)
+   public PantallaRegistroDireccion(String nombre, ListaArticulos listaPedido, String telefono)
          throws FileNotFoundException, IOException, ParseException {
+      this.nombre = nombre;
       iniciarComponentes(listaPedido);
       this.telefono = telefono;
       setTitle("FoodUPB - Registro del cliente");
@@ -38,7 +40,7 @@ public class PantallaRegistroDireccion extends JFrame {
       setMaximizedBounds(getBounds());
    }
 
-   public PantallaRegistroDireccion(ListaArticulos listaPedido, Cliente cliente)
+   public PantallaRegistroDireccion(String nombre, ListaArticulos listaPedido, Cliente cliente)
          throws FileNotFoundException, IOException, ParseException {
       this.cliente = cliente;
       iniciarComponentes(listaPedido);
@@ -62,10 +64,10 @@ public class PantallaRegistroDireccion extends JFrame {
          public void actionPerformed(ActionEvent e) {
             try {
                if (telefono != null) {
-                  new PantallaPedido(listaPedido, telefono);
+                  new PantallaPedido(nombre, listaPedido, telefono);
                }
                if (cliente != null) {
-                  new PantallaPedido(listaPedido, cliente);
+                  new PantallaPedido(nombre, listaPedido, cliente);
                }
 
             } catch (IOException | ParseException e1) {
@@ -166,7 +168,7 @@ public class PantallaRegistroDireccion extends JFrame {
                         (String) comboComuna.getSelectedItem(), campoBarrio.getText());
                }
                try {
-                  new PantallaConfirmacion(listaPedido, cliente);
+                  new PantallaConfirmacion(nombre, listaPedido, cliente);
                } catch (IOException | ParseException e1) {
                   e1.printStackTrace();
                }

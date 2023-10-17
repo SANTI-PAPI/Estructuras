@@ -10,7 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PantallaModificacion extends JFrame {
-    public PantallaModificacion() {
+    String nombre;
+
+    public PantallaModificacion(String nombre) {
+        this.nombre = nombre;
         iniciarComponentes();
         setTitle("FoodUPB - Modificación de pedidos");
         setLocationRelativeTo(null);
@@ -35,7 +38,7 @@ public class PantallaModificacion extends JFrame {
         panelBackground.add(buttonVolver);
         buttonVolver.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) { 
-                new ModuloOperador();
+                new ModuloOperador(nombre);
                 dispose();
             }
           } );
@@ -57,15 +60,5 @@ public class PantallaModificacion extends JFrame {
         this.add(panelBackground);
         this.setVisible(true);
         this.setSize(800, 500);
-    }
-
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PantallaModificacion().setVisible(true);
-
-            }
-
-        });
     }
 }

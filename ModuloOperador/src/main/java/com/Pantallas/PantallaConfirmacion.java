@@ -27,11 +27,13 @@ import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Datos.JSONManager;
 
 public class PantallaConfirmacion extends JFrame {
+    String nombre;
     Cliente cliente;
     ListaArticulos pedido;
 
-    public PantallaConfirmacion(ListaArticulos listaPedido, Cliente cliente)
+    public PantallaConfirmacion(String nombre, ListaArticulos listaPedido, Cliente cliente)
             throws FileNotFoundException, IOException, ParseException {
+        this.nombre = nombre;
         this.pedido = listaPedido;
         this.cliente = cliente;
         iniciarComponentes();
@@ -59,7 +61,7 @@ public class PantallaConfirmacion extends JFrame {
         buttonVolver.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    new PantallaRegistroDireccion(pedido, cliente);
+                    new PantallaRegistroDireccion(nombre, pedido, cliente);
                 } catch (IOException | ParseException e1) {
                     e1.printStackTrace();
                 }

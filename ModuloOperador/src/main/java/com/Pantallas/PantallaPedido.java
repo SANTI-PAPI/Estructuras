@@ -78,13 +78,15 @@ class MyIntFilter extends DocumentFilter {
 }
 
 public class PantallaPedido extends JFrame {
+   String nombre;
    boolean flagEnd = false;
    String telefono;
    Cliente cliente;
    ListaArticulos listaArticulos;
    DefaultTableModel modelo;
 
-   public PantallaPedido(String telefono) throws FileNotFoundException, IOException, ParseException {
+   public PantallaPedido(String nombre, String telefono) throws FileNotFoundException, IOException, ParseException {
+      this.nombre = nombre;
       iniciarComponentes();
       this.telefono = telefono;
       setTitle("FoodUPB - Creación del pedido");
@@ -95,7 +97,8 @@ public class PantallaPedido extends JFrame {
       listaArticulos = JSONManager.getListaArticulos();
    }
 
-   public PantallaPedido(ListaArticulos listaPedido, String telefono) throws FileNotFoundException, IOException, ParseException {
+   public PantallaPedido(String nombre, ListaArticulos listaPedido, String telefono) throws FileNotFoundException, IOException, ParseException {
+      this.nombre = nombre;
       iniciarComponentes();
       this.telefono = telefono;
       setTitle("FoodUPB - Creación del pedido");
@@ -108,15 +111,16 @@ public class PantallaPedido extends JFrame {
       flagEnd = true;
       while (iteradorPedido.hasNext()) {
          Articulo articuloActual = iteradorPedido.next().getObject();
-         String nombre = articuloActual.getNombre();
+         String nombreArticulo = articuloActual.getNombre();
          int cantidad = articuloActual.getCantidad();
-         Object[] nuevaFila = { nombre, cantidad };
+         Object[] nuevaFila = { nombreArticulo, cantidad };
          modelo.addRow(nuevaFila);
       }
       flagEnd = false;
    }
 
-   public PantallaPedido(Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+   public PantallaPedido(String nombre, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+      this.nombre = nombre;
       iniciarComponentes();
       this.cliente = cliente;
       setTitle("FoodUPB - Creación del pedido");
@@ -127,7 +131,8 @@ public class PantallaPedido extends JFrame {
       listaArticulos = JSONManager.getListaArticulos();
    }
 
-   public PantallaPedido(ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+   public PantallaPedido(String nombre, ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+      this.nombre = nombre;
       iniciarComponentes();
       this.cliente = cliente;
       setTitle("FoodUPB - Creación del pedido");
@@ -140,9 +145,9 @@ public class PantallaPedido extends JFrame {
       flagEnd = true;
       while (iteradorPedido.hasNext()) {
          Articulo articuloActual = iteradorPedido.next().getObject();
-         String nombre = articuloActual.getNombre();
+         String nombreArticulo = articuloActual.getNombre();
          int cantidad = articuloActual.getCantidad();
-         Object[] nuevaFila = { nombre, cantidad };
+         Object[] nuevaFila = { nombreArticulo, cantidad };
          modelo.addRow(nuevaFila);
       }
       flagEnd = false;
@@ -166,12 +171,12 @@ public class PantallaPedido extends JFrame {
          public void actionPerformed(ActionEvent e) {
             if (cliente != null) {
                try {
-                  new PantallaPedidoPrevio(cliente);
+                  new PantallaPedidoPrevio(nombre, cliente);
                } catch (IOException | ParseException e1) {
                   e1.printStackTrace();
                }
             } else {
-               new ModuloOperador();
+               new ModuloOperador(nombre);
             }
             dispose();
          }
@@ -321,9 +326,9 @@ public class PantallaPedido extends JFrame {
                      }
                   }
                   if (telefono != null) {
-                     new PantallaRegistroDireccion(listaPedido, telefono);
+                     new PantallaRegistroDireccion(nombre, listaPedido, telefono);
                   } if (cliente != null) {
-                     new PantallaRegistroDireccion(listaPedido, cliente);
+                     new PantallaRegistroDireccion(nombre, listaPedido, cliente);
                   }
                   dispose();
                }

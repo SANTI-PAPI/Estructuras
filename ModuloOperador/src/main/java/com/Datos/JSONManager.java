@@ -21,6 +21,7 @@ import com.Clases.Estructuras.linkedlist.ListaClientes;
 import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class JSONManager {
 
@@ -113,6 +114,27 @@ public class JSONManager {
 
             return tablaArticulos;
         }
+    }
+
+    public static String getUsuario(String id, String pass) throws IOException, ParseException {
+        JSONParser jsonParser = new JSONParser();
+        pass = DigestUtils.sha1Hex(pass);
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 22));
+        dir += "usuarios\\operador\\u-" + id + ".json";
+
+        try (FileReader reader = new FileReader(dir)) {
+            Object obj = jsonParser.parse(reader);
+
+            JSONObject usuario = (JSONObject) obj;
+            String filePass = (String) usuario.get("password");
+            if (filePass != null && filePass.equals(pass)) {
+                return (String) usuario.get("nombre");
+            }
+        }
+        return "";
     }
 
     public static ListaArticulos getListaArticulos() throws FileNotFoundException, IOException, ParseException {

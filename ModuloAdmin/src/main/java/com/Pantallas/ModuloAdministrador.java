@@ -51,6 +51,29 @@ public class ModuloAdministrador extends JFrame {
         JPanel panelGestionUsuarios = new JPanel();
         panelGestionUsuarios.setLayout(null);
         JPanel panelBaseDeDatos = new JPanel();
+        panelBaseDeDatos.setLayout(null);
+
+        JLabel labelArticulo = new JLabel("Artículo");
+        JButton botonAnadirArticulo = new JButton("AÑADIR");
+        botonAnadirArticulo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                new PantallaAnadirArticulo(nombre);
+                dispose();
+            }
+        });
+        JButton botonQuitarArticulo = new JButton("QUITAR");
+
+        JLabel labelCliente = new JLabel("Cliente");
+        JButton botonAnadirCliente = new JButton("AÑADIR");
+        botonAnadirCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                new PantallaAnadirCliente(nombre);
+                dispose();
+            }
+        });
+        JButton botonQuitarCliente = new JButton("QUITAR");
 
         JLabel labelAdmin = new JLabel("Administrador");
         JButton botonAnadirAdmin = new JButton("AÑADIR");
@@ -83,6 +106,23 @@ public class ModuloAdministrador extends JFrame {
         });
         JButton botonQuitarDomiciliario = new JButton("QUITAR");
 
+        labelArticulo.setBounds(175, 120, 100, 20);
+        labelArticulo.setFont(labelArticulo.getFont().deriveFont(Font.PLAIN, 20f));
+        labelCliente.setBounds(178, 210, 100, 20);
+        labelCliente.setFont(labelArticulo.getFont().deriveFont(Font.PLAIN, 20f));
+
+        botonAnadirArticulo.setBounds(95, 150, 100, 30);
+        botonQuitarArticulo.setBounds(225, 150, 100, 30);
+        botonAnadirCliente.setBounds(95, 240, 100, 30);
+        botonQuitarCliente.setBounds(225, 240, 100, 30);
+
+        panelBaseDeDatos.add(labelArticulo);
+        panelBaseDeDatos.add(botonAnadirArticulo);
+        panelBaseDeDatos.add(botonQuitarArticulo);
+        panelBaseDeDatos.add(labelCliente);
+        panelBaseDeDatos.add(botonAnadirCliente);
+        panelBaseDeDatos.add(botonQuitarCliente);
+
         labelAdmin.setBounds(150, 60, 150, 20);
         labelAdmin.setFont(labelAdmin.getFont().deriveFont(Font.PLAIN, 20f));
         labelOperador.setBounds(165, 150, 100, 20);
@@ -96,7 +136,6 @@ public class ModuloAdministrador extends JFrame {
         botonQuitarAdmin.setBounds(225, 90, 100, 30);
         botonQuitarOperador.setBounds(225, 180, 100, 30);
         botonQuitarDomiciliario.setBounds(225, 270, 100, 30);
-        
 
         panelGestionUsuarios.add(labelAdmin);
         panelGestionUsuarios.add(labelOperador);

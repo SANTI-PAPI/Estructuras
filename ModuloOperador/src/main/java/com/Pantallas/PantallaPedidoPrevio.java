@@ -25,11 +25,13 @@ import com.Clases.Estructuras.linkedlist.ListaPedidos;
 import com.Datos.JSONManager;
 
 public class PantallaPedidoPrevio extends JFrame {
+    String nombre;
     Cliente cliente;
     ListaArticulos listaArticulos;
     ListaPedidos listaPedidos;
 
-    public PantallaPedidoPrevio(Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+    public PantallaPedidoPrevio(String nombre, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+        this.nombre = nombre;
         this.cliente = cliente;
         iniciarComponentes();
         setTitle("FoodUPB - Pedidos previos");
@@ -56,7 +58,7 @@ public class PantallaPedidoPrevio extends JFrame {
         mainPanel.add(buttonVolver);
         buttonVolver.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new ModuloOperador();
+                new ModuloOperador(nombre);
                 dispose();
             }
         });
@@ -105,7 +107,7 @@ public class PantallaPedidoPrevio extends JFrame {
         buttonOmitir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
-                    new PantallaPedido(cliente);
+                    new PantallaPedido(nombre, cliente);
                     dispose();
                 } catch (IOException | ParseException e) {
                     e.printStackTrace();
