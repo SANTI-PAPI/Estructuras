@@ -28,6 +28,7 @@ import com.Clases.Estructuras.linkedlist.ListaClientes;
 import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
+import com.Clases.Estructuras.queue.ColaPedidos;
 import com.Clases.Estructuras.queue.ColaPrioridad;
 import com.Clases.Estructuras.tree.ArbolBinario;
 
@@ -35,7 +36,7 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     private static final long serialVersionUID = 123L;
     private ListaPedidos listaPedidosActivos = new ListaPedidos();
     private ListaPedidos copiaListaPedidos = new ListaPedidos();
-    private ColaPrioridad<Articulo> colaPedidos = new ColaPrioridad<>(10);
+    private ColaPedidos colaPedidos = new ColaPedidos(10);
     private ColaPrioridad<Cliente> colaEntregas = new ColaPrioridad<>(5);
 
     protected Servicio() throws RemoteException {
@@ -370,18 +371,20 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
                     Articulo articuloActual = listaActual.contains(articuloNuevo.getId());
                     if (articuloActual != null) {
                         if (articuloNuevo.getCantidad() != articuloActual.getCantidad()) {
-                            int diferencia = articuloActual.getCantidad() - articuloNuevo.getCantidad();
+                            int diferencia = articuloNuevo.getCantidad() - articuloActual.getCantidad();
                             Articulo articuloDiferencia = new Articulo(articuloActual.getId(), articuloActual.getNombre(), articuloActual.getPrecio(), articuloActual.isComplejo());
                             articuloDiferencia.setCantidad(diferencia);
                             articuloDiferencia.setIdPedido(pedido.getIdPedido());
+                            System.out.println(articuloDiferencia.getNombre() + " - Diferencia de " + articuloDiferencia.getCantidad());
                             listaDiferencias.add(articuloDiferencia);
                         }
                     } else {
                         listaDiferencias.add(articuloNuevo);
                     }
                 }
-                copiaListaPedidos.replace(pedido);
-                listaPedidosActivos.sumarDiferenciaPedido(listaDiferencias);
+                copiaListaPedidos.replace(pedido); // Reemplaza la Lista del pedido con la nueva Lista
+                listaPedidosActivos.sumarDiferenciaPedido(listaDiferencias); // Suma la diferencia que falta por preparar de cada Articulo
+                colaPedidos.alterarCola(listaDiferencias);
             }
         }
     }
@@ -417,7 +420,6 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
         String dir = archivo.getCanonicalPath();
         dir = dir.substring(0, (dir.length() - 7));
         dir += "usuarios\\admin\\u-" + nombre + ".json";
-        System.out.println(dir);
 
         try (FileReader reader = new FileReader(dir)) {
             Object obj = jsonParser.parse(reader);
@@ -429,5 +431,43 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
             }
         }
         return "";
+    }
+
+    @Override
+    public void writeAdministrador(String id, String nombre, String password) throws IOException {
+        password = DigestUtils.sha1Hex(password);
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "usuarios\\admin\\u-" + id + ".json";
+
+        JSONObject userObject = new JSONObject();
+        userObject.put("nombre", nombre);
+        userObject.put("password", password);
+
+        try (FileWriter file = new FileWriter(dir)) {
+            file.write(userObject.toJSONString());
+            file.flush();
+        }
+    }
+
+    @Override
+    public void writeOperador(String id, String nombre, String password) throws IOException {
+        password = DigestUtils.sha1Hex(password);
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "usuarios\\operador\\u-" + id + ".json";
+
+        JSONObject userObject = new JSONObject();
+        userObject.put("nombre", nombre);
+        userObject.put("password", password);
+
+        try (FileWriter file = new FileWriter(dir)) {
+            file.write(userObject.toJSONString());
+            file.flush();
+        }
     }
 }

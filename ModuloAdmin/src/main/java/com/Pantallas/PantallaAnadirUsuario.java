@@ -3,7 +3,10 @@ package com.Pantallas;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,14 +16,27 @@ import javax.swing.JTextField;
 
 import org.json.simple.parser.ParseException;
 
+import com.Clases.Servidor.ClienteRMI;
 import com.Datos.JSONManager;
 
 public class PantallaAnadirUsuario extends JFrame {
+    ClienteRMI servidor;
     int tipoUsuario;
     String nombre;
 
-    public PantallaAnadirUsuario(int tipoUsuario, String nombre) {
-        System.out.println(tipoUsuario);
+    public PantallaAnadirUsuario(int tipoUsuario, String nombre) throws IOException {
+        Properties config = new Properties();
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "config.properties";
+
+        try (FileInputStream fin = new FileInputStream(new File(dir))) {
+            config.load(fin);
+            servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+        } catch (Exception e) {
+        }
         this.tipoUsuario = tipoUsuario;
         this.nombre = nombre;
         iniciarComponentes();
@@ -48,33 +64,31 @@ public class PantallaAnadirUsuario extends JFrame {
         botonAnadir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                if (!campoId.getText().equals("") && !campoNombre.getText().equals("")
-                        && !campoPassword.getText().equals("")) {
+                if (!campoId.getText().equals("") && !campoNombre.getText().equals("") && !campoPassword.getText().equals("")) {
                     switch (tipoUsuario) {
-                        case 1:
-                            try {
-                                JSONManager.writeAdministrador(campoId.getText(), campoNombre.getText(),
-                                        campoPassword.getText());
-                            } catch (IOException | ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case 2:
-                            try {
-                                JSONManager.writeOperador(campoId.getText(), campoNombre.getText(),
-                                        campoPassword.getText());
-                            } catch (IOException | ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case 3:
-                            try {
-                                JSONManager.writeDomiciliario(campoId.getText(), campoNombre.getText(),
-                                        campoPassword.getText());
-                            } catch (IOException | ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
+                    case 1:
+                        try {
+                            servidor.writeAdministrador(campoId.getText(), campoNombre.getText(), campoPassword.getText());
+                        } catch (Exception e) {
+
+                        }
+                        break;
+                    case 2:
+                        try {
+                            servidor.writeOperador(campoId.getText(), campoNombre.getText(), campoPassword.getText());
+                            System.out.println("Nuevo operador");
+                        } catch (Exception e) {
+                            
+                        }
+                        break;
+                    case 3:
+                        try {
+                            // servidor.writeDomiciliario(campoId.getText(), campoNombre.getText(),
+                            // campoPassword.getText());
+                        } catch (Exception e) {
+                            
+                        }
+                        break;
                     }
                     new ModuloAdministrador(nombre);
                     dispose();

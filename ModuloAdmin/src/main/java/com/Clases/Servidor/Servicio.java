@@ -319,7 +319,61 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
     @Override
     public String getUsuarioAdmin(String nombre, String password) throws RemoteException, IOException, ParseException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUsuarioAdmin'");
+        JSONParser jsonParser = new JSONParser();
+        password = DigestUtils.sha1Hex(password);
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "usuarios\\admin\\u-" + nombre + ".json";
+
+        try (FileReader reader = new FileReader(dir)) {
+            Object obj = jsonParser.parse(reader);
+
+            JSONObject usuario = (JSONObject) obj;
+            String filePass = (String) usuario.get("password");
+            if (filePass != null && filePass.equals(password)) {
+                return (String) usuario.get("nombre");
+            }
+        }
+        return "";
+    }
+
+    @Override
+    public void writeAdministrador(String id, String nombre, String password) throws IOException {
+        password = DigestUtils.sha1Hex(password);
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "usuarios\\admin\\u-" + id + ".json";
+
+        JSONObject userObject = new JSONObject();
+        userObject.put("nombre", nombre);
+        userObject.put("password", password);
+
+        try (FileWriter file = new FileWriter(dir)) {
+            file.write(userObject.toJSONString());
+            file.flush();
+        }
+    }
+
+    @Override
+    public void writeOperador(String id, String nombre, String password) throws IOException {
+        password = DigestUtils.sha1Hex(password);
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "usuarios\\operador\\u-" + id + ".json";
+
+        JSONObject userObject = new JSONObject();
+        userObject.put("nombre", nombre);
+        userObject.put("password", password);
+
+        try (FileWriter file = new FileWriter(dir)) {
+            file.write(userObject.toJSONString());
+            file.flush();
+        }
     }
 }

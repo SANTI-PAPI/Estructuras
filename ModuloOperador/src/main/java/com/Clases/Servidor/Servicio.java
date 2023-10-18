@@ -300,7 +300,7 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     }
 
     @Override
-    public String getUsuario(String nombre, String password) throws IOException, ParseException {
+    public String getUsuarioOperador(String nombre, String password) throws IOException, ParseException {
         JSONParser jsonParser = new JSONParser();
         password = DigestUtils.sha1Hex(password);
 
@@ -320,4 +320,5 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
         }
         return "";
     }
+
 }

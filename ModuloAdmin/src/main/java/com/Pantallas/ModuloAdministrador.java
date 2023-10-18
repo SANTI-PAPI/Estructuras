@@ -84,7 +84,10 @@ public class ModuloAdministrador extends JFrame {
         botonAnadirAdmin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                new PantallaAnadirUsuario(1, nombre);
+                try {
+                    new PantallaAnadirUsuario(1, nombre);
+                } catch (IOException e) {
+                }
                 dispose();
             }
         });
@@ -94,7 +97,10 @@ public class ModuloAdministrador extends JFrame {
         botonAnadirOperador.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg1) {
-                new PantallaAnadirUsuario(2, nombre);
+                try {
+                    new PantallaAnadirUsuario(2, nombre);
+                } catch (IOException e) {
+                }
                 dispose();
             }
         });
@@ -104,7 +110,7 @@ public class ModuloAdministrador extends JFrame {
         botonAnadirDomiciliario.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg2) {
-                new PantallaAnadirUsuario(3, nombre);
+                // new PantallaAnadirUsuario(3, nombre);
                 dispose();
             }
         });

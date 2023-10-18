@@ -7,7 +7,7 @@ import com.Clases.Estructuras.interfaces.queue.QueueInterface;
 import com.Clases.Estructuras.linkedlist.ListaEnlazada;
 
 public class Cola<T> implements QueueInterface<T> {
-    private ListaEnlazada<T> lista = new ListaEnlazada<>();
+    public ListaEnlazada<T> lista = new ListaEnlazada<>();
 
     @Override
     public boolean clear() {

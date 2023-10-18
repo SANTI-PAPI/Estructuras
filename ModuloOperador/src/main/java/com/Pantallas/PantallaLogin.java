@@ -65,7 +65,7 @@ public class PantallaLogin extends JFrame {
                         for (int i = 0; i < arrPassword.length; i++) {
                             password += arrPassword[i];
                         }
-                        nombre = servidor.getUsuario(campoUsuario.getText(), password);
+                        nombre = servidor.getUsuarioOperador(campoUsuario.getText(), password);
                         if (!nombre.equals("")) {
                             new ModuloOperador(nombre);
                             dispose();

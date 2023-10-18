@@ -171,4 +171,20 @@ public class ClienteRMI {
         }
         return "";
     }
+
+    public void writeAdministrador(String id, String nombre, String password) {
+        try {
+            service = (DatosJSON) Naming.lookup(uri);
+            service.writeAdministrador(id, nombre, password);
+        } catch (Exception e) {
+        }
+    }
+
+    public void writeOperador(String id, String nombre, String password) {
+        try {
+            service = (DatosJSON) Naming.lookup(uri);
+            service.writeOperador(id, nombre, password);
+        } catch (Exception e) {
+        }
+    }
 }

@@ -163,10 +163,10 @@ public class ClienteRMI {
         }
     }
 
-    public String getUsuario(String nombre, String password) {
+    public String getUsuarioOperador(String nombre, String password) {
         try {
             service = (DatosJSON) Naming.lookup(uri);
-            return service.getUsuario(nombre, password);
+            return service.getUsuarioOperador(nombre, password);
         } catch (Exception e) {
         }
         return "";

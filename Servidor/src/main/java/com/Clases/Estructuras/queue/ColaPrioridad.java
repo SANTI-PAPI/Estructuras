@@ -3,9 +3,9 @@ package com.Clases.Estructuras.queue;
 import com.Clases.Estructuras.interfaces.queue.QueueInterface;
 
 public class ColaPrioridad<T> implements QueueInterface<T> {
-    private int cantidad;
-    private int tamano = 0;
-    private Cola<T>[] colaPrioridad;
+    public int cantidad;
+    public int tamano = 0;
+    public Cola<T>[] colaPrioridad;
 
     public ColaPrioridad(int cantidadPrioridad) {
         this.cantidad = cantidadPrioridad;

@@ -33,6 +33,6 @@ public interface DatosJSON extends Remote {
 
     public void modificarPedido(ListaArticulos pedido) throws RemoteException;
 
-    public String getUsuario(String text, String password) throws RemoteException, IOException, ParseException;
+    public String getUsuarioOperador(String text, String password) throws RemoteException, IOException, ParseException;
 
 }

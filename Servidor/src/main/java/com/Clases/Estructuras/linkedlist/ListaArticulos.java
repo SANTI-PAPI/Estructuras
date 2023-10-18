@@ -113,4 +113,31 @@ public class ListaArticulos extends ListaEnlazada<Articulo> {
             }
         }
     }
+
+    public boolean contains(int id, String idPedido) {
+        Iterator<NodeInterface<Articulo>> iterador = this.iterator();
+        while (iterador.hasNext()) {
+            Articulo articuloActual = iterador.next().getObject();
+            if (articuloActual.getId() == id && articuloActual.getIdPedido().equals(idPedido)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void remove(int id, String idPedido) {
+        NodoListaEnlazada<Articulo> nodoActual = cabeza;
+        NodoListaEnlazada<Articulo> nodoAnterior = null;
+        while (nodoActual != null) {
+            if (nodoActual.getObject().getId() == id && nodoActual.getObject().getIdPedido().equals(idPedido)) {
+                if (nodoAnterior == null) {
+                    cabeza = cabeza.getSiguiente();
+                } else {
+                    nodoAnterior.setSiguiente(nodoActual.getSiguiente());
+                }
+                tamano--;
+                return;
+            }
+        }
+    }
 }

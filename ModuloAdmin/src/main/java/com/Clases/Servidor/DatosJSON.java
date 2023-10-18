@@ -37,4 +37,8 @@ public interface DatosJSON extends Remote {
 
     public String getUsuarioAdmin(String nombre, String password) throws RemoteException, IOException, ParseException;
 
+    public void writeAdministrador(String id, String nombre, String password) throws IOException;
+
+    public void writeOperador(String id, String nombre, String password) throws IOException;
+
 }
