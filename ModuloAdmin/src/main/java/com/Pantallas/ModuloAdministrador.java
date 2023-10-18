@@ -3,6 +3,7 @@ package com.Pantallas;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -33,7 +34,10 @@ public class ModuloAdministrador extends JFrame {
         buttonVolver.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                new PantallaLogin();
+                try {
+                    new PantallaLogin();
+                } catch (IOException e) {
+                }
                 dispose();
             }
         });

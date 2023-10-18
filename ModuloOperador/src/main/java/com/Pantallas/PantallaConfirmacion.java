@@ -5,9 +5,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Iterator;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,22 +22,35 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.parser.ParseException;
 
 import com.Clases.Articulo;
 import com.Clases.Cliente;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
-import com.Datos.JSONManager;
+import com.Clases.Servidor.ClienteRMI;
 
 public class PantallaConfirmacion extends JFrame {
     String nombre;
     Cliente cliente;
     ListaArticulos pedido;
+    ClienteRMI servidor;
 
-    public PantallaConfirmacion(String nombre, ListaArticulos listaPedido, Cliente cliente)
-            throws FileNotFoundException, IOException, ParseException {
+    public PantallaConfirmacion(String nombre, ListaArticulos listaPedido, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
         this.nombre = nombre;
+        Properties config = new Properties();
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "config.properties";
+
+        try (FileInputStream fin = new FileInputStream(new File(dir))) {
+            config.load(fin);
+            servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+        } catch (Exception e) {
+        }
         this.pedido = listaPedido;
         this.cliente = cliente;
         iniciarComponentes();
@@ -83,8 +100,8 @@ public class PantallaConfirmacion extends JFrame {
             valorTotal += (articuloActual.getCantidad() * articuloActual.getPrecio());
         }
 
-        String[] columnas = { "Nombre del artículo" , "Cantidad" };
-        
+        String[] columnas = { "Nombre del artículo", "Cantidad" };
+
         JTable tablaArticulos = new JTable(articulos, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -112,7 +129,7 @@ public class PantallaConfirmacion extends JFrame {
         JLabel labelTotal = new JLabel("PRECIO TOTAL:");
         labelTotal.setBounds(600, 120, 100, 30);
         mainPanel.add(labelTotal);
-        
+
         double valorImpuestos = (Double.parseDouble(String.valueOf(valorTotal)) / 100) * 19;
         JLabel labelValorTotal = new JLabel("$ " + String.valueOf(valorTotal));
         labelValorTotal.setBounds(600, 140, 100, 30);
@@ -138,9 +155,17 @@ public class PantallaConfirmacion extends JFrame {
         buttonConfirmar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
-                    JSONManager.writeClientes(cliente);
-                } catch (IOException | ParseException e) {
-                    e.printStackTrace();
+                    servidor.writeClientes(cliente);
+                    pedido.setCliente(cliente);
+                    if (pedido.getIdPedido() == null) {
+                        pedido.setIdPedido(DigestUtils.sha1Hex(LocalDateTime.now().toString()));
+                        servidor.addNuevoPedido(pedido);
+                    } else {
+                        servidor.modificarPedido(pedido);
+                    }
+                    new ModuloOperador(nombre);
+                    dispose();
+                } catch (Exception e) {
                 }
             }
         });

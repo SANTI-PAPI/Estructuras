@@ -3,7 +3,10 @@ package com.Pantallas;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,10 +18,23 @@ import javax.swing.plaf.ColorUIResource;
 
 import org.json.simple.parser.ParseException;
 
-import com.Datos.JSONManager;
+import com.Clases.Servidor.ClienteRMI;
 
 public class PantallaLogin extends JFrame {
-    public PantallaLogin() {
+    ClienteRMI servidor;
+    public PantallaLogin() throws IOException {
+        Properties config = new Properties();
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "config.properties";
+
+        try (FileInputStream fin = new FileInputStream(new File(dir))) {
+            config.load(fin);
+            servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+        } catch (Exception e) {
+        }
         iniciarComponentes();
         setTitle("FoodUPB - Inicio de sesion (operador)");
         setLocationRelativeTo(null);
@@ -49,7 +65,7 @@ public class PantallaLogin extends JFrame {
                         for (int i = 0; i < arrPassword.length; i++) {
                             password += arrPassword[i];
                         }
-                        nombre = JSONManager.getUsuario(campoUsuario.getText(), password);
+                        nombre = servidor.getUsuario(campoUsuario.getText(), password);
                         if (!nombre.equals("")) {
                             new ModuloOperador(nombre);
                             dispose();
@@ -87,7 +103,10 @@ public class PantallaLogin extends JFrame {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PantallaLogin().setVisible(true);
+                try {
+                    new PantallaLogin().setVisible(true);
+                } catch (IOException e) {
+                }
             }
         });
     }

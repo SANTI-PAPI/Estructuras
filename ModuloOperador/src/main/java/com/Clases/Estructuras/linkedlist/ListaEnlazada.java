@@ -5,10 +5,11 @@ import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ListaEnlazada<T> implements LinkedListInterface<T> {
+public class ListaEnlazada<T> implements LinkedListInterface<T>, Serializable {
 
     NodoListaEnlazada<T> cabeza;
     NodoListaEnlazada<T> cola;

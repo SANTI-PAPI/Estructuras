@@ -11,26 +11,41 @@ import org.json.simple.parser.ParseException;
 
 import com.Clases.Cliente;
 import com.Clases.FiltroEntero;
+import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaClientes;
-import com.Datos.JSONManager;
+import com.Clases.Servidor.ClienteRMI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Properties;
 
 public class ModuloOperador extends JFrame {
     ListaClientes listaClientes;
     String nombre;
+    ClienteRMI servidor;
 
-    public ModuloOperador(String nombre) {
+    public ModuloOperador(String nombre) throws IOException, ParseException {
         this.nombre = nombre;
+        Properties config = new Properties();
+
+        File archivo = new File("pom.xml");
+        String dir = archivo.getCanonicalPath();
+        dir = dir.substring(0, (dir.length() - 7));
+        dir += "config.properties";
+
+        try (FileInputStream fin = new FileInputStream(new File(dir))) {
+            config.load(fin);
+            servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+        } catch (Exception e) {
+        }
+        listaClientes = servidor.readClientes();
+
         iniciarComponentes();
         setTitle("FoodUPB - Modulo de operador");
-        try {
-            listaClientes = JSONManager.readClientes();
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(new GridLayout(1, 2));
@@ -101,7 +116,10 @@ public class ModuloOperador extends JFrame {
         panelDerecho.add(buttonModificar);
         buttonModificar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new PantallaModificacion(nombre);
+                try {
+                    new PantallaModificacion(nombre);
+                } catch (IOException e1) {
+                }
                 dispose();
             }
         });
