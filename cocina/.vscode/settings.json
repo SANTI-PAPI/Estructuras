@@ -3,7 +3,9 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\jmont\\Downloads\\json-simple-1.1.jar\\json-simple-1.1.jar"
+        "c:\\Users\\jmont\\Downloads\\json-simple-1.1.jar\\json-simple-1.1.jar",
+        "/home/leroservidor/Desktop/json-simple-1.1.1.jar",
+        "/home/leroservidor/Desktop/commons-codec-1.16.0.jar"
     ],
     "java.dependency.packagePresentation": "hierarchical"
 }
