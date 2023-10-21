@@ -90,10 +90,8 @@ public class PantallaPedido extends JFrame {
     public PantallaPedido(String nombre, String telefono) throws FileNotFoundException, IOException, ParseException {
         Properties config = new Properties();
 
-        File archivo = new File("pom.xml");
+        File archivo = new File("config.properties");
         String dir = archivo.getCanonicalPath();
-        dir = dir.substring(0, (dir.length() - 7));
-        dir += "config.properties";
 
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);

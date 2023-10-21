@@ -2,7 +2,6 @@ package com.Clases.Servidor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -11,11 +10,8 @@ import org.json.simple.parser.ParseException;
 import com.Clases.Articulo;
 import com.Clases.Cliente;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
-import com.Clases.Estructuras.linkedlist.ListaPedidos;
 
 public interface DatosJSON extends Remote {
-
-    public int suma(int i1, int i2) throws RemoteException;
 
     public Object[][] readArticulos() throws RemoteException, IOException, ParseException;
 
@@ -23,7 +19,7 @@ public interface DatosJSON extends Remote {
 
     public byte[] readClientes() throws RemoteException, IOException, FileNotFoundException, ParseException;
 
-    public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, ParseException, ClassNotFoundException;
+    public byte[] getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, ParseException, ClassNotFoundException;
 
     public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, ParseException, ClassNotFoundException;
 
@@ -31,13 +27,13 @@ public interface DatosJSON extends Remote {
 
     public void addNuevoPedido(ListaArticulos pedido) throws RemoteException;
 
-    public void sendArticulo(Articulo articulo) throws RemoteException;
+    public void sendArticulo(Articulo articulo) throws RemoteException, FileNotFoundException, ClassNotFoundException, IOException, ParseException;
 
     public Object[][] readPedidos() throws RemoteException, IOException, ParseException;
 
     public byte[] getListaPedidosActivos() throws RemoteException, IOException;
 
-    public void modificarPedido(ListaArticulos pedido) throws RemoteException;
+    public void modificarPedido(ListaArticulos pedido) throws RemoteException, FileNotFoundException, ClassNotFoundException, IOException, ParseException;
 
     public String getUsuarioOperador(String text, String password) throws RemoteException, IOException, ParseException;
 

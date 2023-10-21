@@ -25,10 +25,8 @@ public class PantallaLogin extends JFrame {
     public PantallaLogin() throws IOException {
         Properties config = new Properties();
 
-        File archivo = new File("pom.xml");
+        File archivo = new File("config.properties");
         String dir = archivo.getCanonicalPath();
-        dir = dir.substring(0, (dir.length() - 7));
-        dir += "config.properties";
 
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);

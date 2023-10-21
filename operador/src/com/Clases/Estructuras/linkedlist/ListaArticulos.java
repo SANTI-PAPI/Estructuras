@@ -9,8 +9,7 @@ import com.Clases.Cliente;
 
 public class ListaArticulos extends ListaEnlazada<Articulo> {
     private static final long serialVersionUID = 295L;
-    private int cantidad; // Para organizar la cantidad de veces que se ha pedido una lista de artículos
-                          // por un Cliente
+    private int cantidad; // Para organizar la cantidad de veces que se ha pedido una lista de artículos por un Cliente
     private Cliente cliente; // Para asignar el pedido a nombre de un cliente
     private String idPedido;
 

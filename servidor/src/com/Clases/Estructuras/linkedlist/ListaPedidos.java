@@ -3,7 +3,6 @@ package com.Clases.Estructuras.linkedlist;
 import java.util.Iterator;
 
 import com.Clases.Articulo;
-import com.Clases.Cliente;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
 
@@ -87,5 +86,28 @@ public class ListaPedidos extends ListaEnlazada<ListaArticulos> {
             }
             nodo = nodo.getSiguiente();
         }
+    }
+
+    public void buscarPedido(ListaArticulos listaActual) {
+        NodoListaEnlazada<ListaArticulos> nodo = cabeza;
+        while (nodo != null) {
+            ListaArticulos pedidoActual = nodo.getObject();
+            if (pedidoActual.size() == listaActual.size()) {
+                boolean sonPedidosIguales = true;
+                Iterator<NodeInterface<Articulo>> iterador = pedidoActual.iterator();
+                while (iterador.hasNext()) {
+                    Articulo articuloActual = iterador.next().getObject();
+                    Articulo articuloActualPedido = listaActual.contains(articuloActual.getId());
+                    if (articuloActual == null || !(articuloActual.getCantidad() == articuloActualPedido.getCantidad())) {
+                        sonPedidosIguales = false;
+                    }
+                }
+                if (sonPedidosIguales) {
+                    nodo.getObject().setCantidad(nodo.getObject().getCantidad() + 1);
+                    return;
+                }
+            }
+        }
+        add(listaActual);
     }
 }

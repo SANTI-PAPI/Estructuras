@@ -3,7 +3,6 @@ package com.Clases.Estructuras.linkedlist;
 import java.util.Iterator;
 
 import com.Clases.Articulo;
-import com.Clases.Cliente;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
 

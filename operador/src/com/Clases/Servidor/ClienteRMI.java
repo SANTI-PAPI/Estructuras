@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Iterator;
@@ -46,7 +45,6 @@ public class ClienteRMI {
         return false;
     }
 
-    // @Override
     public int suma(int i1, int i2) throws RemoteException {
         try {
             service = (DatosJSON) Naming.lookup(uri);
@@ -57,7 +55,6 @@ public class ClienteRMI {
         return 0;
     }
 
-    // @Override
     public ListaArticulos getListaArticulos() throws RemoteException, FileNotFoundException, IOException, ParseException {
         try {
             service = (DatosJSON) Naming.lookup(uri);
@@ -73,7 +70,6 @@ public class ClienteRMI {
         return new ListaArticulos();
     }
 
-    // @Override
     public ListaClientes readClientes() throws RemoteException, IOException, FileNotFoundException, ParseException {
         try {
             service = (DatosJSON) Naming.lookup(uri);
@@ -88,17 +84,19 @@ public class ClienteRMI {
         return new ListaClientes();
     }
 
-    // @Override
     public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, ParseException {
         try {
             service = (DatosJSON) Naming.lookup(uri);
-            return service.getListaPedidos(numeroTelefono);
+            ByteArrayInputStream bs = new ByteArrayInputStream(service.getListaPedidos(numeroTelefono));
+            ObjectInputStream is = new ObjectInputStream(bs);
+            ListaPedidos listaPedidos = (ListaPedidos) is.readObject();
+            is.close();
+            return listaPedidos;
         } catch (Exception e) {
         }
         return new ListaPedidos();
     }
 
-    // @Override
     public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, ParseException {
         try {
             service = (DatosJSON) Naming.lookup(uri);
@@ -107,7 +105,6 @@ public class ClienteRMI {
         }
     }
 
-    // @Override
     public Object[][] readArticulos() throws RemoteException {
         try {
             service = (DatosJSON) Naming.lookup(uri);

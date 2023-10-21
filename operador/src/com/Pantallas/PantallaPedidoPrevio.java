@@ -1,8 +1,10 @@
 package com.Pantallas;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.util.Properties;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,23 +24,33 @@ import org.json.simple.parser.ParseException;
 import com.Clases.Cliente;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
+import com.Clases.Servidor.ClienteRMI;
 
 public class PantallaPedidoPrevio extends JFrame {
     String nombre;
     Cliente cliente;
     ListaArticulos listaArticulos;
     ListaPedidos listaPedidos;
+    ClienteRMI servidor;
 
     public PantallaPedidoPrevio(String nombre, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
         this.nombre = nombre;
         this.cliente = cliente;
+        Properties config = new Properties();
+        File archivo = new File("config.properties");
+        String dir = archivo.getCanonicalPath();
+        try (FileInputStream fin = new FileInputStream(new File(dir))) {
+            config.load(fin);
+            servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"), (String) config.get("SERVICENAME"));
+        } catch (Exception e) {
+        }
+        listaPedidos = servidor.getListaPedidos(cliente.getNumeroTelefono());
         iniciarComponentes();
         setTitle("FoodUPB - Pedidos previos");
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(new GridLayout(1, 2));
         setMaximizedBounds(getBounds());
-        // listaPedidos = JSONManager.getListaPedidos(cliente.getNumeroTelefono());
     }
 
     private void iniciarComponentes() throws FileNotFoundException, IOException, ParseException {

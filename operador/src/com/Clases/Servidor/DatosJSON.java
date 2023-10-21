@@ -9,7 +9,6 @@ import org.json.simple.parser.ParseException;
 
 import com.Clases.Cliente;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
-import com.Clases.Estructuras.linkedlist.ListaPedidos;
 
 public interface DatosJSON extends Remote {
 
@@ -21,7 +20,7 @@ public interface DatosJSON extends Remote {
 
     public byte[] readClientes() throws RemoteException, IOException, FileNotFoundException, ParseException;
 
-    public ListaPedidos getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, ParseException, ClassNotFoundException;
+    public byte[] getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, ParseException, ClassNotFoundException;
 
     public void writeClientes(Cliente cliente) throws RemoteException, IOException, FileNotFoundException, ParseException, ClassNotFoundException;
 

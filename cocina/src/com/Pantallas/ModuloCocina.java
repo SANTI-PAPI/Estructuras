@@ -4,14 +4,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.plaf.ColorUIResource;
-import javax.swing.text.PlainDocument;
 import org.json.simple.parser.ParseException;
 
 import com.Clases.Articulo;
-import com.Clases.FiltroEntero;
-import com.Clases.Estructuras.linkedlist.ListaClientes;
 import com.Clases.Servidor.ClienteRMI;
 import java.awt.*;
 import java.awt.event.ActionEvent;

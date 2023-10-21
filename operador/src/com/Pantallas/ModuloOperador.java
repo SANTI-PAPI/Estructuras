@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Properties;
 
 public class ModuloOperador extends JFrame {
@@ -31,10 +30,8 @@ public class ModuloOperador extends JFrame {
         this.nombre = nombre;
         Properties config = new Properties();
 
-        File archivo = new File("pom.xml");
+        File archivo = new File("config.properties");
         String dir = archivo.getCanonicalPath();
-        dir = dir.substring(0, (dir.length() - 7));
-        dir += "config.properties";
 
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);
@@ -117,9 +114,9 @@ public class ModuloOperador extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new PantallaModificacion(nombre);
+                    dispose();
                 } catch (IOException e1) {
                 }
-                dispose();
             }
         });
 
