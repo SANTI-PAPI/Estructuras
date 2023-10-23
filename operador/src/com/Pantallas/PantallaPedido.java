@@ -138,6 +138,7 @@ public class PantallaPedido extends JFrame {
 
         Iterator<NodeInterface<Articulo>> iteradorPedido = listaPedido.iterator();
         flagEnd = true;
+        modelo = new DefaultTableModel();
         while (iteradorPedido.hasNext()) {
             Articulo articuloActual = iteradorPedido.next().getObject();
             String nombreActual = articuloActual.getNombre();
@@ -201,6 +202,7 @@ public class PantallaPedido extends JFrame {
         setMaximizedBounds(getBounds());
         Iterator<NodeInterface<Articulo>> iteradorPedido = listaPedido.iterator();
         flagEnd = true;
+        modelo = new DefaultTableModel();
         while (iteradorPedido.hasNext()) {
             Articulo articuloActual = iteradorPedido.next().getObject();
             String nombreActual = articuloActual.getNombre();
@@ -263,9 +265,6 @@ public class PantallaPedido extends JFrame {
                 return false;
             }
         };
-        
-        
-        tablaArticulos.setModel(modelo);
         tablaArticulos.setSelectionMode(0);
 
         JScrollPane panelBusqueda = new JScrollPane(tablaArticulos);
@@ -277,7 +276,6 @@ public class PantallaPedido extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nombreReferencia = fieldBuscador.getText();
-                DefaultTableModel modelo = (DefaultTableModel) tablaArticulos.getModel();
                 String[] arregloNombres = new String[modelo.getRowCount()];
                 for (int i = 0; i < modelo.getRowCount(); i++) {
                     arregloNombres[i] = (String) modelo.getValueAt(i, 0);
@@ -287,12 +285,13 @@ public class PantallaPedido extends JFrame {
                     public int compare(String nombre1, String nombre2) {
                         int semejanza1 = calcularSemejanza(nombreReferencia, nombre1);
                         int semejanza2 = calcularSemejanza(nombreReferencia, nombre2);
-                        return Integer.compare(semejanza1, semejanza2);
+                        return Integer.compare(semejanza2, semejanza1);
                     }
                 });
                 Object[][] nuevaTabla = new Object[modelo.getRowCount()][2];
-                for (int i = 0; i < modelo.getRowCount(); i++) {
-                    for (int j = 0; j < arregloNombres.length; i++) {
+                int cantidadFilas = modelo.getRowCount();
+                for (int i = 0; i < cantidadFilas; i++) {
+                    for (int j = 0; j < arregloNombres.length; j++) {
                         if (((String) modelo.getValueAt(i, 0)).equals(arregloNombres[j])) {
                             nuevaTabla[j][0] = arregloNombres[j];
                             nuevaTabla[j][1] = modelo.getValueAt(i, 1);
@@ -318,6 +317,15 @@ public class PantallaPedido extends JFrame {
         labelCantidad.setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
         panelIzquierda.add(labelCantidad);
 
+        JButton buttonAgregar = new JButton("AGREGAR");
+        buttonAgregar.setBounds(265, 350, 100, 30); // Posición del botón "AGREGAR" al lado de la caja de texto
+        panelIzquierda.add(buttonAgregar);
+
+        JPanel panelDerecha = new JPanel(null); // Panel para poner caja y botones
+        panelDerecha.setPreferredSize(new Dimension(300, 450));
+        panelDerecha.setBackground(Color.GRAY);
+        mainPanel.add(panelDerecha, BorderLayout.EAST);
+
         DefaultTableModel modeloPedidos = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -330,22 +338,13 @@ public class PantallaPedido extends JFrame {
         modeloPedidos.addColumn("Nombre del artículo");
         modeloPedidos.addColumn("Cantidad");
 
-        JButton buttonAgregar = new JButton("AGREGAR");
-        buttonAgregar.setBounds(265, 350, 100, 30); // Posición del botón "AGREGAR" al lado de la caja de texto
-        panelIzquierda.add(buttonAgregar);
-
-        JPanel panelDerecha = new JPanel(null); // Panel para poner caja y botones
-        panelDerecha.setPreferredSize(new Dimension(300, 450));
-        panelDerecha.setBackground(Color.GRAY);
-        mainPanel.add(panelDerecha, BorderLayout.EAST);
-
-        JTable tablaPedidos = new JTable(modelo);
+        JTable tablaPedidos = new JTable(modeloPedidos);
         JScrollPane panelPedido = new JScrollPane(tablaPedidos); // Crear un caja donde luego se verá el pedido
         panelPedido.setBounds(30, 75, 260, 250);
         panelPedido.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         panelPedido.setBackground(Color.WHITE);
         panelDerecha.add(panelPedido);
-
+        
         modeloPedidos.addTableModelListener(new TableModelListener() {
 
             public static boolean isNumeric(int strNum) {
