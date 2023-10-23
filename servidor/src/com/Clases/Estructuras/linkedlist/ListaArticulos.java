@@ -139,4 +139,16 @@ public class ListaArticulos extends ListaEnlazada<Articulo> {
             }
         }
     }
+
+    public void copiar(ListaArticulos pedido) {
+        this.idPedido = pedido.getIdPedido();
+        this.cliente = pedido.getCliente();
+        Iterator<NodeInterface<Articulo>> iterador = pedido.iterator();
+        while (iterador.hasNext()) {
+            Articulo articuloActual = iterador.next().getObject();
+            Articulo copiaArticulo = new Articulo(articuloActual.getId(), articuloActual.getNombre(), articuloActual.getPrecio(), articuloActual.isComplejo());
+            copiaArticulo.setCantidad(articuloActual.getCantidad());
+            add(copiaArticulo);
+        }
+    }
 }

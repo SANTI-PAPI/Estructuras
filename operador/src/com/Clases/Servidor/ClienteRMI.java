@@ -45,16 +45,6 @@ public class ClienteRMI {
         return false;
     }
 
-    public int suma(int i1, int i2) throws RemoteException {
-        try {
-            service = (DatosJSON) Naming.lookup(uri);
-            return service.suma(i1, i2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
     public ListaArticulos getListaArticulos() throws RemoteException, FileNotFoundException, IOException, ParseException {
         try {
             service = (DatosJSON) Naming.lookup(uri);

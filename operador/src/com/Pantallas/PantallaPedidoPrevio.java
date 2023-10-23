@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Properties;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +22,9 @@ import javax.swing.table.DefaultTableModel;
 
 import org.json.simple.parser.ParseException;
 
+import com.Clases.Articulo;
 import com.Clases.Cliente;
+import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
 import com.Clases.Servidor.ClienteRMI;
@@ -76,35 +79,56 @@ public class PantallaPedidoPrevio extends JFrame {
                 dispose();
             }
         });
-        String[] columnas = { "Cantidad", "Nombre del artículo" };
-        Object[][] articulos = new Object[0][2];
-        JTable tablaArticulos = new JTable(articulos, columnas) {
+        JTable tablaArticulos = new JTable() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
         tablaArticulos.setSelectionMode(0);
+        DefaultTableModel modelo = new DefaultTableModel();
+        tablaArticulos.setModel(modelo);
+        modelo.addColumn("Nombre del artículo");
+        modelo.addColumn("Cantidad");
+        ListaArticulos listaActual = listaPedidos.getIndex(0);
+        Iterator<NodeInterface<Articulo>> iterador = listaActual.iterator();
+        while (iterador.hasNext()) {
+            Articulo articuloActual = iterador.next().getObject();
+            String nombreActual = articuloActual.getNombre();
+            int cantidad = articuloActual.getCantidad();
+            Object[] nuevaFila = { nombreActual, cantidad };
+            modelo.addRow(nuevaFila);
+        }
+
         JScrollPane panelBusqueda = new JScrollPane(tablaArticulos);
-        panelBusqueda.setBounds(60, 120, 500, 300); 
+        panelBusqueda.setBounds(60, 120, 500, 300);
         panelBusqueda.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         mainPanel.add(panelBusqueda);
 
         JComboBox<String> comboPedidos = new JComboBox<>();
         comboPedidos.setBounds(160, 80, 300, 20);
-        mainPanel.add(comboPedidos);
-
-        DefaultTableModel modelo = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                if (column == 1) {
-                    return true;
+        for (int i = 1; i <= listaPedidos.size(); i++) {
+            comboPedidos.addItem("Pedido frecuente #" + String.valueOf(i));
+        }
+        comboPedidos.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int indice = comboPedidos.getSelectedIndex();
+                ListaArticulos listaActual = listaPedidos.getIndex(indice);
+                DefaultTableModel modelo = (DefaultTableModel) tablaArticulos.getModel();
+                modelo.setRowCount(0);
+                Iterator<NodeInterface<Articulo>> iterador = listaActual.iterator();
+                while (iterador.hasNext()) {
+                    Articulo articuloActual = iterador.next().getObject();
+                    String nombreActual = articuloActual.getNombre();
+                    int cantidad = articuloActual.getCantidad();
+                    Object[] nuevaFila = { nombreActual, cantidad };
+                    modelo.addRow(nuevaFila);
                 }
-                return false;
+
             }
-        };
-        modelo.addColumn("Nombre del artículo");
-        modelo.addColumn("Cantidad");
+        });
+
+        mainPanel.add(comboPedidos);
 
         JButton buttonElegir = new JButton("ELEGIR");
         buttonElegir.setBounds(620, 120, 100, 30); // Posición del botón "AGREGAR" al lado de la caja de texto
@@ -112,6 +136,12 @@ public class PantallaPedidoPrevio extends JFrame {
 
         buttonElegir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                try {
+                    ListaArticulos lista = listaPedidos.getIndex(comboPedidos.getSelectedIndex());
+                    new PantallaPedido(nombre, lista, cliente);
+                    dispose();
+                } catch (Exception ex) {
+                }
             }
         });
 

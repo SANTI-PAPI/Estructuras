@@ -3,11 +3,32 @@ package com.Clases.Estructuras.linkedlist;
 import java.util.Iterator;
 
 import com.Clases.Articulo;
+import com.Clases.Cliente;
 import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
 
 public class ListaPedidos extends ListaEnlazada<ListaArticulos> {
     private static final long serialVersionUID = 2901L;
+    private Cliente cliente;
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public ListaArticulos contains(String idPedido) {
+        Iterator<NodeInterface<ListaArticulos>> iterador = this.iterator();
+        while (iterador.hasNext()) {
+            NodoListaEnlazada<ListaArticulos> nodo = (NodoListaEnlazada<ListaArticulos>) iterador.next();
+            if (nodo.getObject().getIdPedido().equals(idPedido)) {
+                return nodo.getObject();
+            }
+        }
+        return null;
+    }
 
     public boolean sort() {
         if (size() == 1) {
@@ -17,6 +38,7 @@ public class ListaPedidos extends ListaEnlazada<ListaArticulos> {
             return false;
         }
         ListaArticulos[] objects = toArray();
+        System.out.println(objects == null);
         for (int gap = objects.length / 2; gap > 0; gap /= 2) {
             for (int i = gap; i < objects.length; i++) {
                 ListaArticulos actual = objects[i];
@@ -98,16 +120,20 @@ public class ListaPedidos extends ListaEnlazada<ListaArticulos> {
                 while (iterador.hasNext()) {
                     Articulo articuloActual = iterador.next().getObject();
                     Articulo articuloActualPedido = listaActual.contains(articuloActual.getId());
-                    if (articuloActual == null || !(articuloActual.getCantidad() == articuloActualPedido.getCantidad())) {
+                    if (articuloActualPedido == null || (articuloActual.getCantidad() != articuloActualPedido.getCantidad())) {
+                        System.out.println("No son pedidos iguales");
                         sonPedidosIguales = false;
                     }
                 }
                 if (sonPedidosIguales) {
+                    System.out.println("Pedido previo encontrado");
                     nodo.getObject().setCantidad(nodo.getObject().getCantidad() + 1);
                     return;
                 }
             }
+            nodo = nodo.getSiguiente();
         }
+        listaActual.setCantidad(1);
         add(listaActual);
     }
 }

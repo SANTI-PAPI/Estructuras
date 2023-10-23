@@ -8,8 +8,8 @@ import com.Clases.Articulo;
 
 public interface DatosJSON extends Remote {
 
-        public byte[] desencolarArticulo() throws IOException, RemoteException;
+    public byte[] desencolarArticulo() throws IOException, RemoteException;
 
-	public void sendArticulo(Articulo articulo) throws RemoteException;
+    public void sendArticulo(Articulo articulo) throws RemoteException;
 
 }

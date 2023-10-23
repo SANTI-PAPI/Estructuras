@@ -97,4 +97,17 @@ public class ListaPedidos extends ListaEnlazada<ListaArticulos> {
         }
         return null;
     }
+
+    public ListaArticulos getIndex(int indice) {
+        if (indice < tamano) {
+            NodoListaEnlazada<ListaArticulos> nodoActual = cabeza;
+            for (int i = 0; i < tamano; i++) {
+                if (i == indice) {
+                    return nodoActual.getObject();
+                }
+                nodoActual = nodoActual.getSiguiente();
+            }
+        }
+        return null;
+    }
 }

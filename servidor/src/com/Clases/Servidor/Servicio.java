@@ -152,9 +152,10 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     public byte[] getListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException, ClassNotFoundException {
         JSONParser jsonParser = new JSONParser();
         ListaPedidos listaPedidos = new ListaPedidos();
-        String fileDir = "clientes/c" + String.valueOf(numeroTelefono);
+        File archivo = new File("clientes/c" + numeroTelefono + ".json");
+        String dir = archivo.getCanonicalPath();
 
-        try (FileReader reader = new FileReader(fileDir)) {
+        try (FileReader reader = new FileReader(dir)) {
             ListaArticulos listaArticulos = getObjetoListaArticulos();
             Object obj = jsonParser.parse(reader);
             JSONArray arrayPedidos = (JSONArray) obj;
@@ -164,21 +165,23 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
                 } catch (RemoteException e) {
                 }
             });
-            listaPedidos.sort();
             ByteArrayOutputStream outputPedidos = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputPedidos = new ObjectOutputStream(outputPedidos);
             objectOutputPedidos.writeObject(listaPedidos);
             objectOutputPedidos.close();
             return outputPedidos.toByteArray();
+        } catch (Exception e) {
+            return null;
         }
     }
 
     public ListaPedidos getObjetoListaPedidos(String numeroTelefono) throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException, ClassNotFoundException {
         JSONParser jsonParser = new JSONParser();
         ListaPedidos listaPedidos = new ListaPedidos();
-        String fileDir = "clientes/c" + String.valueOf(numeroTelefono);
+        File archivo = new File("clientes/c" + numeroTelefono + ".json");
+        String dir = archivo.getCanonicalPath();
 
-        try (FileReader reader = new FileReader(fileDir)) {
+        try (FileReader reader = new FileReader(dir)) {
             ListaArticulos listaArticulos = getObjetoListaArticulos();
             Object obj = jsonParser.parse(reader);
             JSONArray arrayPedidos = (JSONArray) obj;
@@ -188,8 +191,9 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
                 } catch (RemoteException e) {
                 }
             });
-            listaPedidos.sort();
             return listaPedidos;
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -208,10 +212,10 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     }
 
     public Articulo parseArticuloObject(ListaArticulos listaArticulos, JSONObject objetoPedido) throws RemoteException {
-        JSONObject objetoArticulo = (JSONObject) objetoPedido.get("articulo");
-        Articulo nuevoArticulo = listaArticulos.contains(Integer.parseInt((String) objetoArticulo.get("id")));
+        String stringId = (String) objetoPedido.get("id");
+        Articulo nuevoArticulo = listaArticulos.contains(Integer.parseInt(stringId));
         if (nuevoArticulo != null) {
-            nuevoArticulo.setCantidad(Integer.parseInt((String) objetoArticulo.get("cantidad")));
+            nuevoArticulo.setCantidad(Integer.parseInt((String) objetoPedido.get("cantidad")));
         }
         return nuevoArticulo;
     }
@@ -303,7 +307,9 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     @Override
     public void addNuevoPedido(ListaArticulos pedido) {
         listaPedidosActivos.add(pedido);
-        copiaListaPedidos.add(pedido);
+        ListaArticulos copiaPedido = new ListaArticulos();
+        copiaPedido.copiar(pedido);
+        copiaListaPedidos.add(copiaPedido);
         Iterator<NodeInterface<Articulo>> iterador = pedido.iterator();
         if (pedido.getCliente().isPremium()) {
             while (iterador.hasNext()) {
@@ -351,14 +357,6 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     public byte[] getListaPedidosActivos() throws IOException {
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(bs);
-        Iterator<NodeInterface<ListaArticulos>> iterador = copiaListaPedidos.iterator();
-        while (iterador.hasNext()) {
-            ListaArticulos listaActual = iterador.next().getObject();
-            Iterator<NodeInterface<Articulo>> iteradorArticulos = listaActual.iterator();
-            while (iteradorArticulos.hasNext()) {
-                System.out.println(iteradorArticulos.next().getObject().getCantidad());
-            }
-        }
         os.writeObject(copiaListaPedidos);
         os.close();
         bs.close();
@@ -412,19 +410,24 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
             }
             if (preparado) {
                 listaPedidosActivos.remove(listaActual.getIdPedido());
+                ListaArticulos listaPedido = copiaListaPedidos.contains(listaActual.getIdPedido());
+                almacenarPedido(listaPedido);
                 copiaListaPedidos.remove(listaActual.getIdPedido());
-                almacenarPedido(listaActual);
             }
         }
     }
 
     private void almacenarPedido(ListaArticulos listaActual) throws RemoteException, FileNotFoundException, ClassNotFoundException, IOException, ParseException {
         ListaPedidos listaPedidosCliente = getObjetoListaPedidos(listaActual.getCliente().getNumeroTelefono());
-        System.out.println("Flag 1");
-        listaPedidosCliente.buscarPedido(listaActual);
-        System.out.println("Flag 2");
+        if (listaPedidosCliente != null) {
+            listaPedidosCliente.buscarPedido(listaActual);
+        } else {
+            listaPedidosCliente = new ListaPedidos();
+            listaActual.setCantidad(1);
+            listaPedidosCliente.add(listaActual);
+        }
+        listaPedidosCliente.setCliente(listaActual.getCliente());
         writeListaPedidos(listaPedidosCliente);
-        System.out.println("Flag 3");
     }
 
     private void writeListaPedidos(ListaPedidos listaPedidosCliente) throws IOException {
@@ -446,16 +449,17 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
             JSONObject objetoPedido = new JSONObject();
             objetoPedido.put("pedido", detallesPedido);
-            objetoPedido.put("cantidad", pedidoActual.getCantidad());
+            objetoPedido.put("cantidad", String.valueOf(pedidoActual.getCantidad()));
             arrayPedidos.add(objetoPedido);
         }
 
-        File archivo = new File("clientes/c" + listaPedidosCliente.get().getCliente().getNumeroTelefono() + ".json");
+        File archivo = new File("clientes/c" + listaPedidosCliente.getCliente().getNumeroTelefono() + ".json");
         String dir = archivo.getCanonicalPath();
 
         try (FileWriter file = new FileWriter(dir)) {
             file.write(arrayPedidos.toJSONString());
             file.flush();
+        } catch (Exception e) {
         }
     }
 
@@ -503,10 +507,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     public void writeAdministrador(String id, String nombre, String password) throws IOException {
         password = DigestUtils.sha1Hex(password);
 
-        File archivo = new File("pom.xml");
+        File archivo = new File("usuarios/admin/u-" + id + ".json");
         String dir = archivo.getCanonicalPath();
-        dir = dir.substring(0, (dir.length() - 7));
-        dir += "usuarios/admin/u-" + id + ".json";
 
         JSONObject userObject = new JSONObject();
         userObject.put("nombre", nombre);
@@ -522,10 +524,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     public void writeOperador(String id, String nombre, String password) throws IOException {
         password = DigestUtils.sha1Hex(password);
 
-        File archivo = new File("pom.xml");
+        File archivo = new File("usuarios/operador/u-" + id + ".json");
         String dir = archivo.getCanonicalPath();
-        dir = dir.substring(0, (dir.length() - 7));
-        dir += "usuarios/operador/u-" + id + ".json";
 
         JSONObject userObject = new JSONObject();
         userObject.put("nombre", nombre);

@@ -32,7 +32,6 @@ public class PantallaModificacion extends JFrame {
     public PantallaModificacion(String nombre) throws IOException {
         this.nombre = nombre;
         Properties config = new Properties();
-
         File archivo = new File("config.properties");
         String dir = archivo.getCanonicalPath();
 
@@ -113,8 +112,8 @@ public class PantallaModificacion extends JFrame {
         panelBackground.add(buttonModificar, BorderLayout.NORTH);
 
         setVisible(true);
-        this.add(panelBackground);
-        this.setVisible(true);
-        this.setSize(800, 500);
+        add(panelBackground);
+        setVisible(true);
+        setSize(800, 500);
     }
 }

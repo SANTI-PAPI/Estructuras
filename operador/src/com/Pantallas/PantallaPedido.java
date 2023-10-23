@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -228,7 +230,6 @@ public class PantallaPedido extends JFrame {
                     try {
                         new PantallaPedidoPrevio(nombre, cliente);
                     } catch (IOException | ParseException e1) {
-                        e1.printStackTrace();
                     }
                 } else {
                     try {
@@ -249,19 +250,62 @@ public class PantallaPedido extends JFrame {
         labelBuscador.setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
         panelIzquierda.add(labelBuscador);
 
-        String[] columnas = { "Nombre del artículo", "Precio unitario" };
         Object[][] articulos = servidor.readArticulos();
-        JTable tablaArticulos = new JTable(articulos, columnas) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Nombre del artículo");
+        modelo.addColumn("Precio unitario");
+        for (int i = 0; i < articulos.length; i++) {
+            modelo.addRow(articulos[i]);
+        }
+        JTable tablaArticulos = new JTable(modelo) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
+        
+        
+        tablaArticulos.setModel(modelo);
         tablaArticulos.setSelectionMode(0);
+
         JScrollPane panelBusqueda = new JScrollPane(tablaArticulos);
         panelBusqueda.setBounds(60, 120, 370, 200); // Posición de cajasPanel debajo del buscador
         panelBusqueda.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         panelIzquierda.add(panelBusqueda);
+
+        fieldBuscador.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nombreReferencia = fieldBuscador.getText();
+                DefaultTableModel modelo = (DefaultTableModel) tablaArticulos.getModel();
+                String[] arregloNombres = new String[modelo.getRowCount()];
+                for (int i = 0; i < modelo.getRowCount(); i++) {
+                    arregloNombres[i] = (String) modelo.getValueAt(i, 0);
+                }
+                Arrays.sort(arregloNombres, new Comparator<String>() {
+                    @Override
+                    public int compare(String nombre1, String nombre2) {
+                        int semejanza1 = calcularSemejanza(nombreReferencia, nombre1);
+                        int semejanza2 = calcularSemejanza(nombreReferencia, nombre2);
+                        return Integer.compare(semejanza1, semejanza2);
+                    }
+                });
+                Object[][] nuevaTabla = new Object[modelo.getRowCount()][2];
+                for (int i = 0; i < modelo.getRowCount(); i++) {
+                    for (int j = 0; j < arregloNombres.length; i++) {
+                        if (((String) modelo.getValueAt(i, 0)).equals(arregloNombres[j])) {
+                            nuevaTabla[j][0] = arregloNombres[j];
+                            nuevaTabla[j][1] = modelo.getValueAt(i, 1);
+                        }
+                    }
+                }
+                modelo.setRowCount(0);
+                for (int i = 0; i < nuevaTabla.length; i++) {
+                    modelo.addRow(nuevaTabla[i]);
+                }
+            }
+
+        });
 
         JTextField fieldCantidad = new JTextField("1", 2);
         PlainDocument doc = (PlainDocument) fieldCantidad.getDocument();
@@ -274,7 +318,7 @@ public class PantallaPedido extends JFrame {
         labelCantidad.setHorizontalAlignment(JLabel.CENTER); // Centrar el texto
         panelIzquierda.add(labelCantidad);
 
-        modelo = new DefaultTableModel() {
+        DefaultTableModel modeloPedidos = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 if (column == 1) {
@@ -283,8 +327,8 @@ public class PantallaPedido extends JFrame {
                 return false;
             }
         };
-        modelo.addColumn("Nombre del artículo");
-        modelo.addColumn("Cantidad");
+        modeloPedidos.addColumn("Nombre del artículo");
+        modeloPedidos.addColumn("Cantidad");
 
         JButton buttonAgregar = new JButton("AGREGAR");
         buttonAgregar.setBounds(265, 350, 100, 30); // Posición del botón "AGREGAR" al lado de la caja de texto
@@ -302,7 +346,7 @@ public class PantallaPedido extends JFrame {
         panelPedido.setBackground(Color.WHITE);
         panelDerecha.add(panelPedido);
 
-        modelo.addTableModelListener(new TableModelListener() {
+        modeloPedidos.addTableModelListener(new TableModelListener() {
 
             public static boolean isNumeric(int strNum) {
                 try {
@@ -317,11 +361,11 @@ public class PantallaPedido extends JFrame {
             public void tableChanged(TableModelEvent e) {
                 if (!flagEnd && (tablaPedidos.getSelectedRow() != -1 && tablaPedidos.getRowCount() > 0)) {
                     try {
-                        if (!(isNumeric(Integer.parseInt((String) modelo.getValueAt(tablaPedidos.getSelectedRow(), 1))))) {
+                        if (!(isNumeric(Integer.parseInt((String) modeloPedidos.getValueAt(tablaPedidos.getSelectedRow(), 1))))) {
                         }
                     } catch (Exception exception) {
                         flagEnd = true;
-                        modelo.setValueAt(1, tablaPedidos.getSelectedRow(), 1);
+                        modeloPedidos.setValueAt(1, tablaPedidos.getSelectedRow(), 1);
                         flagEnd = false;
                     }
                 }
@@ -341,7 +385,7 @@ public class PantallaPedido extends JFrame {
                     }
                     if (fila == -1) {
                         Object[] nuevaFila = { nombre, (fieldCantidad.getText()) };
-                        modelo.addRow(nuevaFila);
+                        modeloPedidos.addRow(nuevaFila);
                     } else {
                         String cantidadActual = String.valueOf(tablaPedidos.getModel().getValueAt(fila, 1));
                         tablaPedidos.getModel().setValueAt(String.valueOf(Integer.parseInt(cantidadActual) + Integer.parseInt(fieldCantidad.getText())), fila, 1);
@@ -400,5 +444,19 @@ public class PantallaPedido extends JFrame {
         setBounds(0, 0, 800, 500);
         setResizable(false);
         setVisible(true);
+    }
+
+    public static int calcularSemejanza(String nombreEntrada, String nombreActual) {
+        int semejanza = 0;
+        for (int i = 0; i < nombreEntrada.length(); i++) {
+            if (nombreActual.length() > i && nombreActual.charAt(i) == nombreEntrada.charAt(i)) {
+                semejanza += 3;
+            } else if ((nombreActual.length() > i + 1 && nombreActual.charAt(i + 1) == nombreEntrada.charAt(i)) || (i - 1 >= 0 && nombreActual.length() > i && nombreActual.charAt(i - 1) == nombreEntrada.charAt(i))) {
+                semejanza += 2;
+            } else if ((nombreActual.length() > i + 2 && nombreActual.charAt(i + 2) == nombreEntrada.charAt(i)) || (i - 2 >= 0 && nombreActual.length() > i && nombreActual.charAt(i - 2) == nombreEntrada.charAt(i))) {
+                semejanza++;
+            }
+        }
+        return semejanza;
     }
 }
