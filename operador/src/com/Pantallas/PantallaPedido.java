@@ -86,6 +86,7 @@ public class PantallaPedido extends JFrame {
     Cliente cliente;
     ListaArticulos listaArticulos;
     DefaultTableModel modelo;
+    DefaultTableModel modeloPedidos;
     ClienteRMI servidor;
     String idPedido;
 
@@ -138,13 +139,12 @@ public class PantallaPedido extends JFrame {
 
         Iterator<NodeInterface<Articulo>> iteradorPedido = listaPedido.iterator();
         flagEnd = true;
-        modelo = new DefaultTableModel();
         while (iteradorPedido.hasNext()) {
             Articulo articuloActual = iteradorPedido.next().getObject();
             String nombreActual = articuloActual.getNombre();
             int cantidad = articuloActual.getCantidad();
             Object[] nuevaFila = { nombreActual, cantidad };
-            modelo.addRow(nuevaFila);
+            modeloPedidos.addRow(nuevaFila);
         }
         flagEnd = false;
     }
@@ -202,13 +202,12 @@ public class PantallaPedido extends JFrame {
         setMaximizedBounds(getBounds());
         Iterator<NodeInterface<Articulo>> iteradorPedido = listaPedido.iterator();
         flagEnd = true;
-        modelo = new DefaultTableModel();
         while (iteradorPedido.hasNext()) {
             Articulo articuloActual = iteradorPedido.next().getObject();
             String nombreActual = articuloActual.getNombre();
             int cantidad = articuloActual.getCantidad();
             Object[] nuevaFila = { nombreActual, cantidad };
-            modelo.addRow(nuevaFila);
+            modeloPedidos.addRow(nuevaFila);
         }
         flagEnd = false;
     }
@@ -326,7 +325,7 @@ public class PantallaPedido extends JFrame {
         panelDerecha.setBackground(Color.GRAY);
         mainPanel.add(panelDerecha, BorderLayout.EAST);
 
-        DefaultTableModel modeloPedidos = new DefaultTableModel() {
+        modeloPedidos = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 if (column == 1) {

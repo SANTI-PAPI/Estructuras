@@ -62,16 +62,16 @@ public class PantallaRegistroDireccion extends JFrame {
         buttonVolver.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (telefono != null) {
-                        new PantallaPedido(nombre, listaPedido, telefono);
-                    }
                     if (cliente != null) {
                         new PantallaPedido(nombre, listaPedido, cliente);
+                        dispose();
+                    } else if (telefono != null) {
+                        new PantallaPedido(nombre, listaPedido, telefono);
+                        dispose();
                     }
 
-                } catch (IOException | ParseException e1) {
+                } catch (Exception e1) {
                 }
-                dispose();
             }
         });
 
