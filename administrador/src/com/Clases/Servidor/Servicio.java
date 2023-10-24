@@ -376,4 +376,10 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
             file.flush();
         }
     }
+
+    @Override
+    public void writeArticulo(String nombre, int precio, boolean isComplejo) throws IOException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'writeArticulo'");
+    }
 }

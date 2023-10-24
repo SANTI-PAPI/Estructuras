@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Iterator;
@@ -184,6 +183,14 @@ public class ClienteRMI {
         try {
             service = (DatosJSON) Naming.lookup(uri);
             service.writeOperador(id, nombre, password);
+        } catch (Exception e) {
+        }
+    }
+
+    public void writeArticulo(String nombre, int precio, boolean isComplejo) {
+        try {
+            service = (DatosJSON) Naming.lookup(uri);
+            service.writeArticulo(nombre, precio, isComplejo);
         } catch (Exception e) {
         }
     }

@@ -90,10 +90,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     @Override
     public byte[] readClientes() throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
         JSONParser jsonParser = new JSONParser();
-        File archivo = new File("pom.xml");
+        File archivo = new File("datos/clientes.json");
         String dir = archivo.getCanonicalPath();
-        dir = dir.substring(0, (dir.length() - 7));
-        dir += "datos/clientes.json";
 
         try (FileReader reader = new FileReader(dir)) {
             Object obj = jsonParser.parse(reader);
@@ -115,10 +113,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
     public ListaClientes readListaClientes() throws RemoteException, IOException, FileNotFoundException, org.json.simple.parser.ParseException {
         JSONParser jsonParser = new JSONParser();
-        File archivo = new File("pom.xml");
+        File archivo = new File("datos/clientes.json");
         String dir = archivo.getCanonicalPath();
-        dir = dir.substring(0, (dir.length() - 7));
-        dir += "datos/clientes.json";
 
         try (FileReader reader = new FileReader(dir)) {
             Object obj = jsonParser.parse(reader);
@@ -205,7 +201,8 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
         arrayArticulos.forEach(ar -> {
             try {
                 listaPedido.add(parseArticuloObject(listaArticulos, (JSONObject) ar));
-            } catch (RemoteException e) { }
+            } catch (RemoteException e) {
+            }
         });
 
         return listaPedido;
@@ -533,6 +530,41 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
 
         try (FileWriter file = new FileWriter(dir)) {
             file.write(userObject.toJSONString());
+            file.flush();
+        }
+    }
+
+    @Override
+    public void writeArticulo(String nombre, int precio, boolean isComplejo) throws IOException, ParseException {
+        ListaArticulos listaArticulos = getObjetoListaArticulos();
+        if (listaArticulos.contains(nombre) != null) {
+            Articulo reemplazo = new Articulo(listaArticulos.contains(nombre).getId(), nombre, precio, isComplejo);
+            listaArticulos.replace(reemplazo);
+        } else {
+            int ultimoId = listaArticulos.getLatestId();
+            Articulo nuevoArticulo = new Articulo(ultimoId + 1, nombre, precio, isComplejo);
+            listaArticulos.add(nuevoArticulo);
+        }
+
+        JSONArray arrayArticulos = new JSONArray();
+        Iterator<NodeInterface<Articulo>> iterador = listaArticulos.iterator();
+        while (iterador.hasNext()) {
+            Articulo articuloActual = iterador.next().getObject();
+            JSONObject objetoDetalles = new JSONObject();
+            objetoDetalles.put("id", Integer.toString(articuloActual.getId()));
+            objetoDetalles.put("nombre", articuloActual.getNombre());
+            objetoDetalles.put("precio", Integer.toString(articuloActual.getPrecio()));
+            objetoDetalles.put("isComplejo", Boolean.toString(articuloActual.isComplejo()));
+            JSONObject objetoArticulo = new JSONObject();
+            objetoArticulo.put("articulo", objetoDetalles);
+            arrayArticulos.add(objetoArticulo);
+        }
+        File archivo = new File("datos/articulos.json");
+        String dir = archivo.getCanonicalPath();
+        System.out.println(dir);
+
+        try (FileWriter file = new FileWriter(dir)) {
+            file.write(arrayArticulos.toJSONString());
             file.flush();
         }
     }

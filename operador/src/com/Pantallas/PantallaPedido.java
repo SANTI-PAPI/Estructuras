@@ -400,7 +400,7 @@ public class PantallaPedido extends JFrame {
             public void actionPerformed(ActionEvent arg0) {
                 flagEnd = true;
                 if (tablaPedidos.getSelectedRow() != -1) {
-                    modelo.removeRow(tablaPedidos.getSelectedRow());
+                    modeloPedidos.removeRow(tablaPedidos.getSelectedRow());
                 }
                 flagEnd = false;
             }

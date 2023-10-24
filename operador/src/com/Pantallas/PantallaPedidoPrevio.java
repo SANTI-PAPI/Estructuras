@@ -91,13 +91,15 @@ public class PantallaPedidoPrevio extends JFrame {
         modelo.addColumn("Nombre del artículo");
         modelo.addColumn("Cantidad");
         ListaArticulos listaActual = listaPedidos.getIndex(0);
-        Iterator<NodeInterface<Articulo>> iterador = listaActual.iterator();
-        while (iterador.hasNext()) {
-            Articulo articuloActual = iterador.next().getObject();
-            String nombreActual = articuloActual.getNombre();
-            int cantidad = articuloActual.getCantidad();
-            Object[] nuevaFila = { nombreActual, cantidad };
-            modelo.addRow(nuevaFila);
+        if (listaActual != null) {
+            Iterator<NodeInterface<Articulo>> iterador = listaActual.iterator();
+            while (iterador.hasNext()) {
+                Articulo articuloActual = iterador.next().getObject();
+                String nombreActual = articuloActual.getNombre();
+                int cantidad = articuloActual.getCantidad();
+                Object[] nuevaFila = { nombreActual, cantidad };
+                modelo.addRow(nuevaFila);
+            }
         }
 
         JScrollPane panelBusqueda = new JScrollPane(tablaArticulos);
@@ -137,9 +139,11 @@ public class PantallaPedidoPrevio extends JFrame {
         buttonElegir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    ListaArticulos lista = listaPedidos.getIndex(comboPedidos.getSelectedIndex());
-                    new PantallaPedido(nombre, lista, cliente);
-                    dispose();
+                    if (comboPedidos.getSelectedIndex() != -1) {
+                        ListaArticulos lista = listaPedidos.getIndex(comboPedidos.getSelectedIndex());
+                        new PantallaPedido(nombre, lista, cliente);
+                        dispose();
+                    }
                 } catch (Exception ex) {
                 }
             }

@@ -151,4 +151,28 @@ public class ListaArticulos extends ListaEnlazada<Articulo> {
             add(copiaArticulo);
         }
     }
+
+    public void replace(Articulo reemplazo) {
+        NodoListaEnlazada<Articulo> nodoActual = cabeza;
+        while (nodoActual != null) {
+            if (nodoActual.getObject().getId() == reemplazo.getId()) {
+                nodoActual.setObject(reemplazo);
+                System.out.println("Articulo reemplazado");
+                return;
+            }
+            nodoActual = nodoActual.getSiguiente();
+        }
+    }
+
+    public int getLatestId() {
+        int latestId = 0;
+        Iterator<NodeInterface<Articulo>> iterador = iterator();
+        while (iterador.hasNext()) {
+            Articulo articuloActual = iterador.next().getObject();
+            if (articuloActual.getId() > latestId) {
+                latestId = articuloActual.getId();
+            }
+        }
+        return latestId;
+    }
 }

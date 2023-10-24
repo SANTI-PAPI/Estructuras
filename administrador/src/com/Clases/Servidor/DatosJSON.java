@@ -41,4 +41,6 @@ public interface DatosJSON extends Remote {
 
     public void writeOperador(String id, String nombre, String password) throws IOException;
 
+    public void writeArticulo(String nombre, int precio, boolean isComplejo) throws IOException;
+
 }

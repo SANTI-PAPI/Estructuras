@@ -62,7 +62,10 @@ public class ModuloAdministrador extends JFrame {
         botonAnadirArticulo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                new PantallaAnadirArticulo(nombre);
+                try {
+                    new PantallaAnadirArticulo(nombre);
+                } catch (IOException e) {
+                }
                 dispose();
             }
         });
