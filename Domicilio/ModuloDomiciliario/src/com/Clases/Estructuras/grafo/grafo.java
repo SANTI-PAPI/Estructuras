@@ -8,12 +8,12 @@ import com.Clases.Estructuras.node.NodoListaEnlazada;
 import com.Clases.Estructuras.stack.*;
 import com.Clases.Estructuras.stack.PilaArray;
 
-public class grafo {
+public class Grafo {
 
     private ListaEnlazada<ListaEnlazada<Integer>> grafo;
     int numeroVertices;
 
-    public grafo(int numVertices) {
+    public Grafo(int numVertices) {
         this.numeroVertices = numVertices;
         grafo = new ListaEnlazada<>();
         for (int i = 0; i < numVertices; i++) {
@@ -64,11 +64,6 @@ public class grafo {
         }
 
         return false;
-    }
-
-    public ListaEnlazada<Integer> recorrido(ListaEnlazada<Integer> nodosOrdenados) {
-        return nodosOrdenados;
-
     }
 
     public ListaEnlazada<Integer> recorrido(int inicial, int fin) {
@@ -127,6 +122,143 @@ public class grafo {
             bb = (NodoListaEnlazada) iterador.next();
             System.out.println(bb.getObject());
         }
+    }
+
+    public int comunaToInteger(String comuna) {
+        switch (comuna) {
+            case "CALDAS":
+                return 1;
+
+            case "BOSQUE":
+                return 2;
+
+            case "CUMBRE":
+                return 3;
+
+            case "CASCO_ANTIGUO":
+                return 4;
+
+            case "LAGOS":
+                return 5;
+
+            case "BUCARICA":
+                return 6;
+
+            case "CANAVERAL":
+                return 7;
+
+            case "VILLABEL":
+                return 8;
+
+            case "PROVENZA":
+                return 9;
+
+            case "SUR":
+                return 10;
+
+            case "PEDREGOSA":
+                return 11;
+
+            case "MUTIS":
+                return 12;
+
+            case "SUROCCIDENTE":
+                return 13;
+
+            case "CONCORDIA":
+                return 14;
+
+            case "CIUDADELA":
+                return 16;
+
+            case "CENTRO":
+                return 17;
+
+            case "GARCIA_ROVIRA":
+                return 18;
+
+            case "ORIENTAL":
+                return 19;
+
+            case "MORRORRICO":
+                return 20;
+
+            case "OCCIDENTAL":
+                return 21;
+
+            case "SAN_FRANCISCO":
+                return 22;
+
+            case "NORORIENTAL":
+                return 23;
+
+            case "NORTE":
+                return 24;
+
+            case "RUITOQUE":
+                return 25;
+
+            case "ACAPULCO":
+                return 26;
+
+            case "BARBOSA":
+                return 27;
+            case "PALO_GORDO":
+                return 28;
+
+            case "LLANADAS":
+                return 29;
+
+            case "RIO_FRIO":
+                return 30;
+
+            case "CASCO_URBANO":
+                return 31;
+
+            case "CARRIZAL":
+                return 32;
+
+            case "BOCAS":
+                return 33;
+
+            case "LAGUNETAS":
+                return 34;
+
+            case "LLANO_GRANDE":
+                return 35;
+
+            case "PENAS":
+                return 36;
+
+            case "CHOCOITA":
+                return 37;
+
+            case "CHOCOA":
+                return 38;
+
+            case "CANTALTA":
+                return 39;
+
+            case "PANTANO":
+                return 40;
+
+            case "MOTOSO":
+                return 41;
+
+            case "CEDRO":
+                return 42;
+
+            case "PARROQUIA":
+                return 43;
+
+            case "SOGAMOSO":
+                return 44;
+
+            case "MARTHA":
+                return 45;
+        }
+
+        return -1;
     }
 
 }
