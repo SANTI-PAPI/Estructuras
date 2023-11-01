@@ -76,11 +76,14 @@ public class grafo {
         boolean[] visitados = new boolean[numeroVertices];
         ListaEnlazada<Integer> record = new ListaEnlazada<>();
         colita.push(inicial);
+        int pasos = -1;
         while (!colita.isEmpty()) {
             visitados[(int) inicial] = true;
             int valid = (int) colita.pop();
+            pasos++;
             record.add(valid);
             if (valid == fin) {
+                record.add(pasos);
                 return record;
             }
             // System.out.println("vea");
@@ -102,6 +105,8 @@ public class grafo {
                         indexlista = (NodoListaEnlazada) iterador.next();
                         if ((int) indexlista.getObject() == fin) {
                             record.add(indexlista.getObject());
+                            pasos++;
+                            record.add(pasos);
                             return record;
                         }
                         colita.push((int) indexlista.getObject());

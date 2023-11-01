@@ -102,6 +102,9 @@ public class Domiciliario extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cont++;
+                if (cont == 8) {
+
+                }
                 if (cont > 8) {
                     cont = 0;
                 }
