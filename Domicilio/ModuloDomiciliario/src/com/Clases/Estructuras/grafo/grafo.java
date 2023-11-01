@@ -66,6 +66,11 @@ public class grafo {
         return false;
     }
 
+    public ListaEnlazada<Integer> recorrido(ListaEnlazada<Integer> nodosOrdenados) {
+        return nodosOrdenados;
+
+    }
+
     public ListaEnlazada<Integer> recorrido(int inicial, int fin) {
         PilaArray<Integer> colita = new PilaArray<>();
         boolean[] visitados = new boolean[numeroVertices];
