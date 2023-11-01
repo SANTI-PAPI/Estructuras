@@ -30,9 +30,9 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
     }
 
     @Override
-    public byte[] desencolarArticulo() throws RemoteException, IOException {
+    public byte[] desencolarArticuloDomiciliario() throws RemoteException, IOException {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'desencolarArticulo'");
+        throw new UnsupportedOperationException("Unimplemented method 'desencolarArticuloDomiciliario'");
     }
 
 }

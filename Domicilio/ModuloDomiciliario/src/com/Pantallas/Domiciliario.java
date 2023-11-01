@@ -33,20 +33,24 @@ public class Domiciliario extends JFrame {
     ClienteRMI servidor;
     ColaPrioridad<Articulo> colaDespacho = new ColaPrioridad<>(10);
 
-    public Domiciliario(String nombre, ListaArticulos listaPedido, Cliente cliente) throws IOException, ParseException {
+    public Domiciliario() throws IOException, ParseException {
         Properties config = new Properties();
 
-        File archivo = new File("config.properties");
+        File archivo = new File(
+                "C:\\Users\\santiago\\Documents\\REPOSITORIO-FINAL-ESTRUCTURAS\\Estructuras\\Domicilio\\ModuloDomiciliario\\config.properties");
         String dir = archivo.getCanonicalPath();
-
+        System.out.println(dir);
+        System.out.println("flag");
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
+            System.out.println("falg1");
             config.load(fin);
             servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"),
                     (String) config.get("SERVICENAME"));
         } catch (Exception e) {
+            System.out.println("llama");
+            System.out.println(e.getMessage());
         }
         this.nombre = nombre;
-        this.pedido = listaPedido;
         this.cliente = cliente;
         iniciarComponentes();
     }
@@ -115,14 +119,12 @@ public class Domiciliario extends JFrame {
     private void cargarPedidoEnTabla() throws RemoteException, IOException {
 
         modeloPedidos.setRowCount(cont); // Limpiar la tabla
-        Articulo articuloActual = servidor.desencolarArticulo();
+        Articulo articuloActual = servidor.desencolarArticuloDomiiciliario();
         cliente = articuloActual.getClienteAsociado();
         modeloPedidos.addRow(new Object[] { articuloActual.getNombre().toString(), cliente.getComuna().toString() });
     }
 
     public static void main(String[] args) {
-        ListaArticulos articulos = new ListaArticulos();
-        articulos.add(new Articulo(1, "Hamburguesa", 15000, true));
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -130,8 +132,7 @@ public class Domiciliario extends JFrame {
                 Domiciliario domiciliario;
 
                 try {
-                    domiciliario = new Domiciliario("Pepe", articulos, null);
-                    domiciliario.setVisible(true);
+                    new Domiciliario();
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

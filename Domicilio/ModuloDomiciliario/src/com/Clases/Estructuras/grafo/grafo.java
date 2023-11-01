@@ -2,6 +2,7 @@ package com.Clases.Estructuras.grafo;
 
 import java.util.Iterator;
 
+import com.Clases.Estructuras.interfaces.node.NodeInterface;
 import com.Clases.Estructuras.linkedlist.*;
 import com.Clases.Estructuras.node.NodoListaEnlazada;
 import com.Clases.Estructuras.stack.*;
@@ -65,10 +66,10 @@ public class grafo {
         return false;
     }
 
-    public ListaEnlazada recorrido(int inicial, int fin) {
+    public ListaEnlazada<Integer> recorrido(int inicial, int fin) {
         PilaArray<Integer> colita = new PilaArray<>();
         boolean[] visitados = new boolean[numeroVertices];
-        ListaEnlazada record = new ListaEnlazada<>();
+        ListaEnlazada<Integer> record = new ListaEnlazada<>();
         colita.push(inicial);
         while (!colita.isEmpty()) {
             visitados[(int) inicial] = true;
@@ -78,18 +79,18 @@ public class grafo {
                 return record;
             }
             // System.out.println("vea");
-            Iterator iter = grafo.iterator();
-            NodoListaEnlazada<ListaEnlazada> indexgrafo = null;
+            Iterator<NodeInterface<ListaEnlazada<Integer>>> iter = grafo.iterator();
+            NodoListaEnlazada<ListaEnlazada<Integer>> indexgrafo = null;
             // System.out.println("vea2");
             while (iter.hasNext()) {
                 // System.out.println("glls");
-                indexgrafo = (NodoListaEnlazada<ListaEnlazada>) iter.next();
+                indexgrafo = (NodoListaEnlazada<ListaEnlazada<Integer>>) iter.next();
 
-                Iterator iterador = indexgrafo.getObject().iterator();
+                Iterator<NodeInterface<Integer>> iterador = indexgrafo.getObject().iterator();
 
                 if ((int) indexgrafo.getObject().cabeza.getObject() == valid) {
 
-                    NodoListaEnlazada indexlista = null;
+                    NodoListaEnlazada<Integer> indexlista = null;
 
                     while (iterador.hasNext()) {
                         // System.out.println("flag");

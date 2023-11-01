@@ -24,10 +24,8 @@ public class ModuloCocina extends JFrame {
     public ModuloCocina() throws IOException, ParseException {
         Properties config = new Properties();
 
-        File archivo = new File("pom.xml");
+        File archivo = new File("config.properties");
         String dir = archivo.getCanonicalPath();
-        dir = dir.substring(0, (dir.length() - 7));
-        dir += "config.properties";
 
         try (FileInputStream fin = new FileInputStream(new File(dir))) {
             config.load(fin);
@@ -68,6 +66,7 @@ public class ModuloCocina extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Articulo articulo = servidor.desencolarArticulo();
                 if (articulo1 != null) {
+                    System.out.println(articulo1.getClienteAsociado().getComuna());
                     servidor.sendArticulo(articulo1);
                 }
 

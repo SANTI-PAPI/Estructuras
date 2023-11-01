@@ -14,6 +14,6 @@ public interface DatosJSON extends Remote {
 
     public Object[][] readArticulos() throws RemoteException, IOException, ParseException;
 
-    public byte[] desencolarArticulo() throws RemoteException, IOException;
+    public byte[] desencolarArticuloDomiciliario() throws RemoteException, IOException;
 
 }

@@ -64,10 +64,10 @@ public class ClienteRMI {
         return new Object[0][0];
     }
 
-    public Articulo desencolarArticulo() throws RemoteException, IOException {
+    public Articulo desencolarArticuloDomiiciliario() throws RemoteException, IOException {
         try {
             service = (DatosJSON) Naming.lookup(uri);
-            ByteArrayInputStream bs = new ByteArrayInputStream(service.desencolarArticulo());
+            ByteArrayInputStream bs = new ByteArrayInputStream(service.desencolarArticuloDomiciliario());
             ObjectInputStream is = new ObjectInputStream(bs);
             Articulo articulo = (Articulo) is.readObject();
             System.out.println(articulo.getNombre());

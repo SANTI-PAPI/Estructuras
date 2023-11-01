@@ -10,15 +10,6 @@ public class Articulo implements Serializable {
     private int precio;
     private String idPedido;
     private boolean complejo;
-
-    public Cliente getClienteAsociado() {
-        return clienteAsociado;
-    }
-
-    public void setClienteAsociado(Cliente clienteAsociado) {
-        this.clienteAsociado = clienteAsociado;
-    }
-
     private Cliente clienteAsociado;
 
     public Articulo(int id, String nombre, int precio, boolean complejo) {
@@ -26,6 +17,14 @@ public class Articulo implements Serializable {
         this.nombre = nombre;
         this.precio = precio;
         this.complejo = complejo;
+    }
+
+    public Cliente getClienteAsociado() {
+        return clienteAsociado;
+    }
+
+    public void setClienteAsociado(Cliente clienteAsociado) {
+        this.clienteAsociado = clienteAsociado;
     }
 
     public String getNombre() {

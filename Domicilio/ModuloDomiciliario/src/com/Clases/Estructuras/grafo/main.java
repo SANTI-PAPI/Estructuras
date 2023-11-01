@@ -61,7 +61,7 @@ public class main {
         grfMetropolitano.addConexion(43, 44);
 
         // Piedecuesta
-        grfMetropolitano.addConexion(8, 45);
+        // grfMetropolitano.addConexion(8, 45);
 
         ListaEnlazada rec2 = grfMetropolitano.recorrido(1, 15);
         grfMetropolitano.imprimir(rec2);

@@ -322,6 +322,7 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
             while (iterador.hasNext()) {
                 Articulo articuloActual = iterador.next().getObject();
                 articuloActual.setIdPedido(pedido.getIdPedido());
+                articuloActual.setClienteAsociado(pedido.getCliente());
                 int cantidad = articuloActual.getCantidad();
                 for (int i = 0; i < cantidad; i++) {
                     colaPedidos.insert(articuloActual, 5);
@@ -568,5 +569,19 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
             file.write(arrayArticulos.toJSONString());
             file.flush();
         }
+    }
+
+    @Override
+    public byte[] desencolarArticuloDomiciliario() throws RemoteException, IOException {
+        if (!colaEntregas.isEmpty()) {
+            Articulo articulo = colaEntregas.extract();
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+            ObjectOutputStream os = new ObjectOutputStream(bs);
+            os.writeObject(articulo);
+            os.close();
+            bs.close();
+            return bs.toByteArray();
+        }
+        return null;
     }
 }
