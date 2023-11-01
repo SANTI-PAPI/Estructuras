@@ -5,14 +5,22 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.text.ParseException;
+import java.util.Properties;
 
 import com.Clases.Articulo;
 import com.Clases.Cliente;
 import com.Clases.Estructuras.linkedlist.ListaArticulos;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
+import com.Clases.Estructuras.queue.ColaPrioridad;
 import com.Clases.Servidor.ClienteRMI;
 
 public class Domiciliario extends JFrame {
+    int cont = 0;
     String nombre;
     boolean flagEnd = false;
     String telefono;
@@ -23,8 +31,20 @@ public class Domiciliario extends JFrame {
     String idPedido;
     int pedidoActual = 0;
     ClienteRMI servidor;
+    ColaPrioridad<Articulo> colaDespacho = new ColaPrioridad<>(10);
 
-    public Domiciliario(String nombre, ListaArticulos listaPedido, Cliente cliente) {
+    public Domiciliario(String nombre, ListaArticulos listaPedido, Cliente cliente) throws IOException, ParseException {
+        Properties config = new Properties();
+
+        File archivo = new File("config.properties");
+        String dir = archivo.getCanonicalPath();
+
+        try (FileInputStream fin = new FileInputStream(new File(dir))) {
+            config.load(fin);
+            servidor = new ClienteRMI((String) config.get("IP"), (String) config.get("PORT"),
+                    (String) config.get("SERVICENAME"));
+        } catch (Exception e) {
+        }
         this.nombre = nombre;
         this.pedido = listaPedido;
         this.cliente = cliente;
@@ -55,7 +75,7 @@ public class Domiciliario extends JFrame {
         rutaPanel.add(new JLabel("Ruta"));
 
         // Botón "Siguiente Pedido"
-        JButton siguientePedidoButton = new JButton("Siguiente Pedido");
+        JButton siguientePedidoButton = new JButton("Siguiente Articulo");
         siguientePedidoButton.setBounds(30, 450, 300, 50);
 
         mainPanel.add(siguientePedidoButton);
@@ -66,8 +86,9 @@ public class Domiciliario extends JFrame {
         this.add(mainPanel);
 
         // Crear una tabla para mostrar los detalles del pedido actual
-        String[] columnNames = { "Nombre del artículo", "Cantidad" };
-        modeloPedidos = new DefaultTableModel(columnNames, 0);
+        modeloPedidos = new DefaultTableModel();
+        modeloPedidos.addColumn("Nombre del Artículo");
+        modeloPedidos.addColumn("Domicilio");
         JTable tablaPedidos = new JTable(modeloPedidos);
         JScrollPane scrollPane = new JScrollPane(tablaPedidos);
 
@@ -76,19 +97,27 @@ public class Domiciliario extends JFrame {
         siguientePedidoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (pedidoActual < pedido.size() - 1) {
-                    pedidoActual++;
+                cont++;
+                if (cont > 8) {
+                    cont = 0;
+                }
+                try {
                     cargarPedidoEnTabla();
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
-
     }
 
-    private void cargarPedidoEnTabla() {
-        modeloPedidos.setRowCount(0); // Limpiar la tabla
-        Articulo articuloActual = pedido.get();
-        modeloPedidos.addRow(new Object[] { articuloActual.getNombre(), articuloActual.getCantidad() });
+    private void cargarPedidoEnTabla() throws RemoteException, IOException {
+
+        modeloPedidos.setRowCount(cont); // Limpiar la tabla
+        Articulo articuloActual = servidor.desencolarArticulo();
+        cliente = articuloActual.getClienteAsociado();
+        modeloPedidos.addRow(new Object[] { articuloActual.getNombre().toString(), cliente.getComuna().toString() });
     }
 
     public static void main(String[] args) {
@@ -98,8 +127,19 @@ public class Domiciliario extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Domiciliario domiciliario = new Domiciliario("Pepe", articulos, null);
-                domiciliario.setVisible(true);
+                Domiciliario domiciliario;
+
+                try {
+                    domiciliario = new Domiciliario("Pepe", articulos, null);
+                    domiciliario.setVisible(true);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
             }
         });
     }

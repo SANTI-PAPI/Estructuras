@@ -8,6 +8,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;
 
 import org.json.simple.parser.ParseException;
@@ -46,12 +47,38 @@ public class ClienteRMI {
         return false;
     }
 
-    public void getListaPedidos(ListaPedidos listaPedidos){
+    public void getListaPedidos(ListaPedidos listaPedidos) {
         try {
             service = (DatosJSON) Naming.lookup(uri);
             service.getListaPedidos(listaPedidos);
         } catch (Exception e) {
         }
     }
-    
+
+    public Object[][] readArticulos() throws RemoteException {
+        try {
+            service = (DatosJSON) Naming.lookup(uri);
+            return service.readArticulos();
+        } catch (Exception e) {
+        }
+        return new Object[0][0];
+    }
+
+    public Articulo desencolarArticulo() throws RemoteException, IOException {
+        try {
+            service = (DatosJSON) Naming.lookup(uri);
+            ByteArrayInputStream bs = new ByteArrayInputStream(service.desencolarArticulo());
+            ObjectInputStream is = new ObjectInputStream(bs);
+            Articulo articulo = (Articulo) is.readObject();
+            System.out.println(articulo.getNombre());
+            is.close();
+            bs.close();
+            return articulo;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+
+    }
+
 }

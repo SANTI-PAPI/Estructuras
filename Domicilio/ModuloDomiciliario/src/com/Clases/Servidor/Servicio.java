@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.ParseException;
 
 import com.Clases.Articulo;
 import com.Clases.Estructuras.linkedlist.ListaPedidos;
@@ -18,8 +19,20 @@ public class Servicio extends UnicastRemoteObject implements DatosJSON {
         super();
     }
 
-    public void getListaPedidos(ListaPedidos listaPedidos){
+    public void getListaPedidos(ListaPedidos listaPedidos) {
         listaPedidosActivos = listaPedidos;
     }
-    
+
+    @Override
+    public Object[][] readArticulos() throws RemoteException, IOException, ParseException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readArticulos'");
+    }
+
+    @Override
+    public byte[] desencolarArticulo() throws RemoteException, IOException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'desencolarArticulo'");
+    }
+
 }

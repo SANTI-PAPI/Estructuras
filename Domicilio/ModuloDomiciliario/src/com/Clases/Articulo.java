@@ -11,6 +11,16 @@ public class Articulo implements Serializable {
     private String idPedido;
     private boolean complejo;
 
+    public Cliente getClienteAsociado() {
+        return clienteAsociado;
+    }
+
+    public void setClienteAsociado(Cliente clienteAsociado) {
+        this.clienteAsociado = clienteAsociado;
+    }
+
+    private Cliente clienteAsociado;
+
     public Articulo(int id, String nombre, int precio, boolean complejo) {
         this.id = id;
         this.nombre = nombre;

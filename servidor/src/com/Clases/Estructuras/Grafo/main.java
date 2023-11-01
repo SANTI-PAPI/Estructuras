@@ -75,13 +75,10 @@ public class main {
         grfMetropolitanoGiron.addConexion(16, 12);
         grfMetropolitanoGiron.addConexion(17, 18);
         grfMetropolitanoGiron.addConexion(17, 19);
-        
-        
 
-        // Piedecuesta
         // grfMetropolitano.addConexion(8, 45);
-        
-        ListaEnlazada<Integer> rec2 = grfMetropolitanoBucaramanga.recorrido(9, 7); 
+
+        ListaEnlazada<Integer> rec2 = grfMetropolitanoBucaramanga.recorrido(1, 7);
         grfMetropolitanoBucaramanga.imprimir(rec2);
     }
 }
