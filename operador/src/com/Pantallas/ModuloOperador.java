@@ -123,5 +123,7 @@ public class ModuloOperador extends JFrame {
         this.add(panelBackGround);
         this.setVisible(true);
         this.setSize(800, 500);
+
+
     }
 }
